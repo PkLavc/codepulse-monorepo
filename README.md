@@ -1,6 +1,12 @@
 # codepulse-monorepo
 High-Reliability Code Execution Engine - Monorepo with React Frontend, Node.js Backend, E2E Tests &amp; High QA Coverage
 
+[![Build Status](https://github.com/PkLavc/codepulse-monorepo/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
+[![CodeCov Coverage](https://codecov.io/gh/PkLavc/codepulse-monorepo/branch/main/graph/badge.svg)](https://codecov.io/gh/PkLavc/codepulse-monorepo)
+[![Frontend: React + TypeScript](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-blue)](./frontend)
+[![Backend: Node.js + Fastify](https://img.shields.io/badge/Backend-Node.js%20%2B%20Fastify-green)](./backend)
+[![E2E Tests: Playwright](https://img.shields.io/badge/E2E%20Tests-Playwright-purple)](./e2e)
+
 ## 🚀 Deployment & Integration
 
 ### Deploy Configuration
@@ -62,3 +68,55 @@ DEPLOYMENT:
 - GH_PAGES_DOMAIN
 - VERCEL_PROJECT_NAME
 ```
+
+## 🚀 GitHub Pages Deployment
+
+O frontend é automaticamente deployado para GitHub Pages via GitHub Actions.
+
+**URL**: https://pklavc.github.io/codepulse-monorepo
+
+### Configuração necessária:
+
+1. Habilite GitHub Pages nas configurações do repositório
+2. Selecione `gh-pages` como branch de deploy
+3. O workflow CI automaticamente faz deploy em cada push para main com sucesso
+
+## 📊 Quality Assurance & Testing
+
+### Cobertura de Testes
+
+- **Lint & Style**: ESLint + Prettier validação em cada push
+- **Unit Tests**: Jest para backend e frontend
+- **Integration Tests**: Testes de integração com Vitest
+- **E2E Tests**: Playwright para fluxos de usuário críticos
+- **Coverage Reports**: Codecov integrado
+
+### Teste de Resiliência
+
+- Timeout Backend: 5 segundos com status 408
+- Validação UI: Alerta visual quando timeout ocorre
+- Loop infinito protection: Detecta e interrompe execução
+
+## 🏗️ Arquitetura do Monorepo
+
+```
+codepulse-monorepo/
+├── frontend/          # React + TypeScript + Monaco Editor
+├── backend/           # Fastify + Zod Validation + Rate Limiting
+├── e2e/              # Playwright E2E Tests
+├── shared/           # Tipagens compartilhadas
+├── docs/             # Documentação
+├── .github/workflows/ # CI/CD Pipelines
+└── index.html        # Landing Page
+```
+
+## 🔐 Segurança
+
+- Rate limiting: 10 requisições por minuto por IP
+- Validação Zod: Schema validation em todo input
+- CORS: Configurado para domínios específicos
+- Environment variables: Gerenciados via Vercel
+
+## 📝 License
+
+MIT
