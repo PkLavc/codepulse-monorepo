@@ -1,0 +1,34 @@
+{
+  "name": "codepulse-monorepo",
+  "version": "1.0.0",
+  "description": "High-Reliability Code Execution Engine with React Frontend, Node.js Backend, and High QA Coverage",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "e2e",
+    "shared"
+  ],
+  "scripts": {
+    "install-all": "yarn install",
+    "dev": "yarn workspaces run dev",
+    "build": "yarn workspaces run build",
+    "test": "yarn workspaces run test",
+    "test:coverage": "yarn workspaces run test:coverage",
+    "lint": "yarn workspaces run lint",
+    "format": "yarn workspaces run format",
+    "e2e": "cd e2e && yarn test",
+    "e2e:headed": "cd e2e && yarn test:headed"
+  },
+  "keywords": [
+    "code-execution",
+    "online-ide",
+    "monorepo",
+    "react",
+    "nodejs",
+    "qa",
+    "testing"
+  ],
+  "author": "Patrick Araujo",
+  "license": "MIT"
+}
