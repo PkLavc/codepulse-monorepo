@@ -1,0 +1,32 @@
+{
+  "name": "@codepulse/backend",
+  "version": "1.0.0",
+  "description": "CodePulse Backend - API para execução de código segura",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "fastify": "^4.24.0",
+    "axios": "^1.6.0",
+    "zod": "^3.22.0",
+    "@fastify/rate-limit": "^8.0.0",
+    "@fastify/cors": "^8.4.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.2.0",
+    "vitest": "^0.34.0",
+    "@vitest/coverage-v8": "^0.34.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0"
+  }
+}
