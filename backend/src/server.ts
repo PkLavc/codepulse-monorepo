@@ -21,6 +21,9 @@ const ExecuteCodeSchema = z.object({
 
 type ExecuteCodeRequest = z.infer<typeof ExecuteCodeSchema>;
 
+// Timeout configuration
+const EXECUTION_TIMEOUT = 5000; // 5 seconds
+
 // Routes
 fastify.get('/health', async (request, reply) => {
   return { status: 'ok', timestamp: new Date().toISOString() };
@@ -30,31 +33,76 @@ fastify.post<{ Body: ExecuteCodeRequest }>('/execute', async (request, reply) =>
   try {
     const { code, language } = ExecuteCodeSchema.parse(request.body);
     
-    // Call Piston API (free code execution service)
-    const response = await axios.post('https://emkc.org/api/v2/piston/execute', {
-      language,
-      version: '*',
-      files: [
+    try {
+      // Call Piston API with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), EXECUTION_TIMEOUT);
+
+      const response = await axios.post(
+        'https://emkc.org/api/v2/piston/execute',
         {
-          name: `main.${getFileExtension(language)}`,
-          content: code
-        }
-      ]
-    });
-    
-    return {
-      success: true,
-      output: response.data.run.stdout,
-      error: response.data.run.stderr || null,
-      runtime: response.data.run.code
-    };
+          language,
+          version: '*',
+          files: [
+            {
+              name: `main.${getFileExtension(language)}`,
+              content: code
+            }
+          ]
+        },
+        { signal: controller.signal as any }
+      );
+
+      clearTimeout(timeoutId);
+
+      return {
+        success: true,
+        output: response.data.run.stdout,
+        error: response.data.run.stderr || null,
+        runtime: response.data.run.code
+      };
+    } catch (axiosError: any) {
+      // Handle timeout errors
+      if (axiosError.code === 'ECONNABORTED' || axiosError.message === 'Aborted') {
+        reply.status(408);
+        return {
+          success: false,
+          error: 'Execution Timeout',
+          details: 'The code took too long to execute. Maximum execution time is 5 seconds.',
+          code: 'TIMEOUT_ERROR'
+        };
+      }
+
+      // Handle other axios errors
+      if (axiosError.isAxiosError) {
+        reply.status(axiosError.response?.status || 502);
+        return {
+          success: false,
+          error: 'Execution Service Error',
+          details: axiosError.response?.statusText || 'Failed to execute code',
+          code: 'SERVICE_ERROR'
+        };
+      }
+
+      throw axiosError;
+    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       reply.status(400);
-      return { success: false, error: 'Invalid input', details: error.errors };
+      return { 
+        success: false, 
+        error: 'Invalid input', 
+        details: error.errors,
+        code: 'VALIDATION_ERROR'
+      };
     }
+
     reply.status(500);
-    return { success: false, error: 'Internal server error' };
+    return { 
+      success: false, 
+      error: 'Internal server error',
+      code: 'SERVER_ERROR'
+    };
   }
 });
 
