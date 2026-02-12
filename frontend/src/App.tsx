@@ -72,8 +72,7 @@ export function App() {
               </pre>
             )}
             {!isLoading && !error && !output && (
-              <p className='placeholder'>Clique em &apos;Executar&apos; para ver o resultado</p>            )}
-          </div>
+              <p className="placeholder">Clique em 'Executar' para ver o resultado</p>          </div>
         </div>
       </div>
     </div>
