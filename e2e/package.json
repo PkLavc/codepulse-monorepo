@@ -8,6 +8,7 @@
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
         "lint": "echo 'No linting for e2e'"
+        "e2e": "playwright test",
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0"
