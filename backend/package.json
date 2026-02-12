@@ -9,7 +9,7 @@
     "dev": "node --watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-   test": "vitest",
+   "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src"
