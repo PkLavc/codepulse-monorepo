@@ -1,0 +1,7 @@
+{
+  "buildCommand": "yarn install && yarn workspaces run build",
+  "installCommand": "yarn install --prefer-offline --frozen-lockfile",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
