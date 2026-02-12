@@ -2,6 +2,7 @@
   "name": "@codepulse/backend",
   "version": "1.0.0",
   "description": "CodePulse Backend - API para execução de código segura",
+    "license": "MIT",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
