@@ -32,3 +32,11 @@
     "prettier": "^3.0.0"
   }
 }
+
+
+  "jest": {
+        "testEnvironment": "jsdom",
+        "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
+  }
