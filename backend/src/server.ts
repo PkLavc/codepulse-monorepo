@@ -4,15 +4,6 @@ import rateLimit from '@fastify/rate-limit';
 import axios from 'axios';
 import { z } from 'zod';
 
-const fastify = Fastify({ logger: true });
-
-// Register plugins
-await fastify.register(cors, { origin: true });
-await fastify.register(rateLimit, {
-  max: 100,
-  timeWindow: '15 minutes'
-});
-
 // Request/Response types
 interface ExecuteRequest {
   code: string;
@@ -31,45 +22,58 @@ const executeSchema = z.object({
   language: z.string()
 });
 
-// Routes
-fastify.get('/health', async () => {
-  return { status: 'ok' };
-});
+// Initialize Fastify
+const fastify = Fastify({ logger: true });
 
-fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse }>('/execute', async (request) => {
-  try {
-    const validated = executeSchema.parse(request.body);
-    const startTime = Date.now();
-    
-    // Call execution service
-    const response = await axios.post('http://localhost:3001/execute', validated);
-    const executionTime = Date.now() - startTime;
-    
-    return {
-      output: response.data.output || '',
-      error: null,
-      executionTime
-    };
-  } catch (error) {
-    return {
-      output: '',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      executionTime: 0
-    };
-  }
-});
-
-// Start server
+// Main async function to register plugins and start server
 const start = async () => {
+  // Register plugins
+  await fastify.register(cors, { origin: true });
+  await fastify.register(rateLimit, {
+    max: 100,
+    timeWindow: '15 minutes'
+  });
+
+  // Routes
+  fastify.get('/health', async () => {
+    return { status: 'ok' };
+  });
+
+  fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse }>('/execute', async (request) => {
+    try {
+      const validated = executeSchema.parse(request.body);
+      const startTime = Date.now();
+      
+      // Call execution service
+      const response = await axios.post('http://localhost:3001/execute', validated);
+      const executionTime = Date.now() - startTime;
+      
+      return {
+        output: response.data.output || '',
+        error: null,
+        executionTime
+      };
+    } catch (error) {
+      return {
+        output: '',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        executionTime: 0
+      };
+    }
+  });
+
+  // Start server
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' });
-    console.log('Server listening on http://0.0.0.0:3000');
+    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+    await fastify.listen({ port, host: '0.0.0.0' });
+    console.log(`Server listening on http://0.0.0.0:${port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
   }
 };
 
+// Start the server
 start();
 
 export default fastify;
