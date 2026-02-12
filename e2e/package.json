@@ -9,7 +9,7 @@
     "test:debug": "playwright test --debug",
         "lint": "echo 'No linting for e2e'",
         "e2e": "playwright test",
-        "test:coverage": "yarn test",
+        "test:coverage": "yarn test"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0"
