@@ -1,23 +1,162 @@
+/* Professional Engineering Palette */
+:root {
+  --bg-dark: #0a0b10;
+  --bg-card: #161b22;
+  --accent: #e94560;
+  --text-main: #e6edf3;
+  --text-dim: #8b949e;
+  --success: #238636;
+  --error: #da3633;
+  --border: #30363d;
+}
+
 .app {
   min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   flex-direction: column;
 }
 
-.app header {
-  background-color: #16213e;
+/* Header - Modern & Minimalist */
+header {
+  background-color: var(--bg-card);
   padding: 1rem 2rem;
-  border-bottom: 1px solid #0f3460;
-}
-
-.app header h1 {
-  font-size: 1.5rem;
-  color: #e94560;
-}
-
-.app main {
-  flex: 1;
-  padding: 2rem;
+  border-bottom: 1px solid var(--border);
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+}
+
+header p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* Main Layout */
+.container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* Editor Section */
+.editor-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.execute-btn {
+  margin-top: 1rem;
+  padding: 12px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.2s;
+  font-size: 1rem;
+}
+
+.execute-btn:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+
+.execute-btn:disabled {
+  background-color: var(--border);
+  cursor: not-allowed;
+}
+
+/* Output & QA Section */
+.output-box {
+  background-color: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 500px;
+  overflow-y: auto;
+  font-family: 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+.qa-container h3 {
+  font-size: 1.1rem;
+  margin-top: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.status-pass { color: var(--success); }
+.status-fail { color: var(--error); }
+
+.test-list {
+  list-style: none;
+  padding: 0;
+}
+
+.test-item {
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border-radius: 4px;
+  background: #1c2128;
+  border-left: 4px solid var(--border);
+}
+
+.test-item.passed { border-left-color: var(--success); }
+.test-item.failed { border-left-color: var(--error); }
+
+.test-icon { margin-right: 10px; font-weight: bold; }
+
+.test-diff {
+  background: #000;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #ff7b72;
+  white-space: pre-wrap;
+}
+
+.output-text { color: #79c0ff; line-height: 1.4; }
+
+/* Footer */
+.footer {
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover { text-decoration: underline; }
+
+@media (max-width: 1024px) {
+  .container { grid-template-columns: 1fr; }
 }

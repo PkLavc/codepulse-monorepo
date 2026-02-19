@@ -7,11 +7,11 @@ vi.mock('axios');
 describe('CodePulse Backend - Resilience Tests', () => {
   describe('Timeout Handling', () => {
     it('should handle timeout from Piston API and return 408 status', async () => {
-      // Simular timeout na API Piston
-      const timeoutError = new Error('ECONNABORTED');
-      (timeoutError as Record<string, unknown>).code = 'ECONNABORTED';
-      (timeoutError as Record<string, unknown>).isAxiosError = true;
-      (timeoutError as Record<string, unknown>).response = undefined;
+      // Simulate timeout from Piston API
+      const timeoutError = new Error('ECONNABORTED') as Error & { code?: string; isAxiosError?: boolean; response?: unknown };
+      timeoutError.code = 'ECONNABORTED';
+      timeoutError.isAxiosError = true;
+      timeoutError.response = undefined;
 
       vi.mocked(axios.post).mockRejectedValueOnce(timeoutError);
 

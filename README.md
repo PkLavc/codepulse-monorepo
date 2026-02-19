@@ -1,4 +1,4 @@
-# CodePulse: High-Reliability Code Execution Engine
+# CodePulse: High-Performance Code Execution Engine
 
 **A Professional Monorepo with React Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
@@ -19,7 +19,7 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 - **CI/CD**: GitHub Actions with automated testing, linting, and deployments
 - **Deployment**: GitHub Pages (Frontend) + Vercel (Backend)
 
-### Engineering Excellence & National Interest
+### Engineering Excellence & Professional Showcase
 | Feature | Implementation | Industry Impact |
 | :--- | :--- | :--- |
 | **High QA Standards** | 85%+ Coverage & E2E Testing | Reduces software defects and maintenance costs |
@@ -260,7 +260,7 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ## Author
 
-**Patrick - Computer Engineer** To view other projects and portfolio details, visit:
+**Patrick Lavc - Computer Engineer** To view other projects and portfolio details, visit:
 [https://pklavc.github.io/projects.html](https://pklavc.github.io/projects.html)
 
 ---
