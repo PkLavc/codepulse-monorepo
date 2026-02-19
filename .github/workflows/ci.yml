@@ -53,7 +53,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run frontend linter
-        run: cd frontend && yarn lint
+        run: yarn workspace @codepulse/frontend lint
       - name: Run frontend tests
         run: cd frontend && yarn test
 
