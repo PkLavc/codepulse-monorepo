@@ -22,7 +22,7 @@ jobs:
     if: github.event_name == 'push'
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [24.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -46,7 +46,7 @@ jobs:
     if: github.event_name == 'push'
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [24.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -65,10 +65,10 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '24.x'
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
