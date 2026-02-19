@@ -15,6 +15,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "envFile": ".env.production"
-}
+  ,
+    }
