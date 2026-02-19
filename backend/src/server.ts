@@ -61,7 +61,6 @@ const start = async () => {
   fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse | QAExecuteResponse }>('/api/execute', async (request: FastifyRequest) => {
     try {
       const validated = executeSchema.parse(request.body);
-      const startTime = Date.now();
       
       // Initialize Judge0 service
       const judge0Service = new Judge0Service();
@@ -99,7 +98,6 @@ const start = async () => {
       
       return result;
     } catch (error) {
-      const executionTime = Date.now() - Date.now();
       
       if (error instanceof Error && error.message.includes('testCases')) {
         return {
