@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
+import logo from './assets/logo.png';
 import './App.css';
 
 interface ImportMetaEnv {
@@ -60,7 +61,10 @@ export function App() {
   return (
     <div className="app">
       <header>
-        <h1>{'⚡ CodePulse - Engineering-Focused IDE'}</h1>
+        <h1>
+          <img src={logo} alt="CodePulse Logo" className="header-logo" />
+          {'CodePulse - Engineering-Focused IDE'}
+        </h1>
         <p>{'High-performance code execution with automated QA pipeline'}</p>
       </header>
 

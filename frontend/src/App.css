@@ -33,6 +33,15 @@ header h1 {
   margin: 0;
   font-size: 1.4rem;
   letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 12px;
+  vertical-align: middle;
 }
 
 header p {
