@@ -16,8 +16,7 @@
         #navigation-content, #navigation-bar { position: fixed; top: 0; left: 0; width: 100%; z-index: 9999 !important; }
         #navigation-bar {
             background: transparent !important;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            box-shadow: none !important;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -89,6 +88,14 @@
             color: white;
             transition: all 0.3s ease;
             border: 1px solid rgba(255,255,255,0.3);
+        }
+        select {
+            background-color: #252526 !important;
+            color: white !important;
+        }
+        select option {
+            background-color: #252526 !important;
+            color: white !important;
         }
         select:hover, button:hover {
             background: rgba(255,255,255,0.3);
@@ -185,9 +192,9 @@
             border: 1px solid #f5c6cb;
         }
         .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #00d1ff !important;
+            border: 1px solid #00a8cc !important;
         }
         .loading {
             display: none;
@@ -198,14 +205,14 @@
             z-index: 10;
             text-align: center;
             padding: 20px;
-            color: #667eea;
+            color: #00d1ff;
             background: rgba(0,0,0,0.8);
             border-radius: 8px;
             backdrop-filter: blur(5px);
         }
         .spinner {
-            border: 3px solid rgba(102, 126, 234, 0.3);
-            border-top: 3px solid #667eea;
+            border: 3px solid rgba(0, 209, 255, 0.3);
+            border-top: 3px solid #00d1ff;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -244,7 +251,7 @@
         </div>
         <div id="navigation-bar">
             <div class="nav-brand">
-                <img src="frontend/src/assets/logo.png" alt="CodePulse Logo" style="height:90px; width:auto; vertical-align:middle;">
+                <img src="frontend/src/assets/logo.png" alt="CodePulse Logo" style="height:100px !important; width:auto; vertical-align:middle;">
             </div>
             <div class="menubar">
                 <span class="first-span"></span>
@@ -280,7 +287,7 @@
                     <img src="frontend/src/assets/return.gif" alt="Output" style="height:24px; width:auto; margin-right:8px;">
                     Output
                 </div>
-                <div id="output"><div class="alert alert-info">✅ Welcome to CodePulse IDE!
+                <div id="output"><div class="alert alert-info"><img src="frontend/src/assets/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
 
 Type your code and click "Run" or use Ctrl+Enter</div></div>
                 <div class="loading" id="loading">
@@ -347,7 +354,7 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
 
         // Mensagem inicial
         window.addEventListener('load', () => {
-            showOutput('✅ Welcome to CodePulse IDE!\n\nType your code and click "Run" or use Ctrl+Enter', 'info');
+            showOutput('<img src="frontend/src/assets/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!\n\nType your code and click "Run" or use Ctrl+Enter', 'info');
         });
     </script>
         <script src="https://pklavc.github.io/js/jquery.min.js"></script>
