@@ -22,7 +22,7 @@ interface QAExecuteResponse {
 }
 
 export function App() {
-  const [code, setCode] = useState('// Write your code here\nconsole.log("CodePulse Engine Active");');
+  const [code, setCode] = useState('// Welcome to CodePulse\nconsole.log("System Ready");');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [qaResults, setQaResults] = useState<QAExecuteResponse | null>(null);
