@@ -1,20 +1,15 @@
 name: CI/CD Pipeline
 
+on:
+  workflow_dispatch:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
 permissions:
   contents: write
   deployments: write
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - backend/**
-      - frontend/**
-  pull_request:
-    branches: [main]
-    paths:
-      - backend/**
-      - frontend/**
 
 jobs:
   backend-lint-and-test:
