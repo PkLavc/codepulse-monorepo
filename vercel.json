@@ -1,7 +1,20 @@
 {
-  "buildCommand": "yarn install && yarn workspaces run build",
+  "buildCommand": "cd backend && yarn install && yarn build",
   "installCommand": "yarn install --prefer-offline --frozen-lockfile",
+  "outputDirectory": "backend/dist",
+  "functions": {
+    "backend/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/dist/server.js"
+    }
+  ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "envFile": ".env.production"
 }
