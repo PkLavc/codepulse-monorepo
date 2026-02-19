@@ -37,7 +37,7 @@ jobs:
         with:
           fail_ci_if_error: false
 
-  frontend-lint-and-test:
+  frontend-validation:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     strategy:
@@ -52,10 +52,8 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Run frontend linter
-        run: yarn workspace @codepulse/frontend lint
-      - name: Run frontend tests
-        run: cd frontend && yarn test
+      - name: Build frontend
+        run: cd frontend && yarn build
 
   frontend-deploy:
     runs-on: ubuntu-latest

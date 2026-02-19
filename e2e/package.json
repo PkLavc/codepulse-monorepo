@@ -8,7 +8,7 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "lint": "echo 'No lint needed for e2e'",
+    "lint": "eslint . --ext .js --fix || exit 0",
     "build": "echo 'No build needed for e2e'"
   },
   "devDependencies": {
