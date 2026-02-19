@@ -184,7 +184,7 @@
     <div class="container">
         <div class="header">
             <h1>
-                <i class="fas fa-code"></i>
+                <img src="frontend/src/assets/logo.png" alt="CodePulse Logo" style="height:28px; width:auto; margin-right:10px;" />
                 CodePulse IDE
             </h1>
             <div class="header-controls">
@@ -194,25 +194,25 @@
                     <option value="java">Java</option>
                 </select>
                 <button class="execute-btn" onclick="executeCode()">
-                    <i class="fas fa-play"></i> Executar
+                    <i class="fas fa-play"></i> Run
                 </button>
             </div>
         </div>
         <div class="content">
             <div class="editor-section">
                 <div class="section-title">
-                    <i class="fas fa-edit"></i> Editor de Código
+                    <i class="fas fa-edit"></i> Code Editor
                 </div>
-                <textarea id="code" placeholder="Escreva seu código aqui...">print('Olá CodePulse!')\nprint('Teste de execução')</textarea>
+                <textarea id="code" placeholder="Write your code here...">print('Helo CodePulse!')</textarea>
             </div>
             <div class="output-section">
                 <div class="section-title">
-                    <i class="fas fa-terminal"></i> Saída (Output)
+                    <i class="fas fa-terminal"></i> Output
                 </div>
                 <div id="output"></div>
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Executando código...</p>
+                    <p>Executing code...</p>
                 </div>
             </div>
         </div>
@@ -228,7 +228,7 @@
             const loading = document.getElementById('loading');
 
             if (!code.trim()) {
-                showOutput('Por favor, escreva algum código!', 'info');
+                showOutput('Please enter some code!', 'info');
                 return;
             }
 
@@ -250,13 +250,13 @@
                 if (response.ok) {
                     showOutput(data.output || 'Código executado com sucesso!', 'success');
                 } else if (response.status === 408) {
-                    showOutput('⏱️ Timeout: O código levou muito tempo para executar (> 5s)', 'danger');
+                    showOutput('⏱️ Timeout: The code took too long to execute (> 5s)', 'danger');
                 } else {
                     showOutput(data.error || 'Erro na execução', 'danger');
                 }
             } catch (error) {
                 loading.style.display = 'none';
-                showOutput(`Erro de conexão: ${error.message}\nCertifique-se de que o backend está acessível em ${BACKEND_URL}/api/execute`, 'danger');
+                showOutput(`Connection error: ${error.message}\nEnsure the backend is accessible at ${BACKEND_URL}/api/execute`, 'danger');
             }
         }
 
@@ -265,7 +265,7 @@
             output.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
         }
 
-        // Permite executar com Ctrl+Enter
+        // Allow run with Ctrl+Enter
         document.getElementById('code').addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
                 executeCode();
@@ -274,7 +274,7 @@
 
         // Mensagem inicial
         window.addEventListener('load', () => {
-            showOutput('✅ Bem-vindo ao CodePulse IDE!\n\nDigite seu código e clique em "Executar" ou use Ctrl+Enter', 'info');
+            showOutput('✅ Welcome to CodePulse IDE!\n\nType your code and click "Run" or use Ctrl+Enter', 'info');
         });
     </script>
 </body>

@@ -20,7 +20,7 @@ export const Output: React.FC<OutputProps> = ({
 
   useEffect(() => {
     if (isLoading) {
-      setDisplayText('Executando código...');
+      setDisplayText('Executing code...');
     } else if (output) {
       setDisplayText(output);
     } else if (error) {
@@ -31,7 +31,7 @@ export const Output: React.FC<OutputProps> = ({
   return (
     <div className="output-container">
       <div className="output-header">
-        <h3>📋 Console de Saída</h3>
+        <h3>📋 Output Console</h3>
         {hasTimeout && (
           <span className="timeout-badge">
             ⏱️ Timeout
@@ -43,7 +43,7 @@ export const Output: React.FC<OutputProps> = ({
         {isLoading && (
           <div className="loading-spinner">
             <div className="spinner"></div>
-            <p>Processando execução...</p>
+            <p>Processing execution...</p>
           </div>
         )}
 
@@ -51,9 +51,9 @@ export const Output: React.FC<OutputProps> = ({
           <div className="timeout-alert">
             <div className="timeout-icon">⏱️</div>
             <div className="timeout-content">
-              <h4>Tempo de Execução Excedido</h4>
-              <p>O código levou mais de 5 segundos para executar.</p>
-              <p className="details">Causas comuns: loops infinitos, operações muito pesadas.</p>
+              <h4>Execution Time Exceeded</h4>
+              <p>The code took more than 5 seconds to execute.</p>
+              <p className="details">Common causes: infinite loops or heavy operations.</p>
             </div>
           </div>
         )}
@@ -62,7 +62,7 @@ export const Output: React.FC<OutputProps> = ({
           <div className="error-alert syntax-error">
             <div className="error-icon">⚠️</div>
             <div className="error-content">
-              <h4>Erro de Sintáxe</h4>
+              <h4>Syntax Error</h4>
               <p className="error-message">{error}</p>
             </div>
           </div>
@@ -72,7 +72,7 @@ export const Output: React.FC<OutputProps> = ({
           <div className="error-alert">
             <div className="error-icon">❌</div>
             <div className="error-content">
-              <h4>Erro na Execução</h4>
+              <h4>Execution Error</h4>
               <p className="error-message">{error}</p>
             </div>
           </div>
@@ -80,7 +80,7 @@ export const Output: React.FC<OutputProps> = ({
 
         {!isLoading && !error && !output && (
           <div className="empty-state">
-            <p>🄚 A saída do seu código aparecerá aqui...</p>
+            <p>🄚 Your code output will appear here...</p>
           </div>
         )}
 
@@ -90,7 +90,7 @@ export const Output: React.FC<OutputProps> = ({
       </div>
 
       <div className="output-footer">
-        <small>Status: {isLoading ? '⏳ Executando' : hasTimeout ? '⛔ Timeout' : error ? '❌ Erro' : '✅ Concluído'}</small>
+        <small>Status: {isLoading ? '⏳ Running' : hasTimeout ? '⛔ Timeout' : error ? '❌ Error' : '✅ Completed'}</small>
       </div>
     </div>
   );

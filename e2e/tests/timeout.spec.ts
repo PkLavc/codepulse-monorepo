@@ -15,7 +15,7 @@ test.describe('CodePulse Timeout Resilience', () => {
     await editorFrame.locator('textarea').fill('while True:\n    pass');
 
     // Execute code
-    const executeButton = page.locator('button:has-text("Executar")');
+    const executeButton = page.locator('button:has-text("Run")');
     await executeButton.click();
 
     // Wait for timeout alert (should appear within 6 seconds for 5s backend timeout)
@@ -23,7 +23,7 @@ test.describe('CodePulse Timeout Resilience', () => {
     await expect(timeoutAlert).toBeVisible({ timeout: 7000 });
     
     // Verify alert content
-    await expect(timeoutAlert).toContainText('Tempo limite');
+    await expect(timeoutAlert).toContainText('Timeout');
   });
 
   test('should display 408 status on timeout', async ({ page }) => {
@@ -36,7 +36,7 @@ test.describe('CodePulse Timeout Resilience', () => {
     await editorFrame.locator('textarea').fill('while True:\n    pass');
 
     // Execute code
-    const executeButton = page.locator('button:has-text("Executar")');
+    const executeButton = page.locator('button:has-text("Run")');
     await executeButton.click();
 
     // Wait for output container
@@ -58,7 +58,7 @@ test.describe('CodePulse Timeout Resilience', () => {
     await editorFrame.locator('textarea').fill('while True:\n    pass');
 
     // Execute code
-    const executeButton = page.locator('button:has-text("Executar")');
+    const executeButton = page.locator('button:has-text("Run")');
     await executeButton.click();
 
     // Verify button is still clickable during waiting
