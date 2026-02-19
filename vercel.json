@@ -2,5 +2,9 @@
   "github": {
     "silent": true
   },
+  "builds": [
+    { "src": "backend/package.json", "use": "@vercel/node" },
+    { "src": "frontend/package.json", "use": "@vercel/static-build" }
+  ],
   "ignoreCommand": "bash -lc 'if [ \"$VERCEL_GIT_COMMIT_REF\" = \"gh-pages\" ]; then exit 0; fi; if [ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]; then exit 0; fi; exit 1'"
 }

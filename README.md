@@ -35,7 +35,7 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 - Automatic deployment via GitHub Actions
 - Serverless Functions with Node.js
 - Environment variables managed in Vercel dashboard
-- API URL: `https://codepulse-api.vercel.app`
+- API URL: `https://codepulse-monorepo-backend.vercel.app`
 
 #### Frontend (GitHub Pages)
 - Automatic build via GitHub Actions
@@ -235,7 +235,7 @@ EXECUTION_TIMEOUT=5000
 
 ### Frontend (.env.production)
 ```
-VITE_API_URL=https://codepulse-api.vercel.app
+VITE_API_URL=https://codepulse-monorepo-backend.vercel.app
 VITE_APP_NAME=CodePulse
 ```
 

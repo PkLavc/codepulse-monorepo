@@ -53,7 +53,8 @@ const start = async () => {
       'http://localhost:5173',
       'http://localhost:3000',
       'https://codepulse-api.vercel.app',
-      'https://codepulse-backend.vercel.app'
+      'https://codepulse-backend.vercel.app',
+      'https://codepulse-monorepo-backend.vercel.app'
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true
