@@ -13,15 +13,17 @@
         /* Consolidated CSS: overrides, layout and base styles */
         /* Particles and stacking */
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
-        #navigation-content, #navigation-bar { position: fixed; top: 0; left: 0; width: 100%; z-index: 9999 !important; }
+        #navigation-content, #navigation-bar { position: fixed; top: 0; left: 0; width: 100%; z-index: 999999 !important; }
         #navigation-bar {
-            background: transparent !important;
+            background: none !important;
+            background-color: transparent !important;
+            backdrop-filter: none !important;
             box-shadow: none !important;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 15px 20px;
-            height: 80px;
+            height: 140px;
         }
 
         /* Header should be absolute and not affect document flow (particles background) */
@@ -45,6 +47,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             padding: 20px;
+            overflow: visible;
         }
         .container {
             max-width: 1400px;
@@ -55,8 +58,11 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: auto;
-            margin-top: 120px; /* Increased margin for larger logo */
+            height: calc(100vh - 160px) !important;
+            margin-top: 130px !important;
+            z-index: 10 !important;
+            background: rgba(30, 30, 30, 0.9) !important;
+            position: relative;
         }
         .header {
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
@@ -97,6 +103,11 @@
             background-color: #252526 !important;
             color: white !important;
         }
+        select#language, select#language option {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+            border: 1px solid #333 !important;
+        }
         select:hover, button:hover {
             background: rgba(255,255,255,0.3);
             border-color: rgba(255,255,255,0.5);
@@ -117,6 +128,8 @@
             display: flex;
             flex: 1;
             overflow: hidden;
+            z-index: 100;
+            position: relative;
         }
         .editor-section, .output-section {
             flex: 1;
@@ -193,8 +206,8 @@
         }
         .alert-info {
             background: rgba(102, 126, 234, 0.1) !important;
-            color: #00d1ff !important;
-            border: 1px solid #00a8cc !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
         }
         .loading {
             display: none;
@@ -251,7 +264,7 @@
         </div>
         <div id="navigation-bar">
             <div class="nav-brand">
-                <img src="frontend/src/assets/logo.png" alt="CodePulse Logo" style="height:100px !important; width:auto; vertical-align:middle;">
+                <img src="frontend/src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
             </div>
             <div class="menubar">
                 <span class="first-span"></span>
@@ -376,6 +389,15 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                         $('#navigation-content').removeClass('active');
                     }
                 });
+            });
+            
+            // Fix cursor bug
+            document.addEventListener('mousemove', (e) => {
+                const cursor = document.querySelector('.cursor');
+                if(cursor) {
+                    cursor.style.left = (e.clientX - 20) + 'px';
+                    cursor.style.top = (e.clientY - 20) + 'px';
+                }
             });
         </script>
 </body>
