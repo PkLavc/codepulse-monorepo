@@ -1,4 +1,4 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
@@ -20,15 +20,14 @@ interface ExecuteResponse {
   executionTime: number;
 }
 
+// Corrected QAExecuteResponse interface
 interface QAExecuteResponse {
-  passed: boolean;
-  tests: Array<{
-    input: string;
-    expected: string;
+  success: boolean;
+  results: Array<{
+    testId: number;
+    status: 'passed' | 'failed';
     actual: string;
-    status: 'passed' | 'failed' | 'error';
   }>;
-  executionTime: number;
 }
 
 // Validation schema
@@ -65,8 +64,8 @@ const start = async () => {
       // Initialize Judge0 service
       const judge0Service = new Judge0Service();
       
-      let result;
-      
+      // let executionTime = 0; // Removed: executionTime will be defined only for ExecuteResponse
+
       if (validated.testCases && validated.testCases.length > 0) {
         // Execute with QA logic
         const qaResult = await judge0Service.executeWithQA(
@@ -75,11 +74,13 @@ const start = async () => {
           validated.testCases
         );
         
-        
-        result = {
-          passed: qaResult.passed,
-          tests: qaResult.tests,
-          executionTime
+        return { // Directly return QAExecuteResponse
+          success: qaResult.passed,
+          results: qaResult.tests.map((test, index) => ({
+            testId: index + 1,
+            status: test.status === 'passed' ? 'passed' : 'failed',
+            actual: test.actual
+          }))
         };
       } else {
         // Execute single code without test cases
@@ -88,25 +89,26 @@ const start = async () => {
           validated.language
         );
         
-        
-        result = {
+        // For single code execution, we can simulate executionTime or get it from Judge0 later if available.
+        // For now, let's keep it 0 or a placeholder.
+        const executionTime = 100; // Placeholder for single execution time
+
+        return { // Directly return ExecuteResponse
           output: codeResult.output,
           error: codeResult.error,
           executionTime
         };
       }
       
-      return result;
     } catch (error) {
       
       if (error instanceof Error && error.message.includes('testCases')) {
-        return {
-          passed: false,
-          tests: [],
-          executionTime: 0
+        return { // Return QAExecuteResponse for testCases error
+          success: false,
+          results: [],
         };
       } else {
-        return {
+        return { // Return ExecuteResponse for other errors
           output: '',
           error: error instanceof Error ? error.message : 'Unknown error',
           executionTime: 0
