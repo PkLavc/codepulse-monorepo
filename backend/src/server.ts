@@ -1,7 +1,6 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
-import axios from 'axios';
 import { z } from 'zod';
 import { Judge0Service } from './services/judge0.service.js';
 
@@ -59,7 +58,7 @@ const start = async () => {
     return { status: 'ok' };
   });
 
-  fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse | QAExecuteResponse }>('/api/execute', async (request: any) => {
+  fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse | QAExecuteResponse }>('/api/execute', async (request: FastifyRequest) => {
     try {
       const validated = executeSchema.parse(request.body);
       const startTime = Date.now();
@@ -77,7 +76,6 @@ const start = async () => {
           validated.testCases
         );
         
-        const executionTime = Date.now() - startTime;
         
         result = {
           passed: qaResult.passed,
@@ -91,7 +89,6 @@ const start = async () => {
           validated.language
         );
         
-        const executionTime = Date.now() - startTime;
         
         result = {
           output: codeResult.output,
