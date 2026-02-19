@@ -120,10 +120,13 @@ export class Judge0Service {
       });
 
       const data = response.data;
+      // Support both shapes: { status: { description: 'Finished' } } and { status: 'Finished' }
+      const statusField = data.status;
+      const statusStr = typeof statusField === 'string' ? statusField : (statusField?.description ?? 'Unknown');
       return {
         stdout: data.stdout || '',
         stderr: data.stderr || '',
-        status: data.status?.description || 'Unknown'
+        status: statusStr
       };
     } catch (error) {
       throw new Error(`Failed to get submission result: ${error instanceof Error ? error.message : 'Unknown error'}`);

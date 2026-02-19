@@ -1,3 +1,7 @@
+// Ensure required env exists before importing modules that read them
+process.env.JUDGE0_API_HOST = process.env.JUDGE0_API_HOST ?? 'test-host';
+process.env.JUDGE0_API_KEY = process.env.JUDGE0_API_KEY ?? 'test-key';
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Judge0Service } from './judge0.service';
 import axios from 'axios';

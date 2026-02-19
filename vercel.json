@@ -1,19 +1,6 @@
 {
-  "buildCommand": "cd backend && yarn install && yarn build",
-  "installCommand": "yarn install --prefer-offline --frozen-lockfile",
-  "outputDirectory": "backend/dist",
-  "functions": {
-    "backend/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
+  "github": {
+    "silent": true
   },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/dist/server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "ignoreCommand": "bash -lc 'if [ \"$VERCEL_GIT_COMMIT_REF\" = \"gh-pages\" ]; then exit 0; fi; if [ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]; then exit 0; fi; exit 1'"
 }
