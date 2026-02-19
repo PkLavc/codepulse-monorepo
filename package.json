@@ -30,7 +30,7 @@
   "author": "Patrick Araujo",
   "license": "MIT",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0"
   },
   "dependencies": {
     "axios": "^1.13.5",
