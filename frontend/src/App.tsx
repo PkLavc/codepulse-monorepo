@@ -59,7 +59,8 @@ export function App() {
             disabled={isLoading}
             className="execute-btn"
           >
-            {isLoading ? "⏳ Executando..." : "▶️ Executar"}          </button>
+            {isLoading ? "⏳ Executando..." : "▶️ Executar"}
+          </button>
         </div>
         <div className="output-section">
           <label>Resultado:</label>
@@ -72,7 +73,10 @@ export function App() {
               </pre>
             )}
             {!isLoading && !error && !output && (
-              <p className="placeholder">Clique em 'Executar' para ver o resultado</p>        </div>
+              <p className="placeholder">Clique em 'Executar' para ver o resultado</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

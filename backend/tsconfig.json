@@ -12,7 +12,10 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "removeComments": true
+    "removeComments": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]

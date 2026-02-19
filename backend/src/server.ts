@@ -3,11 +3,16 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import axios from 'axios';
 import { z } from 'zod';
+import { Judge0Service } from './services/judge0.service.js';
 
 // Request/Response types
 interface ExecuteRequest {
   code: string;
   language: string;
+  testCases?: Array<{
+    input: string;
+    expected: string;
+  }>;
 }
 
 interface ExecuteResponse {
@@ -16,10 +21,25 @@ interface ExecuteResponse {
   executionTime: number;
 }
 
+interface QAExecuteResponse {
+  passed: boolean;
+  tests: Array<{
+    input: string;
+    expected: string;
+    actual: string;
+    status: 'passed' | 'failed' | 'error';
+  }>;
+  executionTime: number;
+}
+
 // Validation schema
 const executeSchema = z.object({
   code: z.string(),
-  language: z.string()
+  language: z.string(),
+  testCases: z.array(z.object({
+    input: z.string(),
+    expected: z.string()
+  })).optional()
 });
 
 // Initialize Fastify
@@ -39,26 +59,64 @@ const start = async () => {
     return { status: 'ok' };
   });
 
-  fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse }>('/execute', async (request) => {
+  fastify.post<{ Body: ExecuteRequest; Reply: ExecuteResponse | QAExecuteResponse }>('/api/execute', async (request: any) => {
     try {
       const validated = executeSchema.parse(request.body);
       const startTime = Date.now();
       
-      // Call execution service
-      const response = await axios.post('http://localhost:3001/execute', validated);
-      const executionTime = Date.now() - startTime;
+      // Initialize Judge0 service
+      const judge0Service = new Judge0Service();
       
-      return {
-        output: response.data.output || '',
-        error: null,
-        executionTime
-      };
+      let result;
+      
+      if (validated.testCases && validated.testCases.length > 0) {
+        // Execute with QA logic
+        const qaResult = await judge0Service.executeWithQA(
+          validated.code,
+          validated.language,
+          validated.testCases
+        );
+        
+        const executionTime = Date.now() - startTime;
+        
+        result = {
+          passed: qaResult.passed,
+          tests: qaResult.tests,
+          executionTime
+        };
+      } else {
+        // Execute single code without test cases
+        const codeResult = await judge0Service.executeCode(
+          validated.code,
+          validated.language
+        );
+        
+        const executionTime = Date.now() - startTime;
+        
+        result = {
+          output: codeResult.output,
+          error: codeResult.error,
+          executionTime
+        };
+      }
+      
+      return result;
     } catch (error) {
-      return {
-        output: '',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        executionTime: 0
-      };
+      const executionTime = Date.now() - Date.now();
+      
+      if (error instanceof Error && error.message.includes('testCases')) {
+        return {
+          passed: false,
+          tests: [],
+          executionTime: 0
+        };
+      } else {
+        return {
+          output: '',
+          error: error instanceof Error ? error.message : 'Unknown error',
+          executionTime: 0
+        };
+      }
     }
   });
 
