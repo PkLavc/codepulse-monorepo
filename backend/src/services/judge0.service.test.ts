@@ -172,8 +172,11 @@ describe('Judge0Service', () => {
         { stdout: '0', stderr: '', status: 'Finished' }
       ];
 
-      vi.mocked(axios.post).mockResolvedValueOnce(mockResponse);
-      vi.mocked(axios.get).mockResolvedValue({ data: mockResults[0] });
+      vi.mocked(axios.post).mockResolvedValue(mockResponse);
+      vi.mocked(axios.get)
+        .mockResolvedValueOnce({ data: mockResults[0] })
+        .mockResolvedValueOnce({ data: mockResults[1] })
+        .mockResolvedValueOnce({ data: mockResults[2] });
 
       const testCases = [
         { input: '10 32', expected: '42' },
