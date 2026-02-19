@@ -219,7 +219,7 @@
     </div>
 
     <script>
-        const BACKEND_URL = 'https://codepulse-backend.vercel.app';
+        const BACKEND_URL = 'https://codepulse-api.vercel.app';
 
         async function executeCode() {
             const code = document.getElementById('code').value;
@@ -236,7 +236,7 @@
             output.innerHTML = '';
 
             try {
-                const response = await fetch(`${BACKEND_URL}/execute`, {
+                const response = await fetch(`${BACKEND_URL}/api/execute`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -256,7 +256,7 @@
                 }
             } catch (error) {
                 loading.style.display = 'none';
-                showOutput(`Erro de conexão: ${error.message}\nCertifique-se de que o backend está em execução em ${BACKEND_URL}`, 'danger');
+                showOutput(`Erro de conexão: ${error.message}\nCertifique-se de que o backend está acessível em ${BACKEND_URL}/api/execute`, 'danger');
             }
         }
 

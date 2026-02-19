@@ -46,7 +46,18 @@ const fastify = Fastify({ logger: true });
 // Main async function to register plugins and start server
 const start = async () => {
   // Register plugins
-  await fastify.register(cors, { origin: true });
+  await fastify.register(cors, {
+    origin: [
+      'https://pklavc.github.io',
+      'https://pklavc.github.io/',
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://codepulse-api.vercel.app',
+      'https://codepulse-backend.vercel.app'
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true
+  });
   await fastify.register(rateLimit, {
     max: 100,
     timeWindow: '15 minutes'
