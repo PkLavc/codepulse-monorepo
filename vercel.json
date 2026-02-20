@@ -6,5 +6,16 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/src/server.ts" },
     { "src": "/health", "dest": "backend/src/server.ts" }
-  ]
+  ],
+  "functions": {
+    "backend/src/server.ts": {
+      "runtime": "@vercel/node@latest"
+    }
+  },
+  "regions": ["sfo1"],
+  "github": {
+    "enabled": true,
+    "deploymentEnabled": true,
+    "autoAssignCustomDomains": true
+  }
 }
