@@ -132,15 +132,24 @@ const start = async () => {
   // Start server
   try {
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-    await fastify.listen({ port, host: '0.0.0.0' });
-    console.log(`Server listening on http://0.0.0.0:${port}`);
+    
+    // For Vercel, we don't call listen() directly
+    if (process.env.VERCEL) {
+      console.log('Running on Vercel environment');
+    } else {
+      await fastify.listen({ port, host: '0.0.0.0' });
+      console.log(`Server listening on http://0.0.0.0:${port}`);
+    }
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
   }
 };
 
-// Start the server
-start();
+// Start the server (only for local development)
+if (!process.env.VERCEL) {
+  start();
+}
 
+// Export the fastify instance for Vercel
 export default fastify;
