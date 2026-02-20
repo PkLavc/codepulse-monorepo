@@ -11,7 +11,8 @@
   "scripts": {
     "install-all": "yarn install",
     "dev": "yarn workspaces run dev",
-    "build": "mkdir -p public && touch public/index.html",
+    "build": "yarn build:frontend",
+    "build:frontend": "yarn workspace @codepulse/frontend build",
     "build:backend": "yarn workspace @codepulse/backend build",
     "test": "yarn workspaces run test",
     "test:coverage": "yarn workspaces run test:coverage --exclude e2e",
