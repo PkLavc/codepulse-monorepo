@@ -38,14 +38,11 @@ interface QAServiceResponse {
 export class Judge0Service {
   private readonly baseURL = 'https://judge0-ce.p.rapidapi.com';
   private readonly apiKey = process.env.JUDGE0_API_KEY;
-  private readonly rapidAPIHost = process.env.JUDGE0_API_HOST; // Corrected line
+  private readonly rapidAPIHost = 'judge0-ce.p.rapidapi.com';
 
   constructor() {
     if (!this.apiKey) {
       throw new Error('JUDGE0_API_KEY environment variable is required');
-    }
-    if (!this.rapidAPIHost) { // Added condition
-      throw new Error('JUDGE0_API_HOST environment variable is required');
     }
   }
 
