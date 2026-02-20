@@ -1,11 +1,11 @@
 {
-  "github": {
-    "silent": true
-  },
+  "version": 2,
+  "name": "codepulse-api",
   "builds": [
     {
       "src": "backend/src/server.ts",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["backend/package.json"] }
     }
   ],
   "routes": [
@@ -17,6 +17,5 @@
       "src": "/health",
       "dest": "backend/src/server.ts"
     }
-  ],
-  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"gh-pages\" ]; then exit 0; else exit 1; fi"
+  ]
 }
