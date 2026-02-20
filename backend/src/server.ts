@@ -4,30 +4,6 @@ import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
 import { Judge0Service } from './services/judge0.service.js';
 
-interface ExecuteRequest {
-  code: string;
-  language: string;
-  testCases?: Array<{
-    input: string;
-    expected: string;
-  }>;
-}
-
-interface ExecuteResponse {
-  output: string;
-  error: string | null;
-  executionTime: number;
-}
-
-interface QAExecuteResponse {
-  success: boolean;
-  results: Array<{
-    testId: number;
-    status: 'passed' | 'failed';
-    actual: string;
-  }>;
-}
-
 const executeSchema = z.object({
   code: z.string(),
   language: z.string(),
@@ -53,7 +29,7 @@ async function setupApp() {
 
   fastify.get('/health', async () => ({ status: 'ok' }));
   
-  fastify.post('/api/execute', async (request: FastifyRequest, reply: any) => {
+  fastify.post('/api/execute', async (request: FastifyRequest) => {
     try {
       const validated = executeSchema.parse(request.body);
       
