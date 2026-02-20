@@ -1,21 +1,10 @@
 {
   "version": 2,
-  "name": "codepulse-api",
   "builds": [
-    {
-      "src": "backend/src/server.ts",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["backend/package.json"] }
-    }
+    { "src": "backend/src/server.ts", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/src/server.ts"
-    },
-    {
-      "src": "/health",
-      "dest": "backend/src/server.ts"
-    }
+    { "src": "/api/(.*)", "dest": "backend/src/server.ts" },
+    { "src": "/health", "dest": "backend/src/server.ts" }
   ]
 }

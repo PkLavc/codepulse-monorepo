@@ -74,19 +74,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./frontend/dist
-
-  vercel-deploy-backend:
-    runs-on: ubuntu-latest
-    needs: [backend-lint-and-test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Deploy only on push to main branch
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy Backend to Vercel
-        uses: vercel/action@v2
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
-        env:
-          NODE_ENV: production
