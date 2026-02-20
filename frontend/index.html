@@ -187,6 +187,14 @@
             resize: none;
             outline: none;
             overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .output-pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            font-family: 'Courier New', monospace;
         }
         .alert {
             padding: 12px 15px;
@@ -341,9 +349,15 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 loading.style.display = 'none';
 
                 if (response.ok) {
-                    showOutput(data.output || 'Code executed successfully!', 'success');
+                    if (data.output && data.output.trim()) {
+                        showOutput(data.output, 'success');
+                    } else if (data.error) {
+                        showOutput('Error: ' + data.error, 'danger');
+                    } else {
+                        showOutput('(no output)', 'info');
+                    }
                 } else if (response.status === 408) {
-                    showOutput('⏱️ Timeout: The code took too long to execute (> 5s)', 'danger');
+                    showOutput('Timeout: The code took too long to execute (> 5s)', 'danger');
                 } else {
                     showOutput(data.error || 'Execution error', 'danger');
                 }
@@ -355,7 +369,11 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
 
         function showOutput(message, type) {
             const output = document.getElementById('output');
-            output.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            const escapedMessage = message
+                .replace(/&/g, '&')
+                .replace(/</g, '<')
+                .replace(/>/g, '>');
+            output.innerHTML = `<div class="alert alert-${type}"><pre class="output-pre">${escapedMessage}</pre></div>`;
         }
 
         // Allow run with Ctrl+Enter
