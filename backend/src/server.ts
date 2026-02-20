@@ -22,7 +22,7 @@ async function setupApp() {
   if (isPrepared) return;
   
   await fastify.register(cors, {
-    origin: ['https://pklavc.github.io', 'https://pklavc.github.io/codepulse-monorepo/', 'http://localhost:5173'],
+    origin: ['https://pklavc.github.io', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true
   });
