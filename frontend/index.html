@@ -369,11 +369,14 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
 
         function showOutput(message, type) {
             const output = document.getElementById('output');
-            const escapedMessage = message
-                .replace(/&/g, '&')
-                .replace(/</g, '<')
-                .replace(/>/g, '>');
-            output.innerHTML = `<div class="alert alert-${type}"><pre class="output-pre">${escapedMessage}</pre></div>`;
+            const pre = document.createElement('pre');
+            pre.className = 'output-pre';
+            pre.textContent = message;
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-' + type;
+            alert.appendChild(pre);
+            output.innerHTML = '';
+            output.appendChild(alert);
         }
 
         // Allow run with Ctrl+Enter
