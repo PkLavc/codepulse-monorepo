@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
 import { Judge0Service } from './services/judge0.service.js';
+import { IncomingMessage, ServerResponse } from 'http';
 
 const executeSchema = z.object({
   code: z.string(),
@@ -15,7 +16,12 @@ const executeSchema = z.object({
 
 const fastify = Fastify({ logger: true });
 
+// Variável para garantir que o setup só rode uma vez
+let isPrepared = false;
+
 async function setupApp() {
+  if (isPrepared) return;
+  
   await fastify.register(cors, {
     origin: ['https://pklavc.github.io', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'OPTIONS'],
@@ -32,7 +38,6 @@ async function setupApp() {
   fastify.post('/api/execute', async (request: FastifyRequest) => {
     try {
       const validated = executeSchema.parse(request.body);
-      
       const judge0Service = new Judge0Service();
       
       if (validated.testCases && validated.testCases.length > 0) {
@@ -64,14 +69,9 @@ async function setupApp() {
           executionTime
         };
       }
-      
     } catch (error) {
-      
       if (error instanceof Error && error.message.includes('testCases')) {
-        return {
-          success: false,
-          results: [],
-        };
+        return { success: false, results: [] };
       } else {
         return {
           output: '',
@@ -81,17 +81,25 @@ async function setupApp() {
       }
     }
   });
+
+  isPrepared = true;
 }
 
-
+// Inicialização para ambiente Local
 if (!process.env.VERCEL) {
   setupApp().then(() => {
     const port = Number(process.env.PORT) || 3000;
-    fastify.listen({ port, host: '0.0.0.0' });
+    fastify.listen({ port, host: '0.0.0.0' }, (err) => {
+      if (err) {
+        console.error(err);
+        process.exit(1);
+      }
+    });
   });
 }
 
-export default async (req: any, res: any) => {
+// Exportação corrigida para Vercel (Sem 'any' e com tipos oficiais)
+export default async (req: IncomingMessage, res: ServerResponse) => {
   await setupApp();
   await fastify.ready();
   fastify.server.emit('request', req, res);
