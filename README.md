@@ -13,9 +13,9 @@
 
 CodePulse is a professional-grade monorepo showcasing software engineering excellence with:
 
-- **Frontend**: React with TypeScript & Vite
+- **Frontend**: React with TypeScript & Vite (primary) + HTML/JS fallback
 - **Backend**: Node.js with Fastify & TypeScript
-- **Testing**: Vitest (unit), Playwright (e2e), 85%+ coverage
+- **Testing**: Vitest (unit), Playwright (e2e), test infrastructure in place
 - **CI/CD**: GitHub Actions with automated testing, linting, and deployments
 - **Deployment**: GitHub Pages (Frontend) + Vercel (Backend)
 
@@ -162,12 +162,12 @@ yarn format
 
 ### Frontend Testing
 - **Unit Tests**: Vitest with React Testing Library
-- **Coverage**: 85%+
+- **Coverage**: In development (basic test structure implemented)
 - **Configuration**: `frontend/vitest.config.ts`
 
 ### Backend Testing
-- **Unit Tests**: Vitest
-- **Coverage**: 80%+
+- **Unit Tests**: Vitest with mocked services
+- **Coverage**: In development (basic test structure implemented)
 - **Configuration**: `backend/vitest.config.ts`
 
 ### E2E Testing
@@ -176,7 +176,7 @@ yarn format
 - **Configuration**: `e2e/playwright.config.ts`
 
 ### QA Metrics Snapshot
-- **Unit Testing**: Vitest (Low latency testing)
+- **Unit Testing**: Vitest (Test structure in place)
 - **E2E Testing**: Playwright (Cross-browser verification)
 - **Static Analysis**: ESLint + TypeScript (Strict mode)
 - **Continuous Tracking**: Codecov integration for coverage regression
@@ -208,9 +208,9 @@ yarn format
 
 ## Code Coverage
 
-- **Frontend**: 85% line coverage
-- **Backend**: 80% line coverage
-- **Overall**: 82% combined coverage
+- **Frontend**: Test infrastructure in place (coverage metrics to be implemented)
+- **Backend**: Test infrastructure in place (coverage metrics to be implemented)
+- **Overall**: Test framework ready for coverage implementation
 - Codecov integration for continuous tracking
 
 ## API Documentation
@@ -219,7 +219,6 @@ Backend API endpoints:
 
 ```
 GET  /api/health - Health check
-GET  /api/execute - Execute code (GET variant)
 POST /api/execute - Execute code (POST variant)
 ```
 

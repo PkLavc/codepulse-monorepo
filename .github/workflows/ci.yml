@@ -57,6 +57,7 @@ jobs:
   frontend-deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [backend-lint-and-test, frontend-validation]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 24.x
