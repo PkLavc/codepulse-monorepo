@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodePulse - Online IDE</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="./src/assets/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://pklavc.github.io/css/global.css">
     <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css">
@@ -272,7 +272,7 @@
         </div>
         <div id="navigation-bar">
             <div class="nav-brand">
-                <img src="/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
+                <img src="./src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
             </div>
             <div class="menubar">
                 <span class="first-span"></span>
@@ -287,7 +287,7 @@
         <div class="content">
             <div class="editor-section">
                 <div class="section-title">
-                    <img src="/code.gif" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
+                    <img src="./src/assets/code.gif" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
                     Code Editor
                     <div class="editor-controls">
                         <select id="language">
@@ -296,7 +296,7 @@
                             <option value="java">Java</option>
                         </select>
                         <button class="execute-btn" onclick="executeCode()">
-                            <img src="/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
+                            <img src="./src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
                             <span style="color:white; font-weight:bold;">Run</span>
                         </button>
                     </div>
@@ -305,10 +305,10 @@
             </div>
             <div class="output-section">
                 <div class="section-title">
-                    <img src="/return.gif" alt="Output" style="height:24px; width:auto; margin-right:8px;">
+                    <img src="./src/assets/return.gif" alt="Output" style="height:24px; width:auto; margin-right:8px;">
                     Output
                 </div>
-                <div id="output"><div class="alert alert-info"><img src="/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
+                <div id="output"><div class="alert alert-info"><img src="./src/assets/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
 
 Type your code and click "Run" or use Ctrl+Enter</div></div>
                 <div class="loading" id="loading">
@@ -407,7 +407,7 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     }
                 });
             });
-            
+
             // Fix cursor bug
             document.addEventListener('mousemove', (e) => {
                 const cursor = document.querySelector('.cursor');
