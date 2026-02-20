@@ -1,9 +1,10 @@
 {
   "version": 2,
+  "outputDirectory": "public",
   "builds": [
     { 
       "src": "backend/src/server.ts", 
-      "use": "@vercel/node"
+      "use": "@vercel/node" 
     }
   ],
   "routes": [
