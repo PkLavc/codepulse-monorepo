@@ -39,20 +39,15 @@ jobs:
   frontend-validation:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    strategy:
-      matrix:
-        node-version: [24.x]
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install
-      - name: Build frontend
-        run: cd frontend && yarn build
+      - name: Validate frontend files
+        run: |
+          if [ ! -f "frontend/index.html" ]; then
+            echo "Error: frontend/index.html not found"
+            exit 1
+          fi
+          echo "Frontend files validated successfully"
 
   frontend-deploy:
     runs-on: ubuntu-latest
@@ -60,17 +55,8 @@ jobs:
     needs: [backend-lint-and-test, frontend-validation]
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 24.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: '24.x'
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install
-      - name: Build frontend
-        run: cd frontend && yarn build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/dist
+          publish_dir: ./frontend

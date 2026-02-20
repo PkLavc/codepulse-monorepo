@@ -11,7 +11,7 @@
   "scripts": {
     "install-all": "yarn install",
     "dev": "yarn workspaces run dev",
-    "build": "yarn build:frontend",
+    "build": "yarn build:backend",
     "build:frontend": "yarn workspace @codepulse/frontend build",
     "build:backend": "yarn workspace @codepulse/backend build",
     "test": "yarn workspaces run test",

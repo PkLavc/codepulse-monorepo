@@ -1,13 +1,421 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodePulse - React IDE</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodePulse - Online IDE</title>
+    <link rel="icon" type="image/png" href="./src/assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://pklavc.github.io/css/global.css">
+    <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css">
+    <link rel="stylesheet" href="https://pklavc.github.io/css/index.css">
+    <style>
+        /* Consolidated CSS: overrides, layout and base styles */
+        /* Particles and stacking */
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
+        #navigation-content, #navigation-bar { position: fixed; top: 0; left: 0; width: 100%; z-index: 999999 !important; }
+        #navigation-bar {
+            background: none !important;
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            box-shadow: none !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            height: 140px;
+        }
+
+        /* Header should be absolute and not affect document flow (particles background) */
+        #header { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
+
+        /* Container positioning and background for legibility */
+        .container { position: relative !important; z-index: 5 !important; margin-top: 80px !important; background: rgba(30,30,30,0.85) !important; height: calc(100vh - 120px) !important; box-shadow: none !important; border-radius: 8px !important; padding-top: 8px !important; overflow: hidden; }
+        .container .header { display: flex !important; position: relative; z-index: 6 !important; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important; border-bottom: 2px solid #667eea !important; padding: 12px 20px !important; border-radius: 8px; }
+
+        /* Editor layout fills container */
+        .content { display: flex !important; height: 100% !important; flex: 1 1 auto !important; }
+        .editor-section, .output-section { flex: 1 !important; height: 100% !important; display: flex; flex-direction: column; }
+        textarea, #output { flex: 1 !important; min-height: 0; }
+
+        /* Ensure editor content sits above particles */
+        .content, .editor-section, .output-section, textarea, #output { background: rgba(0,0,0,0.45) !important; }
+
+        /* Base reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: visible;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: transparent;
+            border-radius: 12px;
+            box-shadow: none;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 160px) !important;
+            margin-top: 130px !important;
+            z-index: 10 !important;
+            background: rgba(30, 30, 30, 0.9) !important;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #667eea;
+        }
+        .header h1 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+        }
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        select, button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        select {
+            background-color: #252526 !important;
+            color: white !important;
+        }
+        select option {
+            background-color: #252526 !important;
+            color: white !important;
+        }
+        select#language, select#language option {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+            border: 1px solid #333 !important;
+        }
+        select:hover, button:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .execute-btn {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            font-weight: bold;
+            color: white;
+        }
+        .execute-btn:hover {
+            filter: brightness(1.1);
+        }
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            z-index: 100;
+            position: relative;
+        }
+        .editor-section, .output-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #333;
+        }
+        .output-section {
+            border-right: none;
+            position: relative;
+        }
+        .section-title {
+            background: #252526;
+            color: #ccc;
+            padding: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 55px;
+        }
+        .editor-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .section-title i {
+            color: #667eea;
+        }
+        textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+        textarea:focus {
+            background: #252526;
+        }
+        #output {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .output-pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+        }
+        .alert {
+            padding: 12px 15px;
+            margin: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .alert-success {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        }
+        .alert-danger {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        }
+        .alert-info {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        }
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            color: #00d1ff;
+            background: rgba(0,0,0,0.8);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+        .spinner {
+            border: 3px solid rgba(0, 209, 255, 0.3);
+            border-top: 3px solid #00d1ff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+            .editor-section {
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+            /* mobile: hide nav until menu toggled */
+            #navigation-content { transform: translateY(-120%); opacity: 0; pointer-events: none; transition: transform .28s ease, opacity .28s ease; }
+            #navigation-content.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div id="all">
+        <div class="cursor"></div>
+        <div id="navigation-content">
+            <div class="logo"></div>
+            <div class="navigation-links">
+                <a href="https://pklavc.github.io/" data-text="HOME" id="home-link">HOME</a>
+                <a href="https://pklavc.github.io/about.html" data-text="ABOUT" id="about-link">ABOUT</a>
+                <a href="https://pklavc.github.io/projects.html" data-text="PROJECTS" id="projects-link">PROJECTS</a>
+                <a href="https://pklavc.github.io/codepulse-monorepo/" data-text="IDE & QA" id="ide-link">IDE & QA</a>
+            </div>
+        </div>
+        <div id="navigation-bar">
+            <div class="nav-brand">
+                <img src="./src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
+            </div>
+            <div class="menubar">
+                <span class="first-span"></span>
+                <span class="second-span"></span>
+                <span class="third-span"></span>
+            </div>
+        </div>
+        <div id="header">
+            <div id="particles"></div>
+        </div>
+    <div class="container">
+        <div class="content">
+            <div class="editor-section">
+                <div class="section-title">
+                    <img src="./src/assets/code.gif" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
+                    Code Editor
+                    <div class="editor-controls">
+                        <select id="language">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                        </select>
+                        <button class="execute-btn" onclick="executeCode()">
+                            <img src="./src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
+                            <span style="color:white; font-weight:bold;">Run</span>
+                        </button>
+                    </div>
+                </div>
+                <textarea id="code" placeholder="Write your code here...">print('Hello CodePulse!')</textarea>
+            </div>
+            <div class="output-section">
+                <div class="section-title">
+                    <img src="./src/assets/return.gif" alt="Output" style="height:24px; width:auto; margin-right:8px;">
+                    Output
+                </div>
+                <div id="output"><div class="alert alert-info"><img src="./src/assets/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
+
+Type your code and click "Run" or use Ctrl+Enter</div></div>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Executing code...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://codepulse-monorepo-backend.vercel.app';
+
+        async function executeCode() {
+            const code = document.getElementById('code').value;
+            const language = document.getElementById('language').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+
+            if (!code.trim()) {
+                showOutput('Please enter some code!', 'info');
+                return;
+            }
+
+            loading.style.display = 'block';
+            output.innerHTML = '';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/execute`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code, language })
+                });
+
+                const data = await response.json();
+                loading.style.display = 'none';
+
+                if (response.ok) {
+                    if (data.output && data.output.trim()) {
+                        showOutput(data.output, 'success');
+                    } else if (data.error) {
+                        showOutput('Error: ' + data.error, 'danger');
+                    } else {
+                        showOutput('(no output)', 'info');
+                    }
+                } else if (response.status === 408) {
+                    showOutput('Timeout: The code took too long to execute (> 5s)', 'danger');
+                } else {
+                    showOutput(data.error || 'Execution error', 'danger');
+                }
+            } catch (error) {
+                loading.style.display = 'none';
+                showOutput(`Connection error: ${error.message}\nEnsure the backend is accessible at ${BACKEND_URL}/api/execute`, 'danger');
+            }
+        }
+
+        function showOutput(message, type) {
+            const output = document.getElementById('output');
+            const pre = document.createElement('pre');
+            pre.className = 'output-pre';
+            pre.textContent = message;
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-' + type;
+            alert.appendChild(pre);
+            output.innerHTML = '';
+            output.appendChild(alert);
+        }
+
+        // Allow run with Ctrl+Enter
+        document.getElementById('code').addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                executeCode();
+            }
+        });
+
+    </script>
+        <script src="https://pklavc.github.io/js/jquery.min.js"></script>
+        <script src="https://pklavc.github.io/js/particles.min.js"></script>
+        <script src="https://pklavc.github.io/js/index.js"></script>
+        <script>
+            particlesJS("particles", {"particles":{"number":{"value":50,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
+        </script>
+        <script>
+            // Menu toggle fix: ensure clicks on .menubar open the navigation on small screens
+            $(function(){
+                $('.menubar').on('click', function(e){
+                    e.stopPropagation();
+                    $('#navigation-content').toggleClass('active');
+                });
+                // Close when clicking outside
+                $(document).on('click', function(e){
+                    if (!$(e.target).closest('#navigation-content, .menubar').length) {
+                        $('#navigation-content').removeClass('active');
+                    }
+                });
+            });
+            
+            // Fix cursor bug
+            document.addEventListener('mousemove', (e) => {
+                const cursor = document.querySelector('.cursor');
+                if(cursor) {
+                    cursor.style.left = (e.clientX - 20) + 'px';
+                    cursor.style.top = (e.clientY - 20) + 'px';
+                }
+            });
+        </script>
+</body>
 </html>
