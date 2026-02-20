@@ -6,5 +6,8 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/src/server.ts" },
     { "src": "/health", "dest": "backend/src/server.ts" }
-  ]
+  ],
+  "config": {
+    "zeroConfig": true
+  }
 }

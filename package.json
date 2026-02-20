@@ -11,7 +11,7 @@
   "scripts": {
     "install-all": "yarn install",
     "dev": "yarn workspaces run dev",
-    "build": "yarn workspace @codepulse/frontend build && yarn workspace @codepulse/backend build",
+    "build": "echo 'No build needed for root'",
     "build:backend": "yarn workspace @codepulse/backend build",
     "test": "yarn workspaces run test",
     "test:coverage": "yarn workspaces run test:coverage --exclude e2e",
