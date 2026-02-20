@@ -16,7 +16,6 @@ const executeSchema = z.object({
 
 const fastify = Fastify({ logger: true });
 
-// Variável para garantir que o setup só rode uma vez
 let isPrepared = false;
 
 async function setupApp() {
@@ -85,7 +84,6 @@ async function setupApp() {
   isPrepared = true;
 }
 
-// Inicialização para ambiente Local
 if (!process.env.VERCEL) {
   setupApp().then(() => {
     const port = Number(process.env.PORT) || 3000;
@@ -98,7 +96,6 @@ if (!process.env.VERCEL) {
   });
 }
 
-// Exportação corrigida para Vercel (Sem 'any' e com tipos oficiais)
 export default async (req: IncomingMessage, res: ServerResponse) => {
   await setupApp();
   await fastify.ready();
