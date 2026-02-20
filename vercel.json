@@ -1,13 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "backend/src/server.ts", "use": "@vercel/node" }
+    { 
+      "src": "backend/src/server.ts", 
+      "use": "@vercel/node"
+    }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/src/server.ts" },
     { "src": "/health", "dest": "backend/src/server.ts" }
-  ],
-  "config": {
-    "zeroConfig": true
-  }
+  ]
 }
