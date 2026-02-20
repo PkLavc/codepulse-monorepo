@@ -1,28 +1,35 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 interface TestCase {
   input: string;
   expected: string;
 }
 
-interface Judge0Response {
-  token: string;
-  status: {
-    id: number;
-    description: string;
-  };
+interface PistonExecuteRequest {
+  language: string;
+  version: string;
+  files: Array<{
+    name?: string;
+    content: string;
+  }>;
+  stdin?: string;
+  args?: string[];
+  compileTimeout?: number;
+  runTimeout?: number;
+  compileMemoryLimit?: number;
+  runMemoryLimit?: number;
 }
 
-interface Judge0Submission {
-  source_code: string;
-  language_id: number;
-  stdin?: string;
-  expected_output?: string;
-  cpu_time_limit?: number;
-  memory_limit?: number;
+interface PistonExecuteResponse {
+  language: string;
+  version: string;
+  run: {
+    stdout: string;
+    stderr: string;
+    code: number;
+    signal: string | null;
+    output: string;
+  };
 }
 
 interface QAServiceResponse {
@@ -36,117 +43,51 @@ interface QAServiceResponse {
 }
 
 export class Judge0Service {
-  private readonly baseURL = 'https://judge0-ce.p.rapidapi.com';
-  private readonly apiKey = process.env.JUDGE0_API_KEY;
-  private readonly rapidAPIHost = 'judge0-ce.p.rapidapi.com';
+  private readonly baseURL = 'https://emkc.org/api/v2/piston/execute';
 
-  constructor() {
-    if (!this.apiKey) {
-      throw new Error('JUDGE0_API_KEY environment variable is required');
-    }
-  }
+  constructor() {}
 
   /**
-   * Maps language names to Judge0 language IDs
+   * Maps language names to Piston versions
    */
-  private getLanguageId(language: string): number {
-    const languageMap: Record<string, number> = {
-      'javascript': 63,
-      'python': 71,
-      'java': 62,
-      'c': 50,
-      'cpp': 54,
-      'csharp': 51,
-      'go': 60,
-      'rust': 73,
-      'php': 68,
-      'ruby': 72,
-      'swift': 80,
-      'kotlin': 78,
-      'typescript': 74
+  private getLanguageVersion(language: string): string {
+    const languageMap: Record<string, string> = {
+      'javascript': '18.15.0',
+      'python': '3.10.0',
+      'java': '15.0.2',
+      'c': '11.2.0',
+      'cpp': '11.2.0',
+      'csharp': '6.12.0',
+      'go': '1.19.5',
+      'rust': '1.67.0',
+      'php': '8.2.1',
+      'ruby': '3.1.3',
+      'swift': '5.7.1',
+      'kotlin': '1.7.21',
+      'typescript': '4.9.4'
     };
 
-    const langId = languageMap[language.toLowerCase()];
-    if (!langId) {
+    const version = languageMap[language.toLowerCase()];
+    if (!version) {
       throw new Error(`Unsupported language: ${language}`);
     }
-    return langId;
+    return version;
   }
 
   /**
-   * Submits code to Judge0 for execution
+   * Executes code with Piston API
    */
-  private async submitCode(submission: Judge0Submission): Promise<string> {
+  private async executeWithPiston(request: PistonExecuteRequest): Promise<PistonExecuteResponse> {
     try {
-      const response = await axios.post<Judge0Response>(
-        `${this.baseURL}/submissions`,
-        submission,
-        {
-          headers: {
-            'X-RapidAPI-Key': this.apiKey,
-            'X-RapidAPI-Host': this.rapidAPIHost,
-            'Content-Type': 'application/json'
-          },
-          params: {
-            base64_encoded: 'false',
-            fields: '*'
-          }
-        }
+      const response = await axios.post<PistonExecuteResponse>(
+        this.baseURL,
+        request
       );
 
-      return response.data.token;
+      return response.data;
     } catch (error) {
-      throw new Error(`Failed to submit code to Judge0: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to execute code with Piston: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  }
-
-  /**
-   * Retrieves the result of a submission
-   */
-  private async getSubmissionResult(token: string): Promise<{ stdout: string; stderr: string; status: string }> {
-    try {
-      const response = await axios.get(`${this.baseURL}/submissions/${token}`, {
-        headers: {
-          'X-RapidAPI-Key': this.apiKey,
-          'X-RapidAPI-Host': this.rapidAPIHost
-        },
-        params: {
-          base64_encoded: 'false',
-          fields: 'stdout,stderr,status'
-        }
-      });
-
-      const data = response.data;
-      // Support both shapes: { status: { description: 'Finished' } } and { status: 'Finished' }
-      const statusField = data.status;
-      const statusStr = typeof statusField === 'string' ? statusField : (statusField?.description ?? 'Unknown');
-      return {
-        stdout: data.stdout || '',
-        stderr: data.stderr || '',
-        status: statusStr
-      };
-    } catch (error) {
-      throw new Error(`Failed to get submission result: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }
-
-  /**
-   * Waits for submission to complete
-   */
-  private async waitForCompletion(token: string, maxAttempts: number = 30): Promise<{ stdout: string; stderr: string; status: string }> {
-    for (let i = 0; i < maxAttempts; i++) {
-      const result = await this.getSubmissionResult(token);
-      
-      if (result.status === 'Finished') {
-        return result;
-      } else if (result.status === 'In Queue' || result.status === 'Processing') {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      } else {
-        throw new Error(`Submission failed with status: ${result.status}`);
-      }
-    }
-
-    throw new Error('Submission timed out');
   }
 
   /**
@@ -157,26 +98,26 @@ export class Judge0Service {
     language: string,
     testCases: TestCase[]
   ): Promise<QAServiceResponse> {
-    const languageId = this.getLanguageId(language);
+    const version = this.getLanguageVersion(language);
     const results: QAServiceResponse['tests'] = [];
     let allPassed = true;
 
     for (const testCase of testCases) {
       try {
-        // Submit code with test case
-        const submission: Judge0Submission = {
-          source_code: code,
-          language_id: languageId,
+        const request: PistonExecuteRequest = {
+          language,
+          version,
+          files: [{
+            content: code
+          }],
           stdin: testCase.input,
-          expected_output: testCase.expected,
-          cpu_time_limit: 2000, // 2 seconds
-          memory_limit: 268435456 // 256MB
+          runTimeout: 5000,
+          runMemoryLimit: 268435456
         };
 
-        const token = await this.submitCode(submission);
-        const result = await this.waitForCompletion(token);
+        const result = await this.executeWithPiston(request);
 
-        const actualOutput = result.stdout.trim();
+        const actualOutput = result.run.stdout.trim();
         const expectedOutput = testCase.expected.trim();
         const passed = actualOutput === expectedOutput;
 
@@ -188,7 +129,7 @@ export class Judge0Service {
           input: testCase.input,
           expected: testCase.expected,
           actual: actualOutput,
-          status: result.stderr ? 'error' : (passed ? 'passed' : 'failed')
+          status: result.run.stderr ? 'error' : (passed ? 'passed' : 'failed')
         });
 
       } catch (error) {
@@ -217,20 +158,24 @@ export class Judge0Service {
     stdin?: string
   ): Promise<{ output: string; error: string | null }> {
     try {
-      const languageId = this.getLanguageId(language);
+      const version = this.getLanguageVersion(language);
       
-      const submission: Judge0Submission = {
-        source_code: code,
-        language_id: languageId,
-        stdin: stdin
+      const request: PistonExecuteRequest = {
+        language,
+        version,
+        files: [{
+          content: code
+        }],
+        stdin: stdin,
+        runTimeout: 5000,
+        runMemoryLimit: 268435456
       };
 
-      const token = await this.submitCode(submission);
-      const result = await this.waitForCompletion(token);
+      const result = await this.executeWithPiston(request);
 
       return {
-        output: result.stdout,
-        error: result.stderr || null
+        output: result.run.stdout,
+        error: result.run.stderr || null
       };
     } catch (error) {
       return {
