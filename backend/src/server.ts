@@ -83,16 +83,16 @@ async function setupApp() {
   });
 }
 
+
 if (!process.env.VERCEL) {
   setupApp().then(() => {
     const port = Number(process.env.PORT) || 3000;
     fastify.listen({ port, host: '0.0.0.0' });
   });
-} else {
-  setupApp();
 }
 
 export default async (req: any, res: any) => {
+  await setupApp();
   await fastify.ready();
   fastify.server.emit('request', req, res);
 };
