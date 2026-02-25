@@ -19,32 +19,6 @@ interface TestCase {
   expected: string;
 }
 
-interface PistonExecuteRequest {
-  language: string;
-  version: string;
-  files: Array<{
-    name?: string;
-    content: string;
-  }>;
-  stdin?: string;
-  args?: string[];
-  compileTimeout?: number;
-  runTimeout?: number;
-  compileMemoryLimit?: number;
-  runMemoryLimit?: number;
-}
-
-interface PistonExecuteResponse {
-  language: string;
-  version: string;
-  run: {
-    stdout: string;
-    stderr: string;
-    code: number;
-    signal: string | null;
-    output: string;
-  };
-}
 
 interface QAServiceResponse {
   passed: boolean;
