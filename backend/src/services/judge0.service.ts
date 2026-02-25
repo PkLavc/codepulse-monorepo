@@ -5,18 +5,26 @@ interface TestCase {
   expected: string;
 }
 
-interface Judge0Response {
-  stdout: string;
-  stderr: string;
-  compile_output: string | null;
-  exit_code: number;
-  status: {
-    id: number;
-    description: string;
+interface PistonFile {
+  name: string;
+  content: string;
+}
+
+interface PistonResponse {
+  language: string;
+  version: string;
+  run: {
+    stdout: string;
+    stderr: string;
+    code: number | null;
+    signal: string | null;
   };
-  token: string;
-  time: string;
-  memory: number;
+  compile?: {
+    stdout: string;
+    stderr: string;
+    code: number | null;
+    signal: string | null;
+  };
 }
 
 interface QAServiceResponse {
@@ -29,82 +37,106 @@ interface QAServiceResponse {
   }>;
 }
 
-export class Judge0Service {
-  private readonly baseURL = 'https://ce.judge0.com';
+/**
+ * CodeExecution service using Piston API
+ * Replaces Judge0 CE which is no longer available
+ * 
+ * Piston is an open-source code execution engine hosted at emkc.org
+ * API Documentation: https://piston.readthedocs.io/
+ */
+export class CodeExecutionService {
+  private readonly baseURL = 'https://emkc.org/api/v2/piston';
 
   constructor() {}
 
   /**
-   * Maps language names to Judge0 CE language IDs
+   * Maps language names to Piston runtime names
    */
-  private getLanguageId(language: string): number {
-    const languageMap: Record<string, number> = {
-      'javascript': 63,
-      'python': 71,
-      'java': 62,
-      'c': 50,
-      'cpp': 54,
-      'csharp': 51,
-      'go': 60,
-      'rust': 73,
-      'php': 68,
-      'ruby': 72,
-      'bash': 46,
-      'typescript': 74
+  private getLanguageRuntime(language: string): string {
+    const languageMap: Record<string, string> = {
+      'javascript': 'javascript',
+      'node': 'javascript',
+      'python': 'python',
+      'python3': 'python',
+      'java': 'java',
+      'c': 'c',
+      'cpp': 'c++',
+      'c++': 'c++',
+      'csharp': 'csharp',
+      'c#': 'csharp',
+      'go': 'go',
+      'rust': 'rust',
+      'php': 'php',
+      'ruby': 'ruby',
+      'bash': 'bash',
+      'sh': 'bash',
+      'typescript': 'javascript',
+      'ts': 'javascript'
     };
-    const id = languageMap[language.toLowerCase()];
-    if (!id) {
+
+    const runtime = languageMap[language.toLowerCase()];
+    if (!runtime) {
       throw new Error(`Unsupported language: ${language}`);
     }
-    return id;
+    return runtime;
   }
 
   /**
-   * Polls Judge0 CE for submission result
+   * Executes code using Piston API
    */
-  private async pollResult(token: string, maxAttempts = 30): Promise<Judge0Response> {
-    const delayMs = 500;
-    
-    for (let i = 0; i < maxAttempts; i++) {
-      try {
-        const response = await axios.get<Judge0Response>(`${this.baseURL}/submissions/${token}`);
-        const { status } = response.data;
-        
-        // Status codes: 1=In Queue, 2=Processing, 3=Accepted, 4=Wrong Answer, 5=Time Limit, etc.
-        if (status.id > 2) {
-          return response.data;
-        }
-        
-        // Wait before polling again
-        await new Promise(resolve => setTimeout(resolve, delayMs));
-      } catch (error) {
-        throw new Error(`Failed to poll Judge0: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    }
-    
-    throw new Error('Submission timed out after polling for 15 seconds');
-  }
-
-  /**
-   * Executes code with Judge0 CE API
-   */
-  private async executeWithJudge0(
-    languageId: number,
-    sourceCode: string,
-    stdin: string = ''
-  ): Promise<Judge0Response> {
+  async executeCode(
+    code: string,
+    language: string,
+    stdin?: string
+  ): Promise<{ output: string; error: string | null }> {
     try {
-      const response = await axios.post<{ token: string }>(`${this.baseURL}/submissions`, {
-        language_id: languageId,
-        source_code: sourceCode,
-        stdin: stdin
+      const runtime = this.getLanguageRuntime(language);
+
+      const files: PistonFile[] = [
+        {
+          name: this.getFileName(runtime),
+          content: code
+        }
+      ];
+
+      const response = await axios.post<PistonResponse>(`${this.baseURL}/execute`, {
+        language: runtime,
+        files: files,
+        stdin: stdin || '',
+        args: [],
+        compile_timeout: 10000,
+        run_timeout: 3000,
+        compile_memory_limit: -1,
+        run_memory_limit: -1
       });
-      
-      const token = response.data.token;
-      const result = await this.pollResult(token);
-      return result;
+
+      const { run, compile } = response.data;
+
+      // Check for compilation errors
+      if (compile && compile.stderr) {
+        return {
+          output: '',
+          error: compile.stderr
+        };
+      }
+
+      // Check for runtime errors
+      if (run.stderr) {
+        return {
+          output: run.stdout || '',
+          error: run.stderr
+        };
+      }
+
+      return {
+        output: run.stdout || '',
+        error: null
+      };
     } catch (error) {
-      throw new Error(`Failed to execute code with Judge0: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return {
+        output: '',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
     }
   }
 
@@ -116,28 +148,26 @@ export class Judge0Service {
     language: string,
     testCases: TestCase[]
   ): Promise<QAServiceResponse> {
-    const languageId = this.getLanguageId(language);
     const results: QAServiceResponse['tests'] = [];
     let allPassed = true;
 
     for (const testCase of testCases) {
       try {
-        const result = await this.executeWithJudge0(
-          languageId,
-          code,
-          testCase.input
-        );
-        const actualOutput = result.stdout ? result.stdout.trim() : '';
+        const result = await this.executeCode(code, language, testCase.input);
+
+        const actualOutput = result.output ? result.output.trim() : '';
         const expectedOutput = testCase.expected.trim();
         const passed = actualOutput === expectedOutput;
+
         if (!passed) {
           allPassed = false;
         }
+
         results.push({
           input: testCase.input,
           expected: testCase.expected,
           actual: actualOutput,
-          status: result.stderr ? 'error' : passed ? 'passed' : 'failed'
+          status: result.error ? 'error' : passed ? 'passed' : 'failed'
         });
       } catch (error) {
         allPassed = false;
@@ -157,29 +187,22 @@ export class Judge0Service {
   }
 
   /**
-   * Executes single code without test cases (for backward compatibility)
+   * Gets the appropriate filename based on runtime
    */
-  async executeCode(
-    code: string,
-    language: string,
-    stdin?: string
-  ): Promise<{ output: string; error: string | null }> {
-    try {
-      const languageId = this.getLanguageId(language);
-      const result = await this.executeWithJudge0(
-        languageId,
-        code,
-        stdin || ''
-      );
-      return {
-        output: result.stdout || '',
-        error: result.stderr || null
-      };
-    } catch (error) {
-      return {
-        output: '',
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
-    }
+  private getFileName(runtime: string): string {
+    const extensions: Record<string, string> = {
+      'javascript': 'main.js',
+      'python': 'main.py',
+      'java': 'Main.java',
+      'c': 'main.c',
+      'c++': 'main.cpp',
+      'csharp': 'Main.cs',
+      'go': 'main.go',
+      'rust': 'main.rs',
+      'php': 'main.php',
+      'ruby': 'main.rb',
+      'bash': 'main.sh'
+    };
+    return extensions[runtime] || 'main.txt';
   }
 }
