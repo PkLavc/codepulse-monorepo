@@ -17,6 +17,6 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": [: ["src/**/*", "api/**/*.ts"]
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
