@@ -30,7 +30,7 @@ interface QAServiceResponse {
 }
 
 export class Judge0Service {
-  private readonly baseURL = 'https://ce.judge0.com/submissions';
+  private readonly baseURL = 'https://ce.judge0.com';
 
   constructor() {}
 
@@ -39,24 +39,50 @@ export class Judge0Service {
    */
   private getLanguageId(language: string): number {
     const languageMap: Record<string, number> = {
-      'javascript': 63,   // JavaScript (Node.js 12.14.0)
-      'python': 71,       // Python (3.8.1)
-      'java': 62,         // Java (OpenJDK 13.0.1)
-      'c': 50,            // C (GCC 9.2.0)
-      'cpp': 54,          // C++ (GCC 9.2.0)
-      'csharp': 51,       // C# (Mono 6.6.0.161)
-      'go': 60,           // Go (1.13.5)
-      'rust': 73,         // Rust (1.40.0)
-      'php': 68,          // PHP (7.4.1)
-      'ruby': 72,         // Ruby (2.7.0)
-      'bash': 46,         // Bash (5.0.0)
-      'typescript': 74    // TypeScript (3.7.4)
+      'javascript': 63,
+      'python': 71,
+      'java': 62,
+      'c': 50,
+      'cpp': 54,
+      'csharp': 51,
+      'go': 60,
+      'rust': 73,
+      'php': 68,
+      'ruby': 72,
+      'bash': 46,
+      'typescript': 74
     };
     const id = languageMap[language.toLowerCase()];
     if (!id) {
       throw new Error(`Unsupported language: ${language}`);
     }
     return id;
+  }
+
+  /**
+   * Polls Judge0 CE for submission result
+   */
+  private async pollResult(token: string, maxAttempts = 30): Promise<Judge0Response> {
+    const delayMs = 500;
+    
+    for (let i = 0; i < maxAttempts; i++) {
+      try {
+        const response = await axios.get<Judge0Response>(`${this.baseURL}/submissions/${token}`);
+        const { status } = response.data;
+        
+        // Status codes: 1=In Queue, 2=Processing, 3=Accepted, 4=Wrong Answer, 5=Time Limit, etc.
+        if (status.id > 2) {
+          return response.data;
+        }
+        
+        // Wait before polling again
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      } catch (error) {
+        throw new Error(`Failed to poll Judge0: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+    
+    throw new Error('Submission timed out after polling for 15 seconds');
   }
 
   /**
@@ -68,21 +94,17 @@ export class Judge0Service {
     stdin: string = ''
   ): Promise<Judge0Response> {
     try {
-      const response = await axios.post<Judge0Response>(
-        this.baseURL,
-        {
-          language_id: languageId,
-          source_code: sourceCode,
-          stdin: stdin
-        }
-      );
-      return response.data;
+      const response = await axios.post<{ token: string }>(`${this.baseURL}/submissions`, {
+        language_id: languageId,
+        source_code: sourceCode,
+        stdin: stdin
+      });
+      
+      const token = response.data.token;
+      const result = await this.pollResult(token);
+      return result;
     } catch (error) {
-      throw new Error(
-        `Failed to execute code with Judge0: ${
-          error instanceof Error ? error.message : 'Unknown error'
-        }`
-      );
+      throw new Error(`Failed to execute code with Judge0: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -108,11 +130,9 @@ export class Judge0Service {
         const actualOutput = result.stdout ? result.stdout.trim() : '';
         const expectedOutput = testCase.expected.trim();
         const passed = actualOutput === expectedOutput;
-
         if (!passed) {
           allPassed = false;
         }
-
         results.push({
           input: testCase.input,
           expected: testCase.expected,
@@ -151,7 +171,6 @@ export class Judge0Service {
         code,
         stdin || ''
       );
-
       return {
         output: result.stdout || '',
         error: result.stderr || null
