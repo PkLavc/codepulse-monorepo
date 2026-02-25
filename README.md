@@ -2,6 +2,7 @@
 
 **A Professional Monorepo with React Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
+[<!-- ci-trigger: validate Judge0Service fixes -->]
 [![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
 [![CodeCov Coverage](https://codecov.io/gh/PkLavc/codepulse-monorepo/branch/main/graph/badge.svg)](https://codecov.io/gh/PkLavc/codepulse-monorepo)
 [![Frontend: React + TypeScript](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-blue)](./frontend)
