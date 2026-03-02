@@ -7,7 +7,9 @@ interface ImportMetaEnv {
   VITE_API_URL?: string;
 }
 
-const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 'https://codepulse-monorepo.onrender.com';
+// Configuração da URL da API
+const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://codepulse-monorepo.onrender.com');
 
 interface QATestResult {
   testId: number;

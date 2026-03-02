@@ -4,6 +4,9 @@ import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
 import { GlotService } from './services/glot.service.js';
 
+// Load environment variables
+import 'dotenv/config';
+
 const executeSchema = z.object({
   code: z.string(),
   language: z.string(),
@@ -34,6 +37,7 @@ async function setupApp() {
   });
 
   fastify.get('/health', async () => ({ status: 'ok' }));
+  
   
   fastify.post('/api/execute', async (request) => {
     try {
@@ -89,12 +93,20 @@ async function setupApp() {
 if (!process.env.VERCEL) {
   setupApp().then(() => {
     const port = Number(process.env.PORT) || 3000;
-    fastify.listen({ port, host: '0.0.0.0' }, (err) => {
-      if (err) {
-        console.error(err);
-        process.exit(1);
-      }
-    });
+    console.log(`Starting server on port ${port}...`);
+    try {
+      fastify.listen({ port, host: '0.0.0.0' }, (err) => {
+        if (err) {
+          console.error('Error starting server:', err);
+          process.exit(1);
+        } else {
+          console.log(`Server successfully started on http://localhost:${port}`);
+        }
+      });
+    } catch (err) {
+      console.error('Error starting server:', err);
+      process.exit(1);
+    }
   });
 }
 
@@ -103,3 +115,4 @@ export default async (req, res) => {
   await fastify.ready();
   fastify.server.emit('request', req, res);
 };
+
