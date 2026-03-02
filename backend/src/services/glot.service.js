@@ -85,9 +85,27 @@ export class GlotService {
 
       console.log(`[Execution] Running via Glot.io Engine for ${language}...`);
 
-      // For now, use mock responses until Glot.io token is available
-      // TODO: Replace with real API call when token is obtained
-      return this.getMockResponse(code, language, stdin);
+      const response = await axios.post(`${this.baseURL}/${runtime}/${version}`, {
+        files: [
+          {
+            name: this.getFileName(runtime),
+            content: code
+          }
+        ],
+        stdin: stdin || ''
+      }, {
+        headers: {
+          'Authorization': `Token ${process.env.GLOT_API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('[Glot.io] Response Received:', response.data);
+
+      return {
+        output: response.data.stdout || '',
+        error: response.data.stderr || null
+      };
     } catch (error) {
       console.error('Glot.io API error:', error.message);
       return {
