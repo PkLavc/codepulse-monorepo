@@ -1,9 +1,8 @@
-import Fastify, { FastifyRequest } from 'fastify';
+import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
 import { Judge0Service } from './services/judge0.service.js';
-import { IncomingMessage, ServerResponse } from 'http';
 
 const executeSchema = z.object({
   code: z.string(),
@@ -34,7 +33,7 @@ async function setupApp() {
 
   fastify.get('/health', async () => ({ status: 'ok' }));
   
-  fastify.post('/api/execute', async (request: FastifyRequest) => {
+  fastify.post('/api/execute', async (request) => {
     try {
       const validated = executeSchema.parse(request.body);
       const judge0Service = new Judge0Service();
@@ -96,7 +95,7 @@ if (!process.env.VERCEL) {
   });
 }
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
+export default async (req, res) => {
   await setupApp();
   await fastify.ready();
   fastify.server.emit('request', req, res);

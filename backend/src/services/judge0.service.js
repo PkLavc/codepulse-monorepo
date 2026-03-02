@@ -1,55 +1,18 @@
 import axios from 'axios';
 
-interface TestCase {
-  input: string;
-  expected: string;
-}
-
-interface PistonFile {
-  name: string;
-  content: string;
-}
-
-interface PistonResponse {
-  language: string;
-  version: string;
-  run: {
-    stdout: string;
-    stderr: string;
-    code: number | null;
-    signal: string | null;
-  };
-  compile?: {
-    stdout: string;
-    stderr: string;
-    code: number | null;
-    signal: string | null;
-  };
-}
-
-interface QAServiceResponse {
-  passed: boolean;
-  tests: Array<{
-    input: string;
-    expected: string;
-    actual: string;
-    status: 'passed' | 'failed' | 'error';
-  }>;
-}
-
 /**
  * Piston API service for code execution
  */
 export class Judge0Service {
-  private readonly baseURL = 'https://emkc.org/api/v2/piston';
-
-  constructor() {}
+  constructor() {
+    this.baseURL = 'https://emkc.org/api/v2/piston';
+  }
 
   /**
    * Maps language names to Piston runtime names
    */
-  private getLanguageRuntime(language: string): string {
-    const languageMap: Record<string, string> = {
+  getLanguageRuntime(language) {
+    const languageMap = {
       'javascript': 'javascript',
       'node': 'javascript',
       'python': 'python',
@@ -80,22 +43,18 @@ export class Judge0Service {
   /**
    * Executes code using Piston API
    */
-  async executeCode(
-    code: string,
-    language: string,
-    stdin?: string
-  ): Promise<{ output: string; error: string | null }> {
+  async executeCode(code, language, stdin) {
     try {
       const runtime = this.getLanguageRuntime(language);
 
-      const files: PistonFile[] = [
+      const files = [
         {
           name: this.getFileName(runtime),
           content: code
         }
       ];
 
-      const response = await axios.post<PistonResponse>(`${this.baseURL}/execute`, {
+      const response = await axios.post(`${this.baseURL}/execute`, {
         language: runtime,
         files: files,
         stdin: stdin || '',
@@ -139,12 +98,8 @@ export class Judge0Service {
   /**
    * Executes code with test cases and performs QA
    */
-  async executeWithQA(
-    code: string,
-    language: string,
-    testCases: TestCase[]
-  ): Promise<QAServiceResponse> {
-    const results: QAServiceResponse['tests'] = [];
+  async executeWithQA(code, language, testCases) {
+    const results = [];
     let allPassed = true;
 
     for (const testCase of testCases) {
@@ -185,8 +140,8 @@ export class Judge0Service {
   /**
    * Gets the appropriate filename based on runtime
    */
-  private getFileName(runtime: string): string {
-    const extensions: Record<string, string> = {
+  getFileName(runtime) {
+    const extensions = {
       'javascript': 'main.js',
       'python': 'main.py',
       'java': 'Main.java',

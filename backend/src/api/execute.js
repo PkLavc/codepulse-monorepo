@@ -10,7 +10,7 @@ const executeSchema = z.object({
   })).optional()
 });
 
-export default async (req: any, res: any) => {
+export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', 'https://pklavc.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
