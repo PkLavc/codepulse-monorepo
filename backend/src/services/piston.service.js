@@ -6,6 +6,7 @@ import axios from 'axios';
 export class PistonService {
   constructor() {
     this.baseURL = 'https://emkc.org/api/v2/piston';
+    this.glotURL = 'https://glot.io/api/run';
     this.runtimes = new Map();
     this.initialized = false;
   }
@@ -94,7 +95,7 @@ export class PistonService {
     try {
       const { language: runtime, version } = this.getLanguageRuntime(language);
 
-      console.log(`[Piston] Executing ${language} code...`);
+      console.log(`[Execution] Using Piston Community Mirror for ${language}...`);
 
       const response = await axios.post(`${this.baseURL}/execute`, {
         language: runtime,
@@ -124,10 +125,10 @@ export class PistonService {
       };
     } catch (error) {
       console.error('Piston API error:', error.message);
-      // Only fallback for server errors (5xx), not user errors (4xx)
+      // Try Glot.io fallback for server errors (5xx)
       if (error.response && error.response.status >= 500) {
-        console.log('[Piston] API server error, using fallback...');
-        return this.getMockResponse(code, language, stdin);
+        console.log('[Piston] API server error, trying Glot.io fallback...');
+        return this.executeWithGlot(code, language, stdin);
       }
       // For user errors (4xx), return the actual error
       return {
@@ -138,62 +139,84 @@ export class PistonService {
   }
 
   /**
-   * Returns mock responses for testing when Piston API fails
+   * Executes code using Glot.io as fallback
    */
-  getMockResponse(code, language, stdin) {
-    // For Python, try to execute the code logic to get real results
-    if (language.toLowerCase() === 'python') {
-      try {
-        // Simple evaluation for basic Python arithmetic
-        if (code.includes('range(1, 101)') && code.includes('total += i')) {
-          // Calculate sum of 1 to 100: n(n+1)/2 = 100*101/2 = 5050
-          const sum = (100 * 101) / 2;
-          return {
-            output: `Sum of 1 to 100: ${sum}\n`,
-            error: null
-          };
-        }
-        
-        // Simple print statements
-        if (code.includes('print(')) {
-          const printMatch = code.match(/print\(['"]([^'"]+)['"]\)/);
-          if (printMatch) {
-            return {
-              output: printMatch[1] + '\n',
-              error: null
-            };
+  async executeWithGlot(code, language, stdin = '') {
+    try {
+      console.log(`[Execution] Using Glot.io fallback for ${language}...`);
+      
+      // Map language names to Glot.io format
+      const glotLanguage = this.getGlotLanguage(language);
+      const glotVersion = this.getGlotVersion(language);
+      
+      const response = await axios.post(`${this.glotURL}/${glotLanguage}/${glotVersion}`, {
+        files: [
+          {
+            name: 'main.js',
+            content: code
           }
-        }
-      } catch (e) {
-        // Fall through to generic response
-      }
-    }
-    
-    // For JavaScript
-    if (language.toLowerCase() === 'javascript') {
-      if (code.includes('console.log(')) {
-        const consoleMatch = code.match(/console\.log\(['"]([^'"]+)['"]\)/);
-        if (consoleMatch) {
-          return {
-            output: consoleMatch[1] + '\n',
-            error: null
-          };
-        }
-      }
-    }
-    
-    // Generic fallback
-    if (code.includes('error') || code.includes('throw')) {
+        ],
+        stdin: stdin || ''
+      });
+
+      return {
+        output: response.data.stdout || '',
+        error: response.data.stderr || null
+      };
+    } catch (error) {
+      console.error('Glot.io fallback error:', error.message);
       return {
         output: '',
-        error: 'Mock runtime error: Something went wrong'
+        error: 'Both Piston and Glot.io services are unavailable'
       };
     }
+  }
 
-    return {
-      output: 'Mock execution completed successfully\n',
-      error: null
+  /**
+   * Maps language names to Glot.io format
+   */
+  getGlotLanguage(language) {
+    const languageMap = {
+      'javascript': 'javascript',
+      'node': 'javascript',
+      'python': 'python',
+      'python3': 'python',
+      'java': 'java',
+      'c': 'c',
+      'cpp': 'cpp',
+      'c++': 'cpp',
+      'csharp': 'csharp',
+      'c#': 'csharp',
+      'go': 'go',
+      'rust': 'rust',
+      'php': 'php',
+      'ruby': 'ruby',
+      'bash': 'bash',
+      'sh': 'bash',
+      'typescript': 'javascript',
+      'ts': 'javascript'
     };
+    return languageMap[language.toLowerCase()] || 'javascript';
+  }
+
+  /**
+   * Gets Glot.io version for language
+   */
+  getGlotVersion(language) {
+    const versionMap = {
+      'javascript': '18.15.0',
+      'python': '3.10.0',
+      'java': '15.0.2',
+      'c': '10.2.0',
+      'cpp': '10.2.0',
+      'csharp': '6.12.0',
+      'go': '1.16.2',
+      'rust': '1.50.0',
+      'php': '8.0.3',
+      'ruby': '3.0.0',
+      'bash': '5.0.17'
+    };
+    return versionMap[this.getGlotLanguage(language)] || '18.15.0';
   }
 
   /**
