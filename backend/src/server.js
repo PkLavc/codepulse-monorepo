@@ -15,6 +15,8 @@ const executeSchema = z.object({
 
 const fastify = Fastify({ logger: true });
 
+console.log('VAR_CHECK: GLOT_API_TOKEN is', process.env.GLOT_API_TOKEN ? 'DEFINED' : 'MISSING');
+
 let isPrepared = false;
 
 async function setupApp() {
