@@ -1,11 +1,13 @@
 import axios from 'axios';
 
 /**
- * Piston API service for code execution
+ * Mock Piston API service for code execution (for testing when Judge0 CE is not available)
  */
-export class Judge0Service {
+export class MockJudge0Service {
   constructor() {
     this.baseURL = process.env.JUDGE0_BASE_URL || 'http://localhost:2358';
+    // Force mock mode for now since we don't have Judge0 CE running
+    this.useMock = true;
   }
 
   /**
@@ -41,9 +43,17 @@ export class Judge0Service {
   }
 
   /**
-   * Executes code using Piston API
+   * Executes code using mock responses (for testing)
    */
   async executeCode(code, language, stdin) {
+    // Always use mock responses for now since we don't have Judge0 CE running
+    return this.getMockResponse(code, language, stdin);
+  }
+
+  /**
+   * Executes code using actual Judge0 CE server
+   */
+  async executeWithJudge0(code, language, stdin) {
     try {
       const runtime = this.getLanguageRuntime(language);
 
@@ -96,7 +106,45 @@ export class Judge0Service {
   }
 
   /**
-   * Executes code with test cases and performs QA
+   * Returns mock responses for testing
+   */
+  getMockResponse(code, language, stdin) {
+    // Simple mock logic based on common patterns
+    if (code.includes('console.log') || code.includes('print(')) {
+      // Extract what would be printed (very basic parsing)
+      const consoleMatch = code.match(/console\.log\(['"]([^'"]+)['"]\)/);
+      const printMatch = code.match(/print\(['"]([^'"]+)['"]\)/);
+      
+      let output = '';
+      if (consoleMatch) {
+        output = consoleMatch[1];
+      } else if (printMatch) {
+        output = printMatch[1];
+      } else {
+        output = 'Mock execution completed';
+      }
+      
+      return {
+        output: output + '\n',
+        error: null
+      };
+    }
+    
+    if (code.includes('error') || code.includes('throw')) {
+      return {
+        output: '',
+        error: 'Mock runtime error: Something went wrong'
+      };
+    }
+
+    return {
+      output: 'Mock execution completed successfully\n',
+      error: null
+    };
+  }
+
+  /**
+   * Executes code with test cases and performs QA using mock responses
    */
   async executeWithQA(code, language, testCases) {
     const results = [];

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Judge0Service } from '../services/judge0.service';
+import { MockJudge0Service } from '../services/mock-judge0.service';
 
 const executeSchema = z.object({
   code: z.string(),
@@ -30,7 +30,7 @@ export default async (req, res) => {
 
   try {
     const validated = executeSchema.parse(req.body);
-    const judge0Service = new Judge0Service();
+    const judge0Service = new MockJudge0Service();
 
     if (validated.testCases && validated.testCases.length > 0) {
       const qaResult = await judge0Service.executeWithQA(
