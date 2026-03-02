@@ -7,7 +7,7 @@ interface ImportMetaEnv {
   VITE_API_URL?: string;
 }
 
-const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 'https://codepulse-monorepo-backend.vercel.app';
+const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 'https://codepulse-monorepo.onrender.com';
 
 interface QATestResult {
   testId: number;

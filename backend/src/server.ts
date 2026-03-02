@@ -22,9 +22,9 @@ async function setupApp() {
   if (isPrepared) return;
   
   await fastify.register(cors, {
-    origin: ['https://pklavc.github.io', 'http://localhost:5173'],
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true
+    credentials: false
   });
   
   await fastify.register(rateLimit, {
