@@ -23,7 +23,7 @@ async function setupApp() {
   if (isPrepared) return;
   
   await fastify.register(cors, {
-    origin: '*',
+    origin: true,
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: false
   });
@@ -37,6 +37,7 @@ async function setupApp() {
   
   fastify.post('/api/execute', async (request) => {
     try {
+      console.log('[API] Execution request received for:', request.body?.language);
       const validated = executeSchema.parse(request.body);
       const judge0Service = new GlotService();
       
