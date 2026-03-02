@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Judge0Service } from '../services/judge0.service.js';
+import { Judge0Service } from '../services/judge0.service';
 
 const executeSchema = z.object({
   code: z.string(),
