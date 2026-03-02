@@ -31,10 +31,10 @@ export const Output: React.FC<OutputProps> = ({
   return (
     <div className="output-container">
       <div className="output-header">
-        <h3>📋 Output Console</h3>
+        <h3>Output Console</h3>
         {hasTimeout && (
           <span className="timeout-badge">
-            ⏱️ Timeout
+            Timeout
           </span>
         )}
       </div>
@@ -80,7 +80,7 @@ export const Output: React.FC<OutputProps> = ({
 
         {!isLoading && !error && !output && (
           <div className="empty-state">
-            <p>🄚 Your code output will appear here...</p>
+            <p>Your code output will appear here...</p>
           </div>
         )}
 
@@ -90,7 +90,7 @@ export const Output: React.FC<OutputProps> = ({
       </div>
 
       <div className="output-footer">
-        <small>Status: {isLoading ? '⏳ Running' : hasTimeout ? '⛔ Timeout' : error ? '❌ Error' : '✅ Completed'}</small>
+        <small>Status: {isLoading ? 'Running' : hasTimeout ? 'Timeout' : error ? 'Error' : 'Completed'}</small>
       </div>
     </div>
   );

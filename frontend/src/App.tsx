@@ -9,7 +9,6 @@ interface ImportMetaEnv {
 
 const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 'https://codepulse-monorepo-backend.vercel.app';
 
-// Interfaces for standardized backend responses
 interface QATestResult {
   testId: number;
   status: 'passed' | 'failed';
@@ -63,14 +62,14 @@ export function App() {
       <header>
         <h1>
           <img src={logo} alt="CodePulse Logo" className="header-logo" />
-          {'CodePulse - Engineering-Focused IDE'}
+          CodePulse - Engineering-Focused IDE
         </h1>
-        <p>{'High-performance code execution with automated QA pipeline'}</p>
+        <p>High-performance code execution with automated QA pipeline</p>
       </header>
 
       <div className="container">
         <div className="editor-section">
-          <label>{'Source Code:'}</label>
+          <label>Source Code:</label>
           <MonacoEditor
             height="450px"
             defaultLanguage="javascript"
@@ -89,29 +88,28 @@ export function App() {
             disabled={isLoading}
             className="execute-btn"
           >
-            {isLoading ? "⏳ Processing..." : "▶️ Launch Execution"}
+            {isLoading ? "Processing..." : "Launch Execution"}
           </button>
         </div>
 
         <div className="output-section">
-          <label>{'Terminal Output / QA Results:'}</label>
+          <label>Terminal Output / QA Results:</label>
           <div className="output-box">
-            {isLoading && <p className="loading">{'Accessing sandboxed environment...'}</p>}
-            {error && <p className="error">{'❌ System Error: '}{error}</p>}
+            {isLoading && <p className="loading">Accessing sandboxed environment...</p>}
+            {error && <p className="error">System Error: {error}</p>}
 
-            {/* Display QA Results with clear professional status */}
             {qaResults && ( 
               <div className="qa-container">
                 <h3 className={qaResults.success ? 'status-pass' : 'status-fail'}>
-                  {qaResults.success ? '✅ All QA Tests Passed' : '❌ QA Pipeline Failed'}
+                  {qaResults.success ? 'All QA Tests Passed' : 'QA Pipeline Failed'}
                 </h3>
                 <ul className="test-list">
                   {qaResults.results.map((test) => (
                     <li key={test.testId} className={`test-item ${test.status}`}>
                       <span className="test-icon">{test.status === 'passed' ? '✔' : '✘'}</span>
-                      <span className="test-name">{'Test Case #'}{test.testId}</span>
+                      <span className="test-name">Test Case #{test.testId}</span>
                       {test.status === 'failed' && ( 
-                        <pre className="test-diff">{`Expected output mismatch. Actual: ${test.actual}`}</pre>
+                        <pre className="test-diff">Expected output mismatch. Actual: {test.actual}</pre>
                       )}
                     </li>
                   ))}
@@ -119,7 +117,6 @@ export function App() {
               </div>
             )}
 
-            {/* Display raw output for direct code execution */}
             {output && !qaResults && ( 
               <pre className="output-text">
                 <code>{output}</code>
@@ -127,7 +124,7 @@ export function App() {
             )}
 
             {!isLoading && !error && !output && !qaResults && (
-              <p className="placeholder">{'Awaiting code execution... Click "Launch" to start.'}</p>
+              <p className="placeholder">Awaiting code execution... Click "Launch" to start.</p>
             )}
           </div>
         </div>
@@ -135,9 +132,9 @@ export function App() {
 
       <footer className="footer">
         <p>
-          {'CodePulse v1.0.0 | ' }
-          <a href="https://github.com/lojadosapo" target="_blank" rel="noreferrer">{'Engineering Portfolio'}</a>
-          {' | Professional Software Quality Assurance Showcase'}
+          CodePulse v1.0.0 | 
+          <a href="https://github.com/lojadosapo" target="_blank" rel="noreferrer">Engineering Portfolio</a>
+          | Professional Software Quality Assurance Showcase
         </p>
       </footer>
     </div>

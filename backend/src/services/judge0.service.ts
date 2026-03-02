@@ -38,13 +38,9 @@ interface QAServiceResponse {
 }
 
 /**
- * CodeExecution service using Piston API
- * Replaces Judge0 CE which is no longer available
- * 
- * Piston is an open-source code execution engine hosted at emkc.org
- * API Documentation: https://piston.readthedocs.io/
+ * Piston API service for code execution
  */
-export class CodeExecutionService {
+export class Judge0Service {
   private readonly baseURL = 'https://emkc.org/api/v2/piston';
 
   constructor() {}
