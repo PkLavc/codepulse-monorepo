@@ -3,10 +3,10 @@
 **A Professional Monorepo with React Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
 [<!-- ci-trigger: validate Judge0Service fixes -->]
-[![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
+[![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/Deploy%20to%20Render/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
 [![CodeCov Coverage](https://codecov.io/gh/PkLavc/codepulse-monorepo/branch/main/graph/badge.svg)](https://codecov.io/gh/PkLavc/codepulse-monorepo)
 [![Frontend: React + TypeScript](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-blue)](./frontend)
-[![Backend: Node.js + Fastify](https://img.shields.io/badge/Backend-Node.js%20%2B%20Fastify-green)](./backend)
+[![Backend: Node.js + Fastify](https://img.shields.io/badge/Backend-Node.js%20%2B%20Fastify-blue)](./backend)
 [![E2E Tests: Playwright](https://img.shields.io/badge/E2E%20Tests-Playwright-purple)](./e2e)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
@@ -32,11 +32,11 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 
 ### Deployment Configuration
 
-#### Backend (Vercel)
+#### Backend (Render)
 - Automatic deployment via GitHub Actions
 - Serverless Functions with Node.js
-- Environment variables managed in Vercel dashboard
-- API URL: `https://codepulse-monorepo-backend.vercel.app`
+- Environment variables managed in Render dashboard
+- API URL: `https://codepulse-monorepo.onrender.com`
 
 #### Frontend (GitHub Pages)
 - Automatic build via GitHub Actions
@@ -50,8 +50,8 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 | **Frontend** | React | 18.x |
 | | TypeScript | 5.x |
 | | Vite | Latest |
-| **Backend** | Node.js | 18.x |
-| | Fastify | Latest |
+| **Backend** | Node.js | 20.x |
+| | Fastify | 4.x |
 | | TypeScript | 5.x |
 | **Testing** | Vitest | Latest |
 | | Playwright | Latest |
@@ -100,63 +100,63 @@ codepulse-monorepo/
 ## Quick Start
 
 ### Prerequisites
-- Node.js 18.x or higher
-- Yarn 3.x or higher
+- Node.js 20.x or higher
+- NPM 9.x or higher
 
 ### Installation
 
 ```bash
 # Install dependencies across all workspaces
-yarn install
+npm install
 ```
 
 ### Development
 
 ```bash
 # Start all services in development mode
-yarn dev
+npm run dev
 
 # Frontend only
-cd frontend && yarn dev
+cd frontend && npm run dev
 
 # Backend only
-cd backend && yarn dev
+cd backend && npm run dev
 ```
 
 ### Testing
 
 ```bash
 # Run all tests
-yarn test
+npm test
 
 # With coverage report
-yarn test:coverage
+npm run test:coverage
 
 # E2E tests
-cd e2e && yarn test
+cd e2e && npm test
 ```
 
 ### Build
 
 ```bash
 # Build all packages
-yarn build
+npm run build
 
 # Frontend build
-cd frontend && yarn build
+cd frontend && npm run build
 
 # Backend build
-cd backend && yarn build
+cd backend && npm run build
 ```
 
 ### Linting
 
 ```bash
 # Lint all packages
-yarn lint
+npm run lint
 
 # Format code
-yarn format
+npm run format
 ```
 
 ## Testing & QA
@@ -235,7 +235,7 @@ EXECUTION_TIMEOUT=5000
 
 ### Frontend (.env.production)
 ```
-VITE_API_URL=https://codepulse-monorepo-backend.vercel.app
+VITE_API_URL=https://codepulse-monorepo.onrender.com
 VITE_APP_NAME=CodePulse
 ```
 

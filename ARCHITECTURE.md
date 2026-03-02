@@ -174,7 +174,7 @@ interface OutputProps {
 - Serverless Functions deployment
 - Build Command: `cd backend && yarn install && yarn build`
 - Output Directory: `backend/dist/`
-- Node.js Runtime: 18.x
+- Node.js Runtime: 20.x
 - API Routes: All `/api/*` routes mapped to backend handler
 
 **Configuration:** `vercel.json`
@@ -185,7 +185,7 @@ interface OutputProps {
 
 1. **Trigger**: On push to `main` or pull requests
 2. **Lint and Test Job**:
-   - Node.js 18.x environment
+   - Node.js 20.x environment
    - Install dependencies
    - Run ESLint
    - Run unit tests
@@ -220,7 +220,7 @@ GH_PAGES_DOMAIN=pklavc.github.io
 ## Development Setup
 
 ### Prerequisites
-- Node.js 18.x or higher
+- Node.js 20.x or higher
 - Yarn package manager
 - Judge0 RapidAPI key (for code execution)
 

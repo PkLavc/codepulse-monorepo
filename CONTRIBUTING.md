@@ -23,46 +23,47 @@ This repository demonstrates:
 ### 3. Set Up the Environment
 
 #### Prerequisites
-- Node.js 18+
-- Yarn package manager
+- Node.js 20+
+- NPM package manager
 - Playwright for e2e testing
 
 #### Local Setup
 ```bash
 # Install dependencies
-yarn install
+npm install
 
 # Set up Playwright browsers
-yarn playwright install
+npm install @playwright/test
+npx playwright install
 
 # Set up environment variables
 cp .env.example .env
 # Edit .env with your configuration
 
 # Run initial build
-yarn build
+npm run build
 ```
 
 ### 4. Start Development
 ```bash
 # Start development servers for all packages
-yarn dev
+npm run dev
 
 # Or start specific packages
-yarn workspace @codepulse/backend dev
-yarn workspace @codepulse/frontend dev
+cd backend && npm run dev
+cd frontend && npm run dev
 
 # Run tests
-yarn test
+npm test
 
 # Run e2e tests
-yarn test:e2e
+cd e2e && npm test
 
 # Run linting
-yarn lint
+npm run lint
 
 # Run type checking
-yarn typecheck
+npm run typecheck
 ```
 
 ### 5. Make Your Changes
