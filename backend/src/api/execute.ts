@@ -1,6 +1,5 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { Judge0Service } from '../src/services/judge0.service.js';
+import { Judge0Service } from '../services/judge0.service.js';
 
 const executeSchema = z.object({
   code: z.string(),
@@ -11,7 +10,7 @@ const executeSchema = z.object({
   })).optional()
 });
 
-export default async (req: VercelRequest, res: VercelResponse) => {
+export default async (req: any, res: any) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', 'https://pklavc.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
