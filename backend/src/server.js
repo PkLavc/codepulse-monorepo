@@ -2,7 +2,7 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
-import { PistonService } from './services/piston.service.js';
+import { GlotService } from './services/glot.service.js';
 
 const executeSchema = z.object({
   code: z.string(),
@@ -36,7 +36,7 @@ async function setupApp() {
   fastify.post('/api/execute', async (request) => {
     try {
       const validated = executeSchema.parse(request.body);
-      const judge0Service = new PistonService();
+      const judge0Service = new GlotService();
       
       if (validated.testCases && validated.testCases.length > 0) {
         const qaResult = await judge0Service.executeWithQA(
