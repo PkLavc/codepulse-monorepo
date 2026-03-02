@@ -1,16 +1,19 @@
 {
   "version": 2,
   "builds": [
-    { "src": "backend/src/server.ts", "use": "@vercel/node" }
+    {
+      "src": "backend/src/server.ts",
+      "use": "@vercel/node"
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "backend/src/server.ts" },
-    { "src": "/health", "dest": "backend/src/server.ts" }
-  ],
-  "regions": ["sfo1"],
-  "github": {
-    "enabled": true,
-    "deploymentEnabled": true,
-    "autoAssignCustomDomains": true
-  }
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/src/server.ts"
+    },
+    {
+      "src": "/health",
+      "dest": "backend/src/server.ts"
+    }
+  ]
 }
