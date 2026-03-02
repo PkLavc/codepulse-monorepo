@@ -85,6 +85,8 @@ export class GlotService {
 
       console.log(`[Execution] Running via Glot.io Engine for ${language}...`);
 
+      console.log('Enviando token (primeiros 4 caracteres):', process.env.GLOT_API_TOKEN?.substring(0, 4));
+
       const response = await axios.post(`${this.baseURL}/${runtime}/${version}`, {
         files: [
           {
@@ -95,7 +97,7 @@ export class GlotService {
         stdin: stdin || ''
       }, {
         headers: {
-          'Authorization': `Token ${process.env.GLOT_API_TOKEN}`,
+          'Authorization': 'Token ' + process.env.GLOT_API_TOKEN,
           'Content-Type': 'application/json'
         }
       });
