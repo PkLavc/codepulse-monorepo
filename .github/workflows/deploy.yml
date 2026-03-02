@@ -1,0 +1,44 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    # Backend Setup and Build
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm install
+
+    - name: Build backend
+      working-directory: ./backend
+      run: npm run build
+
+    # Frontend Setup and Build
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm install
+
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+
+    # Deploy to Render
+    - name: Trigger Render Deploy
+      if: github.ref == 'refs/heads/main'
+      run: curl -f ${{ secrets.RENDER_DEPLOY_HOOK }}
