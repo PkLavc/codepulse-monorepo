@@ -166,45 +166,6 @@ label {
 
 .footer a:hover { text-decoration: underline; }
 
-/* Minimal credits footer styling */
-.footer-minimal {
-  padding: 30px 0;
-  text-align: center;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-.footer-minimal p {
-  font-size: 13px;
-  color: #666;
-}
-.credits-trigger {
-  cursor: pointer;
-  text-decoration: underline;
-  transition: color 0.3s;
-}
-.credits-trigger:hover {
-  color: var(--accent);
-}
-.credits-hidden {
-  display: none; /* Escondido por padrão */
-  margin-top: 15px;
-  animation: fadeIn 0.5s ease;
-}
-.credits-grid {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-.credits-grid a {
-  font-size: 11px;
-  color: #444;
-  text-decoration: none;
-}
-.credits-grid a:hover {
-  color: var(--accent);
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
 @media (max-width: 1024px) {
   .container { grid-template-columns: 1fr; }
 }

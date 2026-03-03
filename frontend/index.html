@@ -5,75 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodePulse - React IDE</title>
-    
-    <!-- Minimal credits footer styling -->
-    <style>
-      .footer-minimal {
-        padding: 30px 0;
-        text-align: center;
-        border-top: 1px solid rgba(255,255,255,0.05);
-      }
-      .footer-minimal p {
-        font-size: 13px;
-        color: #666;
-      }
-      .credits-trigger {
-        cursor: pointer;
-        text-decoration: underline;
-        transition: color 0.3s;
-      }
-      .credits-trigger:hover {
-        color: #00d1ff;
-      }
-      .credits-hidden {
-        display: none; /* Escondido por padrão */
-        margin-top: 15px;
-        animation: fadeIn 0.5s ease;
-      }
-      .credits-grid {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-      }
-      .credits-grid a {
-        font-size: 11px;
-        color: #444;
-        text-decoration: none;
-      }
-      .credits-grid a:hover {
-        color: #00d1ff;
-      }
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Minimal footer with credits toggle -->
-    <footer class="footer-minimal">
-      <div class="footer-container">
-        <p>© 2026 Patrick Araujo • <span class="credits-trigger" onclick="toggleCredits()">Resources & Attributions</span></p>
-        <div id="credits-list" class="credits-hidden">
-          <div class="credits-grid">
-            <a href="https://lordicon.com/" target="_blank">Icons</a>
-            <a href="https://vincentgarreau.com/" target="_blank">VFX</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-    
-    <!-- JavaScript for credits toggle -->
-    <script>
-      function toggleCredits() {
-        var x = document.getElementById("credits-list");
-        if (x.style.display === "block") {
-          x.style.display = "none";
-        } else {
-          x.style.display = "block";
-        }
-      }
-    </script>
   </body>
 </html>
