@@ -29,6 +29,14 @@ export function App() {
   const [qaResults, setQaResults] = useState<QAExecuteResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Função para alternar exibição de créditos
+  const toggleCredits = () => {
+    const creditsList = document.getElementById('credits-list');
+    if (creditsList) {
+      creditsList.style.display = creditsList.style.display === 'block' ? 'none' : 'block';
+    }
+  };
+
   const handleExecute = async () => {
     setIsLoading(true);
     setOutput('');
@@ -132,12 +140,16 @@ export function App() {
         </div>
       </div>
 
-      <footer className="footer">
-        <p>
-          CodePulse v1.0.0 | 
-          <a href="https://github.com/lojadosapo" target="_blank" rel="noreferrer">Engineering Portfolio</a>
-          | Professional Software Quality Assurance Showcase
-        </p>
+      <footer className="footer-minimal">
+        <div className="footer-container">
+          <p>© 2026 Patrick Araujo • <span className="credits-trigger" onClick={toggleCredits}>Resources & Attributions</span></p>
+          <div id="credits-list" className="credits-hidden">
+            <div className="credits-grid">
+              <a href="https://lordicon.com/" target="_blank">Icons</a>
+              <a href="https://vincentgarreau.com/" target="_blank">VFX</a>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
