@@ -30,9 +30,15 @@ jobs:
       - name: Run unit tests
         run: npm test
 
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: frontend
+          folder: frontend/dist
           branch: gh-pages
           clean: true
