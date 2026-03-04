@@ -4,8 +4,8 @@
 
 **CodePulse** is a professional-grade online IDE that has been significantly refactored to use a **standalone HTML architecture**. The system provides:
 - **Frontend**: Single-page HTML application with embedded CSS and JavaScript
-- **Backend**: External Node.js service deployed on Vercel
-- **Code Execution**: Secure execution via external code execution service
+- **Backend**: External Node.js service deployed on Render
+- **Code Execution**: Secure execution via Glot.io API
 - **Multi-language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
 
 ## Repository Structure
@@ -19,19 +19,19 @@ codepulse-monorepo/
 │   ├── src/
 │   │   ├── server.ts              # Fastify server with API routes
 │   │   └── services/
-│   │       ├── execution.service.ts  # Code execution service integration
-│   │       └── execution.service.test.ts
+│   │       ├── glot.service.ts    # Glot.io service integration
+│   │       └── glot.service.test.ts
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── .eslintrc.json
 ├── frontend/
 │   ├── src/
-│   │   ├── App.tsx                # Main application component
+│   │   ├── App.tsx                # Legacy React component (archived)
 │   │   ├── components/
-│   │   │   ├── Output.tsx         # Output display component with styling
+│   │   │   ├── Output.tsx         # Legacy component (archived)
 │   │   │   ├── Output.css
 │   │   │   └── Output.test.tsx
-│   │   ├── main.tsx               # React entry point
+│   │   ├── main.tsx               # Legacy entry point (archived)
 │   │   ├── App.css
 │   │   └── index.css
 │   ├── index.html                 # **MAIN APPLICATION** - Standalone HTML IDE
@@ -47,7 +47,7 @@ codepulse-monorepo/
 │   └── ARCHITECTURE.md            # This file
 ├── .env.example                   # Environment variables template
 ├── package.json                   # Root package.json with workspaces
-├── vercel.json                    # Vercel deployment configuration
+├── vercel.json                    # Vercel deployment configuration (legacy)
 ├── README.md                      # Project overview
 └── CONTRIBUTING.md                # Contribution guidelines
 ```
@@ -96,14 +96,14 @@ const boilerplates = {
 2. Selects programming language from dropdown
 3. Clicks "Run" button or uses Ctrl+Enter
 4. Code sent to backend via fetch API
-5. Backend executes code using external code execution service
+5. Backend executes code using Glot.io API
 6. Results displayed in output area
 
 ### Backend Architecture (External Service)
 
 **Deployment:**
-- **Platform**: Vercel serverless functions
-- **URL**: `https://codepulse-monorepo-backend.vercel.app`
+- **Platform**: Render serverless functions
+- **URL**: `https://codepulse-monorepo-backend.onrender.com`
 - **Runtime**: Node.js 20.x
 
 **API Endpoints:**
@@ -123,12 +123,13 @@ POST /api/execute
 - **CORS Configuration**: Allows cross-origin requests
 - **Error Handling**: Comprehensive error responses
 - **Timeout Handling**: 5-second execution timeout
+- **Glot.io Integration**: Secure multi-language code execution
 
 ### Integration Architecture
 
 **Frontend-Backend Communication:**
 ```javascript
-const BACKEND_URL = 'https://codepulse-monorepo-backend.vercel.app';
+const BACKEND_URL = 'https://codepulse-monorepo-backend.onrender.com';
 
 async function executeCode() {
     const code = document.getElementById('code').value;
@@ -167,12 +168,14 @@ async function executeCode() {
 - Vite build system
 - Monaco Editor integration
 - Complex frontend tooling
+- Judge0 API integration
 
 **Simplified Architecture:**
 - Single HTML file instead of multi-file React application
 - Direct API calls instead of complex state management
 - Native textarea instead of sophisticated code editor
 - External CSS/JS loading instead of build-time bundling
+- Glot.io API instead of Judge0 API
 
 ### Benefits of Current Architecture
 
@@ -181,6 +184,7 @@ async function executeCode() {
 3. **Maintainability**: Single file to maintain and understand
 4. **Accessibility**: Works in any modern browser without setup
 5. **Deployment**: Easy deployment to any static hosting
+6. **Cost Efficiency**: Render hosting instead of Vercel
 
 ## Deployment
 
@@ -195,14 +199,14 @@ async function executeCode() {
 
 ### Backend Deployment
 
-**Vercel:**
+**Render:**
 - Serverless Functions deployment
-- Build Command: `cd backend && yarn install && yarn build`
+- Build Command: `cd backend && npm install && npm run build`
 - Output Directory: `backend/dist/`
 - Node.js Runtime: 20.x
 - API Routes: All `/api/*` routes mapped to backend handler
 
-**Configuration:** `vercel.json`
+**Configuration:** `render.yaml` (to be created)
 
 ## CI/CD Pipeline
 
@@ -216,8 +220,8 @@ async function executeCode() {
    - Run unit tests
    - Upload coverage to Codecov
 3. **Frontend Deploy Job** (only on main push):
-   - Build frontend
-   - Deploy to GitHub Pages
+   - Copy `frontend/` directory directly to GitHub Pages
+   - No build process required
 
 ## Environment Configuration
 
@@ -234,11 +238,11 @@ VITE_API_URL=http://localhost:3001
 VITE_APP_NAME=CodePulse
 
 # APIs
-JUDGE0_API_KEY=your_judge0_rapidapi_key_here
-PISTON_API_URL=https://emkc.org/api/v2/piston/execute
+GLOT_API_URL=https://run.glot.io
+GLOT_API_TOKEN=your_glot_api_token
 
 # Deployment
-VERCEL_PROJECT_NAME=codepulse-api
+RENDER_PROJECT_NAME=codepulse-backend
 GH_PAGES_DOMAIN=pklavc.github.io
 ```
 
@@ -247,7 +251,7 @@ GH_PAGES_DOMAIN=pklavc.github.io
 ### Prerequisites
 - Node.js 20.x or higher
 - NPM package manager
-- Access to backend API (deployed on Vercel)
+- Access to backend API (deployed on Render)
 
 ### Installation
 
@@ -288,10 +292,10 @@ cd backend && npm test
 |-------|------------|
 | **Frontend** | HTML, CSS, JavaScript (standalone) |
 | **Backend** | Node.js, Fastify, TypeScript, Axios |
-| **Code Execution** | External code execution service |
+| **Code Execution** | Glot.io API |
 | **Visual Effects** | Particle.js |
 | **Styling** | External CSS from pklavc.github.io |
-| **Deployment** | Vercel (Backend), GitHub Pages (Frontend) |
+| **Deployment** | Render (Backend), GitHub Pages (Frontend) |
 | **CI/CD** | GitHub Actions |
 | **Package Management** | NPM |
 
@@ -301,7 +305,7 @@ cd backend && npm test
 2. **Language Selection**: Dropdown selects target language
 3. **API Request**: POST to `/api/execute` with code and language
 4. **Backend Processing**: Fastify server receives request
-5. **External Service Integration**: Code sent to external code execution service
+5. **Glot.io Integration**: Code sent to Glot.io API for execution
 6. **Result Processing**: Execution results processed and returned
 7. **Frontend Display**: Results displayed in output area
 
@@ -317,11 +321,11 @@ cd backend && npm test
 - **Syntax Errors**: Proper error message formatting
 - **Runtime Errors**: Stack trace and error details
 - **Resource Limits**: Memory and CPU timeout handling
-- **API Errors**: External service integration failures
+- **API Errors**: Glot.io service integration failures
 
 ## Security Considerations
 
-- **Sandboxed Execution**: Code runs in external service's secure environment
+- **Sandboxed Execution**: Code runs in Glot.io's secure environment
 - **Input Validation**: Backend validates all inputs
 - **CORS Protection**: Proper cross-origin resource sharing
 - **Rate Limiting**: Prevents API abuse

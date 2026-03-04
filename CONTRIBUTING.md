@@ -143,16 +143,16 @@ The CodePulse IDE is now a **single-page HTML application** with the following c
 - **No Framework Dependencies**: Pure HTML/CSS/JavaScript implementation
 - **Code Editor**: Uses a simple textarea for code input
 - **Language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
-- **Backend Integration**: Connects to external backend at `https://codepulse-monorepo-backend.vercel.app`
+- **Backend Integration**: Connects to external backend at `https://codepulse-monorepo-backend.onrender.com`
 - **API Endpoint**: `/api/execute` for code execution
 - **Visual Effects**: Particle.js for background effects
 - **Styling**: External CSS from `https://pklavc.github.io/css/` (global.css, color-blue.css, index.css)
 
 ### Backend (External Service)
-- **Deployment**: Vercel serverless functions
-- **URL**: `https://codepulse-monorepo-backend.vercel.app`
+- **Deployment**: Render serverless functions
+- **URL**: `https://codepulse-monorepo-backend.onrender.com`
 - **API**: `/api/execute` endpoint for code execution
-- **Integration**: Uses Judge0 API via RapidAPI for secure code execution
+- **Integration**: Uses Glot.io API for secure code execution
 
 ### Key Changes from Previous Architecture
 - **Removed**: React, TypeScript, Vite, Monaco Editor dependencies

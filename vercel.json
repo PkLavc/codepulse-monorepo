@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "name": "codepulse-backend",
+  "builds": [
+    {
+      "src": "backend/package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/dist/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3001"
+  }
+}

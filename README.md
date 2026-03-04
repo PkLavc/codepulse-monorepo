@@ -1,11 +1,11 @@
 # CodePulse: High-Performance Code Execution Engine
 
-**A Professional Monorepo with React Frontend, Node.js Backend, E2E Tests & High QA Coverage**
+**A Professional Monorepo with Standalone HTML Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
-<!-- ci-trigger: validate Judge0Service fixes -->
-[![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/Deploy%20to%20Render/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
+<!-- ci-trigger: validate GlotService fixes -->
+[![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
 [![CodeCov Coverage](https://codecov.io/gh/PkLavc/codepulse-monorepo/branch/main/graph/badge.svg)](https://codecov.io/gh/PkLavc/codepulse-monorepo)
-[![Frontend: React + TypeScript](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-blue)](./frontend)
+[![Frontend: HTML + CSS + JavaScript](https://img.shields.io/badge/Frontend-HTML%20%2B%20CSS%20%2B%20JS-blue)](./frontend)
 [![Backend: Node.js + Fastify](https://img.shields.io/badge/Backend-Node.js%20%2B%20Fastify-blue)](./backend)
 [![E2E Tests: Playwright](https://img.shields.io/badge/E2E%20Tests-Playwright-purple)](./e2e)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
@@ -14,11 +14,12 @@
 
 CodePulse is a professional-grade monorepo showcasing software engineering excellence with:
 
-- **Frontend**: React with TypeScript & Vite (primary) + HTML/JS fallback
-- **Backend**: Node.js with Fastify & TypeScript
-- **Testing**: Vitest (unit), Playwright (e2e), test infrastructure in place
+- **Frontend**: Standalone HTML application with CSS/JavaScript (IDE-like interface)
+- **Backend**: Node.js with Fastify & TypeScript (API service)
+- **Code Execution**: Glot.io integration for secure multi-language code execution
+- **Testing**: Vitest (unit), Playwright (e2e), comprehensive test infrastructure
 - **CI/CD**: GitHub Actions with automated testing, linting, and deployments
-- **Deployment**: GitHub Pages (Frontend) + Vercel (Backend)
+- **Deployment**: GitHub Pages (Frontend) + Render (Backend)
 
 ### Engineering Excellence & Professional Showcase
 | Feature | Implementation | Industry Impact |
@@ -47,12 +48,14 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 
 | Layer | Technology | Version |
 |-------|-----------|----------|
-| **Frontend** | React | 18.x |
-| | TypeScript | 5.x |
-| | Vite | Latest |
+| **Frontend** | HTML5 | Standard |
+| | CSS3 | Standard |
+| | JavaScript ES6+ | Modern |
+| | Particle.js | Latest |
 | **Backend** | Node.js | 20.x |
 | | Fastify | 4.x |
 | | TypeScript | 5.x |
+| **Code Execution** | Glot.io API | Latest |
 | **Testing** | Vitest | Latest |
 | | Playwright | Latest |
 | **CI/CD** | GitHub Actions | - |
@@ -64,8 +67,8 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 ### System Interaction Flow
 ```mermaid
 graph LR
-    A[Frontend: React/TS] -->|API Calls| B[Backend: Fastify/Node]
-    B -->|Logic| C[Execution Engine]
+    A[Frontend: HTML/CSS/JS] -->|API Calls| B[Backend: Fastify/Node]
+    B -->|Glot.io API| C[Code Execution]
     D[Playwright E2E] -->|Tests| A
     D -->|Tests| B
     E[CI/CD Pipeline] -->|Validates| D
@@ -73,8 +76,9 @@ graph LR
 
 ```
 codepulse-monorepo/
-├── frontend/              # React + Vite application
-│   ├── src/
+├── frontend/              # Standalone HTML application
+│   ├── index.html         # Main IDE application
+│   ├── src/               # Legacy React structure (archived)
 │   │   ├── App.tsx
 │   │   ├── App.test.tsx
 │   │   └── ...
@@ -84,7 +88,8 @@ codepulse-monorepo/
 │   ├── src/
 │   │   ├── server.ts
 │   │   ├── server.test.ts
-│   │   └── ...
+│   │   └── services/
+│   │       └── glot.service.ts
 │   ├── package.json
 │   └── tsconfig.json
 ├── e2e/                   # Playwright end-to-end tests
@@ -113,14 +118,11 @@ npm install
 ### Development
 
 ```bash
-# Start all services in development mode
-npm run dev
-
-# Frontend only
-cd frontend && npm run dev
-
-# Backend only
+# Start backend in development mode
 cd backend && npm run dev
+
+# Frontend runs directly from index.html (no build required)
+# Open frontend/index.html in browser to test
 ```
 
 ### Testing
@@ -139,21 +141,17 @@ cd e2e && npm test
 ### Build
 
 ```bash
-# Build all packages
-npm run build
-
-# Frontend build
-cd frontend && npm run build
-
-# Backend build
+# Build backend only
 cd backend && npm run build
+
+# Frontend: No build required (standalone HTML)
 ```
 
 ### Linting
 
 ```bash
-# Lint all packages
-npm run lint
+# Lint backend packages
+cd backend && npm run lint
 
 # Format code
 npm run format
@@ -162,23 +160,26 @@ npm run format
 ## Testing & QA
 
 ### Frontend Testing
-- **Unit Tests**: Vitest with React Testing Library
-- **Coverage**: In development (basic test structure implemented)
-- **Configuration**: `frontend/vitest.config.ts`
+- **Manual Testing**: Direct browser testing via `frontend/index.html`
+- **No Build Required**: Standalone HTML application
+- **Visual Verification**: Particle effects, responsive design, code execution
 
 ### Backend Testing
 - **Unit Tests**: Vitest with mocked services
 - **Coverage**: In development (basic test structure implemented)
 - **Configuration**: `backend/vitest.config.ts`
+- **API Testing**: Fastify server endpoints and Glot.io integration
 
 ### E2E Testing
 - **Framework**: Playwright
 - **Browsers**: Chromium, Firefox, WebKit
 - **Configuration**: `e2e/playwright.config.ts`
+- **Test Scenarios**: Code execution workflow, error handling, timeout scenarios
 
 ### QA Metrics Snapshot
-- **Unit Testing**: Vitest (Test structure in place)
+- **Unit Testing**: Vitest (Backend test structure in place)
 - **E2E Testing**: Playwright (Cross-browser verification)
+- **Manual Testing**: Frontend IDE functionality
 - **Static Analysis**: ESLint + TypeScript (Strict mode)
 - **Continuous Tracking**: Codecov integration for coverage regression
 
@@ -188,19 +189,19 @@ npm run format
 
 1. **Lint & Test Job**
    - Runs on: Push to main, Pull requests
-   - Node.js versions: 18.x
+   - Node.js versions: 20.x
    - Steps:
      - Checkout code
      - Install Node.js
-     - Install dependencies with Yarn
+     - Install dependencies with NPM
      - Run ESLint
      - Run unit tests with coverage
      - Upload coverage to Codecov
 
 2. **Frontend Deploy Job**
    - Runs after lint-and-test succeeds
-   - Builds React app with Vite
-   - Deploys to GitHub Pages
+   - Copies `frontend/` directory directly to GitHub Pages
+   - No build process required (standalone HTML)
    - Status: ✅ Green checkmark
 
 3. **Status Badges**
@@ -209,7 +210,7 @@ npm run format
 
 ## Code Coverage
 
-- **Frontend**: Test infrastructure in place (coverage metrics to be implemented)
+- **Frontend**: Manual testing approach (standalone HTML application)
 - **Backend**: Test infrastructure in place (coverage metrics to be implemented)
 - **Overall**: Test framework ready for coverage implementation
 - Codecov integration for continuous tracking
@@ -231,11 +232,13 @@ NODE_ENV=production
 PORT=3001
 CORE_ALLOWED_ORIGINS=*
 EXECUTION_TIMEOUT=5000
+GLOT_API_URL=https://run.glot.io
+GLOT_API_TOKEN=your_glot_api_token
 ```
 
 ### Frontend (.env.production)
 ```
-VITE_API_URL=https://codepulse-monorepo.onrender.com
+VITE_API_URL=https://codepulse-monorepo-backend.onrender.com
 VITE_APP_NAME=CodePulse
 ```
 
@@ -249,10 +252,12 @@ VITE_APP_NAME=CodePulse
 
 Contributions are welcome! Please ensure:
 
-1. All tests pass: `yarn test`
-2. Code is linted: `yarn lint`
-3. Coverage is maintained: `yarn test:coverage`
+1. All tests pass: `npm test`
+2. Code is linted: `npm run lint`
+3. Coverage is maintained: `npm run test:coverage`
 4. Commit messages follow conventional commits
+5. Frontend changes are tested manually via `frontend/index.html`
+6. Backend changes maintain Glot.io integration compatibility
 
 ## License
 

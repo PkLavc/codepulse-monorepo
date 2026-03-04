@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: codepulse-backend
+    env: node
+    buildCommand: "cd backend && npm install && npm run build"
+    startCommand: "cd backend && npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: GLOT_API_URL
+        value: "https://run.glot.io"
+      - key: GLOT_API_TOKEN
+        fromDatabaseSecret: GLOT_API_TOKEN
+    healthCheckPath: /health
+    region: oregon
+    plan: free
+    autoDeploy: true

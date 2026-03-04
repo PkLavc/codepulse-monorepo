@@ -9,6 +9,13 @@
     "e2e"
   ],
   "scripts": {
+    "dev": "npm run dev --prefix backend",
+    "build": "npm run build --prefix backend",
+    "test": "npm run test --prefix backend",
+    "test:coverage": "npm run test:coverage --prefix backend",
+    "lint": "npm run lint --prefix backend",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present"
@@ -17,8 +24,9 @@
     "code-execution",
     "online-ide",
     "monorepo",
-    "react",
+    "html",
     "nodejs",
+    "glot-io",
     "qa",
     "testing"
   ],
@@ -31,6 +39,8 @@
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1"
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.2.4",
+    "typescript": "^5.4.5"
   }
 }
