@@ -397,13 +397,18 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             ruby: "puts 'Hello CodePulse!'"
         };
 
-        // Dynamic language switching logic
+        // Dynamic language switching logic with comprehensive validation
         document.getElementById('language').addEventListener('change', function() {
             const currentCode = document.getElementById('code').value;
-            const defaultPythonCode = "print('Hello CodePulse!')";
+            const currentCodeTrimmed = currentCode.trim();
             
-            // Only change code if it matches the default Python code
-            if (currentCode.trim() === defaultPythonCode.trim()) {
+            // Check if current code matches any of the boilerplate defaults
+            const isDefaultCode = Object.values(boilerplates).some(boilerplate => 
+                currentCodeTrimmed === boilerplate.trim()
+            );
+            
+            // Only change code if it matches any default boilerplate (preserves user modifications)
+            if (isDefaultCode) {
                 const selectedLanguage = this.value;
                 document.getElementById('code').value = boilerplates[selectedLanguage];
             }
