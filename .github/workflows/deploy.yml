@@ -30,12 +30,9 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: Build frontend
-        run: npm run build --workspace=codepulse-frontend
-
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: frontend/dist
+          folder: frontend
           branch: gh-pages
           clean: true
