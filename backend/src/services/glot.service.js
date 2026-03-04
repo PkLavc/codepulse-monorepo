@@ -31,7 +31,7 @@ export class GlotService {
       this.runtimes.set('bash', '5.0.17');
       this.initialized = true;
     } catch (error) {
-      console.error('Failed to initialize Glot runtimes:', error);
+      // Error handling without console.log
       this.initialized = true;
     }
   }
@@ -83,11 +83,8 @@ export class GlotService {
     try {
       const { language: runtime, version } = this.getLanguageRuntime(language);
 
-      console.log(`[Execution] Running via Glot.io Engine for ${language}...`);
-
       // Use hardcoded token for testing
       const token = process.env.GLOT_API_TOKEN || 'db2dd0bd-64e5-487b-801a-c9845ea7bbd0';
-      console.log('Enviando token (primeiros 4 caracteres):', token?.substring(0, 4));
 
       const response = await axios.post(`${this.baseURL}/${runtime}/${version}`, {
         files: [
@@ -104,14 +101,13 @@ export class GlotService {
         }
       });
 
-      console.log('[Glot.io] Response Received:', response.data);
+      // Response handling without console.log
 
       return {
         output: response.data.stdout || '',
         error: response.data.stderr || null
       };
     } catch (error) {
-      console.error('Glot.io API error:', error.message);
       return {
         output: '',
         error: error.response?.data?.message || error.message || 'Glot.io service unavailable'
@@ -122,7 +118,7 @@ export class GlotService {
   /**
    * Returns mock responses for testing (temporary until Glot.io token is available)
    */
-  getMockResponse(code, language, stdin) {
+  getMockResponse(code, language, _stdin) {
     // For Python, try to execute the code logic to get real results
     if (language.toLowerCase() === 'python') {
       try {

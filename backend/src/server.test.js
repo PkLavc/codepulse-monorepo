@@ -8,7 +8,7 @@ describe('CodePulse Backend - Resilience Tests', () => {
   describe('Timeout Handling', () => {
     it('should handle timeout from Piston API and return 408 status', async () => {
       // Simulate timeout from Piston API
-      const timeoutError = new Error('ECONNABORTED') as Error & { code?: string; isAxiosError?: boolean; response?: unknown };
+      const timeoutError = new Error('ECONNABORTED');
       timeoutError.code = 'ECONNABORTED';
       timeoutError.isAxiosError = true;
       timeoutError.response = undefined;
