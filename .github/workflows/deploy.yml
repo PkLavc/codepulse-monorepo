@@ -1,44 +1,38 @@
-name: Deploy to Render
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-    # Backend Setup and Build
-    - name: Install backend dependencies
-      working-directory: ./backend
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build backend
-      working-directory: ./backend
-      run: npm run build
+      - name: Run linting
+        run: npm run lint
 
-    # Frontend Setup and Build
-    - name: Install frontend dependencies
-      working-directory: ./frontend
-      run: npm install
+      - name: Run unit tests
+        run: npm test
 
-    - name: Build frontend
-      working-directory: ./frontend
-      run: npm run build
-
-    # Deploy to Render
-    - name: Trigger Render Deploy
-      if: github.ref == 'refs/heads/main'
-      run: curl -f ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: frontend
+          branch: gh-pages
+          clean: true

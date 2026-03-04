@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-**CodePulse** is a professional-grade monorepo showcasing software engineering excellence with:
-- **Frontend**: React + TypeScript + Vite with Monaco Editor
-- **Backend**: Node.js + Fastify + Judge0 API integration
-- **E2E Tests**: Playwright for comprehensive testing
-- **High QA Coverage**: Quality assurance and testing reports
+**CodePulse** is a professional-grade online IDE that has been significantly refactored to use a **standalone HTML architecture**. The system provides:
+- **Frontend**: Single-page HTML application with embedded CSS and JavaScript
+- **Backend**: External Node.js service deployed on Vercel
+- **Code Execution**: Secure execution via external code execution service
+- **Multi-language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
 
 ## Repository Structure
 
@@ -19,8 +19,8 @@ codepulse-monorepo/
 │   ├── src/
 │   │   ├── server.ts              # Fastify server with API routes
 │   │   └── services/
-│   │       ├── judge0.service.ts  # Judge0 API integration service
-│   │       └── judge0.service.test.ts
+│   │       ├── execution.service.ts  # Code execution service integration
+│   │       └── execution.service.test.ts
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── .eslintrc.json
@@ -34,8 +34,8 @@ codepulse-monorepo/
 │   │   ├── main.tsx               # React entry point
 │   │   ├── App.css
 │   │   └── index.css
-│   ├── index.html
-│   ├── vite.config.ts             # Vite configuration
+│   ├── index.html                 # **MAIN APPLICATION** - Standalone HTML IDE
+│   ├── vite.config.ts             # Vite configuration (legacy)
 │   ├── tsconfig.json
 │   └── package.json
 ├── e2e/
@@ -52,110 +52,135 @@ codepulse-monorepo/
 └── CONTRIBUTING.md                # Contribution guidelines
 ```
 
-## Backend Architecture
+## Current Architecture (Updated 2026)
 
-### Fastify Server (`backend/src/server.ts`)
+### Frontend Architecture - Standalone HTML Application
 
-The backend is built with Fastify, a lightweight and efficient Node.js framework:
+The CodePulse IDE is now implemented as a **single-page HTML application** (`index.html`) with the following characteristics:
 
 **Key Features:**
-- **CORS Configuration**: Enables cross-origin requests from frontend and other sources
-- **Rate Limiting**: Protects API from abuse (100 requests per 15 minutes)
-- **Health Check Endpoint**: GET `/health` for monitoring
-- **Code Execution Endpoint**: POST `/api/execute` for code execution with or without test cases
+- **No Framework Dependencies**: Pure HTML/CSS/JavaScript implementation
+- **Simple Code Editor**: Uses native textarea element for code input
+- **Real-time Language Switching**: Dynamic boilerplate code updates
+- **Visual Effects**: Particle.js for animated background
+- **Responsive Design**: Mobile-friendly layout with CSS Grid/Flexbox
+- **External Styling**: CSS loaded from `https://pklavc.github.io/css/`
 
-**API Routes:**
+**Supported Languages:**
+- Python
+- JavaScript
+- Java
+- C++
+- C#
+- PHP
+- Go
+- Ruby
 
+**Code Editor Features:**
+```javascript
+// Language boilerplates with Hello CodePulse string
+const boilerplates = {
+    python: "print('Hello CodePulse!')",
+    javascript: "console.log('Hello CodePulse!');",
+    java: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello CodePulse!\");\n    }\n}",
+    cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello CodePulse!\" << endl;\n    return 0;\n}",
+    csharp: "using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine(\"Hello CodePulse!\");\n    }\n}",
+    php: "<?php\necho 'Hello CodePulse!';\n?>",
+    go: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello CodePulse!\")\n}",
+    ruby: "puts 'Hello CodePulse!'"
+};
+```
+
+**Execution Flow:**
+1. User writes code in textarea
+2. Selects programming language from dropdown
+3. Clicks "Run" button or uses Ctrl+Enter
+4. Code sent to backend via fetch API
+5. Backend executes code using external code execution service
+6. Results displayed in output area
+
+### Backend Architecture (External Service)
+
+**Deployment:**
+- **Platform**: Vercel serverless functions
+- **URL**: `https://codepulse-monorepo-backend.vercel.app`
+- **Runtime**: Node.js 20.x
+
+**API Endpoints:**
 ```typescript
+// Health check
 GET /health
 // Returns: { status: 'ok' }
 
+// Code execution
 POST /api/execute
-// Body: { code: string; language: string; testCases?: Array<{ input: string; expected: string }> }
-// Returns: { output?: string; error?: string; executionTime: number; passed?: boolean; tests?: Array }
+// Body: { code: string; language: string }
+// Returns: { output?: string; error?: string; executionTime: number }
 ```
 
-### Judge0 Service (`backend/src/services/judge0.service.ts`)
+**Key Features:**
+- **Rate Limiting**: Protects against abuse
+- **CORS Configuration**: Allows cross-origin requests
+- **Error Handling**: Comprehensive error responses
+- **Timeout Handling**: 5-second execution timeout
 
-Integrates with Judge0 API via RapidAPI for secure code execution:
+### Integration Architecture
 
-**Supported Languages:**
-- JavaScript (ID: 63)
-- Python (ID: 71)
-- Java (ID: 62)
-- C (ID: 50)
-- C++ (ID: 54)
-- C# (ID: 51)
-- Go (ID: 60)
-- Rust (ID: 73)
-- PHP (ID: 68)
-- Ruby (ID: 72)
-- Swift (ID: 80)
-- Kotlin (ID: 78)
-- TypeScript (ID: 74)
+**Frontend-Backend Communication:**
+```javascript
+const BACKEND_URL = 'https://codepulse-monorepo-backend.vercel.app';
 
-**Methods:**
-
-1. `executeCode(code, language, stdin?)`: Executes code without test cases
-2. `executeWithQA(code, language, testCases)`: Runs code against test cases for validation
-3. `getLanguageId(language)`: Maps language names to Judge0 IDs
-4. `submitCode(submission)`: Submits code to Judge0
-5. `getSubmissionResult(token)`: Retrieves execution results
-6. `waitForCompletion(token)`: Polls for completion (max 30 attempts)
-
-**Configuration:**
-- Base URL: `https://judge0-ce.p.rapidapi.com`
-- Requires: `JUDGE0_API_KEY` environment variable
-- CPU Time Limit: 2 seconds per execution
-- Memory Limit: 256MB
-
-## Frontend Architecture
-
-### App Component (`frontend/src/App.tsx`)
-
-Main React component built with TypeScript and Vite:
-
-**Features:**
-- **Monaco Editor Integration**: Professional code editor with syntax highlighting
-- **State Management**: Uses React hooks (useState, useRef)
-- **API Integration**: Communicates with backend via fetch API
-- **Error Handling**: Displays errors and loading states
-- **Multi-language Support**: Switch between JavaScript, Python, and other languages
-
-**Key States:**
-- `code`: Currently edited code
-- `output`: Execution output
-- `error`: Error messages
-- `isLoading`: Loading indicator
-
-**Component Flow:**
-1. User writes code in Monaco Editor
-2. Clicks "Execute" button
-3. Code is sent to backend via `/api/execute`
-4. Backend executes using Judge0
-5. Results displayed in Output component
-
-### Output Component (`frontend/src/components/Output.tsx`)
-
-Dedicated component for displaying code execution results:
-
-**Features:**
-- **Loading State**: Shows spinner while code executes
-- **Error Visualization**: Distinguishes between syntax errors, timeouts, and runtime errors
-- **Timeout Detection**: Identifies when execution exceeds 5 seconds
-- **Visual Indicators**: Emojis and badges for quick status recognition
-- **Empty State**: Helpful message when no results available
-- **Status Footer**: Real-time status indicators
-
-**Props:**
-```typescript
-interface OutputProps {
-  output: string;
-  error: string | null;
-  isLoading: boolean;
-  isTimeout?: boolean;
+async function executeCode() {
+    const code = document.getElementById('code').value;
+    const language = document.getElementById('language').value;
+    
+    const response = await fetch(`${BACKEND_URL}/api/execute`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code, language })
+    });
+    
+    const data = await response.json();
+    // Handle response and display output
 }
 ```
+
+**External Dependencies:**
+- **CSS Framework**: `https://pklavc.github.io/css/global.css`
+- **Color Theme**: `https://pklavc.github.io/css/color-blue.css`
+- **Layout Styles**: `https://pklavc.github.io/css/index.css`
+- **Icons**: `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css`
+- **JavaScript Libraries**:
+  - `https://pklavc.github.io/js/jquery.min.js`
+  - `https://pklavc.github.io/js/particles.min.js`
+  - `https://pklavc.github.io/js/index.js`
+
+## Key Architectural Changes
+
+### From Previous Architecture
+
+**Removed Components:**
+- React framework and dependencies
+- TypeScript compilation
+- Vite build system
+- Monaco Editor integration
+- Complex frontend tooling
+
+**Simplified Architecture:**
+- Single HTML file instead of multi-file React application
+- Direct API calls instead of complex state management
+- Native textarea instead of sophisticated code editor
+- External CSS/JS loading instead of build-time bundling
+
+### Benefits of Current Architecture
+
+1. **Simplicity**: No build process required
+2. **Performance**: Faster loading with minimal dependencies
+3. **Maintainability**: Single file to maintain and understand
+4. **Accessibility**: Works in any modern browser without setup
+5. **Deployment**: Easy deployment to any static hosting
 
 ## Deployment
 
@@ -164,9 +189,9 @@ interface OutputProps {
 **GitHub Pages:**
 - Automatically deployed on push to `main` branch
 - URL: https://pklavc.github.io/codepulse-monorepo/
-- Configured in CI/CD pipeline
+- No build process required - direct HTML serving
 
-**Build Command:** `yarn build` (Vite builds to `dist/`)
+**Build Command:** Not required (standalone HTML)
 
 ### Backend Deployment
 
@@ -221,8 +246,8 @@ GH_PAGES_DOMAIN=pklavc.github.io
 
 ### Prerequisites
 - Node.js 20.x or higher
-- Yarn package manager
-- Judge0 RapidAPI key (for code execution)
+- NPM package manager
+- Access to backend API (deployed on Vercel)
 
 ### Installation
 
@@ -231,60 +256,76 @@ GH_PAGES_DOMAIN=pklavc.github.io
 git clone https://github.com/PkLavc/codepulse-monorepo.git
 cd codepulse-monorepo
 
-# Install dependencies (all workspaces)
-yarn install
+# Install dependencies (for backend development)
+npm install
 
-# Setup environment
-cp .env.example .env.local
-# Edit .env.local with your Judge0 API key
+# No frontend build required - index.html is standalone
 ```
 
 ### Running Locally
 
 ```bash
-# Run all workspaces in development mode
-yarn dev
+# For backend development
+cd backend && npm run dev
 
-# Or run individual workspaces
-cd backend && yarn dev
-cd frontend && yarn dev
+# Frontend runs directly from index.html
+# Open index.html in browser to test
 ```
 
 ### Testing
 
 ```bash
-# Run all tests
-yarn test
+# Run backend tests
+cd backend && npm test
 
-# Run linting
-yarn lint
-
-# Run E2E tests
-cd e2e && yarn test
+# Manual frontend testing
+# Open index.html in browser and test code execution
 ```
 
 ## Technology Stack
 
 | Layer | Technology |
 |-------|------------|
-| **Frontend** | React, TypeScript, Vite, Monaco Editor |
+| **Frontend** | HTML, CSS, JavaScript (standalone) |
 | **Backend** | Node.js, Fastify, TypeScript, Axios |
-| **Code Execution** | Judge0 API (RapidAPI) |
-| **Testing** | Playwright, Vitest, Jest |
+| **Code Execution** | External code execution service |
+| **Visual Effects** | Particle.js |
+| **Styling** | External CSS from pklavc.github.io |
 | **Deployment** | Vercel (Backend), GitHub Pages (Frontend) |
 | **CI/CD** | GitHub Actions |
-| **Package Management** | Yarn Workspaces |
+| **Package Management** | NPM |
 
-## Key Achievements
+## Code Execution Flow
 
-✅ **Professional Monorepo Structure**: Clean separation of concerns with shared configuration
-✅ **High Code Quality**: ESLint, TypeScript, comprehensive testing
-✅ **Secure Code Execution**: Sandboxed execution via Judge0 API
-✅ **Responsive UI**: Monaco Editor with real-time code feedback
-✅ **Automated Deployment**: CI/CD pipeline with GitHub Actions
-✅ **QA Documentation**: Comprehensive testing reports and coverage
-✅ **Multiple Language Support**: 13+ programming languages
-✅ **Error Handling**: Graceful error messages and timeout detection
+1. **User Input**: Code written in textarea
+2. **Language Selection**: Dropdown selects target language
+3. **API Request**: POST to `/api/execute` with code and language
+4. **Backend Processing**: Fastify server receives request
+5. **External Service Integration**: Code sent to external code execution service
+6. **Result Processing**: Execution results processed and returned
+7. **Frontend Display**: Results displayed in output area
+
+## Error Handling
+
+**Frontend Error States:**
+- **No Code**: "Please enter some code!" message
+- **Connection Error**: Network connectivity issues
+- **Backend Error**: Server-side execution errors
+- **Timeout**: Execution exceeds 5-second limit
+
+**Backend Error Handling:**
+- **Syntax Errors**: Proper error message formatting
+- **Runtime Errors**: Stack trace and error details
+- **Resource Limits**: Memory and CPU timeout handling
+- **API Errors**: External service integration failures
+
+## Security Considerations
+
+- **Sandboxed Execution**: Code runs in external service's secure environment
+- **Input Validation**: Backend validates all inputs
+- **CORS Protection**: Proper cross-origin resource sharing
+- **Rate Limiting**: Prevents API abuse
+- **No Local Execution**: All code runs on external secure servers
 
 ## Future Enhancements
 

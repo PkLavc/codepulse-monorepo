@@ -133,3 +133,67 @@ Before submitting a Pull Request, please make sure to:
 6.  **Pass Tests**: Make sure all existing tests pass and the project compiles successfully.
 7.  **Linting/Static Analysis**: Fix any linting or static analysis warnings.
 8.  **Link to Issue**: If your Pull Request resolves an existing issue, clearly link it in the Pull Request description.
+
+## Current Architecture (Updated)
+
+### Frontend (Standalone HTML Application)
+The CodePulse IDE is now a **single-page HTML application** with the following characteristics:
+
+- **Architecture**: Standalone HTML file with embedded CSS and JavaScript
+- **No Framework Dependencies**: Pure HTML/CSS/JavaScript implementation
+- **Code Editor**: Uses a simple textarea for code input
+- **Language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
+- **Backend Integration**: Connects to external backend at `https://codepulse-monorepo-backend.vercel.app`
+- **API Endpoint**: `/api/execute` for code execution
+- **Visual Effects**: Particle.js for background effects
+- **Styling**: External CSS from `https://pklavc.github.io/css/` (global.css, color-blue.css, index.css)
+
+### Backend (External Service)
+- **Deployment**: Vercel serverless functions
+- **URL**: `https://codepulse-monorepo-backend.vercel.app`
+- **API**: `/api/execute` endpoint for code execution
+- **Integration**: Uses Judge0 API via RapidAPI for secure code execution
+
+### Key Changes from Previous Architecture
+- **Removed**: React, TypeScript, Vite, Monaco Editor dependencies
+- **Simplified**: Single HTML file instead of complex frontend build system
+- **Externalized**: Backend runs as separate service on Vercel
+- **Streamlined**: Direct API communication without complex frontend tooling
+
+## Development Workflow
+
+### For Frontend Changes
+1. Edit `index.html` directly
+2. Test locally by opening the file in a browser
+3. Ensure backend API is accessible at the configured URL
+4. Test code execution for all supported languages
+
+### For Backend Changes
+1. Work on the backend repository separately
+2. Deploy to Vercel
+3. Update frontend configuration if needed
+
+### Testing
+- Manual testing through the web interface
+- Verify code execution for all supported languages
+- Test error handling and timeout scenarios
+- Validate visual effects and responsive design
+
+## Important Notes
+
+- **No Build Process**: The frontend requires no build tools or compilation
+- **External Dependencies**: Relies on external CSS and JavaScript libraries
+- **Backend Independence**: Frontend and backend are completely separate
+- **Direct API Calls**: Simple fetch API calls to external backend service
+- **Cross-Origin**: Proper CORS configuration required on backend
+
+## Getting Help
+
+If you have questions or need assistance:
+
+1. Check the existing issues and discussions
+2. Review the updated architecture documentation
+3. Look at the current implementation in `index.html`
+4. Test the live application at https://pklavc.github.io/codepulse-monorepo/
+
+Your contributions are valuable in improving this streamlined, standalone IDE application!

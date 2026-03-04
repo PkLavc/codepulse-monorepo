@@ -1,13 +1,8 @@
 {
-  "name": "codepulse-monorepo",
+  "name": "@codepulse/frontend",
   "version": "1.0.0",
-  "description": "High-Reliability Code Execution Engine with React Frontend, Node.js Backend, and High QA Coverage",
-  "private": true,
-  "workspaces": [
-    "backend",
-    "frontend",
-    "e2e"
-  ],
+  "description": "CodePulse Frontend - React IDE with Monaco Editor",
+  "type": "module",
   "scripts": {
     "install-all": "yarn install",
     "dev": "yarn workspaces run dev",
