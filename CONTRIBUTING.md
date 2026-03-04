@@ -15,7 +15,7 @@ cd codepulse-monorepo
 ### 2. Understand the Project
 This repository demonstrates:
 - **Monorepo Architecture** with Yarn workspaces
-- **Full-Stack Development** with TypeScript across frontend and backend
+- **Full-Stack Development** with TypeScript across backend
 - **Modern Tooling** including ESLint, Prettier, and Jest
 - **Testing Strategies** with unit and e2e testing
 - **Quality Assurance** with comprehensive test coverage reporting
@@ -46,24 +46,11 @@ npm run build
 
 ### 4. Start Development
 ```bash
-# Start development servers for all packages
-npm run dev
-
-# Or start specific packages
+# Start backend in development mode
 cd backend && npm run dev
-cd frontend && npm run dev
 
-# Run tests
-npm test
-
-# Run e2e tests
-cd e2e && npm test
-
-# Run linting
-npm run lint
-
-# Run type checking
-npm run typecheck
+# Frontend runs directly from index.html (no build required)
+# Open frontend/index.html in browser to test
 ```
 
 ### 5. Make Your Changes
@@ -75,13 +62,13 @@ npm run typecheck
 ### 6. Test Your Changes
 ```bash
 # Run tests
-yarn test
+npm test
 
 # Run linting
-yarn lint
+npm run lint
 
 # Run type checking
-yarn typecheck
+npm run typecheck
 ```
 
 ### 7. Commit and Push
@@ -127,7 +114,7 @@ Before submitting a Pull Request, please make sure to:
 
 1.  **Focus on a specific sub-project**: Your changes should be for one of the portfolio projects.
 2.  **Branching**: Fork the repository and create your branch from `main` (or the relevant branch for the specific project, if indicated).
-3.  **Code Style**: Follow the code style and best practices of the sub-project (e.g., TypeScript conventions, NestJS, Docker).
+3.  **Code Style**: Follow the code style and best practices of the sub-project (e.g., TypeScript conventions, Fastify, Docker).
 4.  **Commit Messages**: Write clear and concise commit messages. Try to use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) pattern when possible.
 5.  **Tests**: Include comprehensive tests that cover your changes, ensuring good code coverage where applicable.
 6.  **Pass Tests**: Make sure all existing tests pass and the project compiles successfully.
@@ -157,7 +144,7 @@ The CodePulse IDE is now a **single-page HTML application** with the following c
 ### Key Changes from Previous Architecture
 - **Removed**: React, TypeScript, Vite, Monaco Editor dependencies
 - **Simplified**: Single HTML file instead of complex frontend build system
-- **Externalized**: Backend runs as separate service on Vercel
+- **Externalized**: Backend runs as separate service on Render
 - **Streamlined**: Direct API communication without complex frontend tooling
 
 ## Development Workflow
@@ -167,10 +154,11 @@ The CodePulse IDE is now a **single-page HTML application** with the following c
 2. Test locally by opening the file in a browser
 3. Ensure backend API is accessible at the configured URL
 4. Test code execution for all supported languages
+5. **No build required** - frontend is standalone HTML application
 
 ### For Backend Changes
 1. Work on the backend repository separately
-2. Deploy to Vercel
+2. Deploy to Render
 3. Update frontend configuration if needed
 
 ### Testing

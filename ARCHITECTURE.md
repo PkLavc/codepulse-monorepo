@@ -25,15 +25,12 @@ codepulse-monorepo/
 │   ├── tsconfig.json
 │   └── .eslintrc.json
 ├── frontend/
-│   ├── src/
-│   │   ├── App.tsx                # Legacy React component (archived)
-│   │   ├── components/
-│   │   │   ├── Output.tsx         # Legacy component (archived)
-│   │   │   ├── Output.css
-│   │   │   └── Output.test.tsx
-│   │   ├── main.tsx               # Legacy entry point (archived)
-│   │   ├── App.css
-│   │   └── index.css
+│   ├── src/                       # Visual assets (GIFs, Logos, Icons)
+│   │   ├── code.gif
+│   │   ├── doc.gif
+│   │   ├── logo.png
+│   │   ├── play.gif
+│   │   └── return.gif
 │   ├── index.html                 # **MAIN APPLICATION** - Standalone HTML IDE
 │   ├── vite.config.ts             # Vite configuration (legacy)
 │   ├── tsconfig.json
