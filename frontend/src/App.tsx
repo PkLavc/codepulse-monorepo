@@ -7,9 +7,7 @@ interface ImportMetaEnv {
   VITE_API_URL?: string;
 }
 
-// Configuração da URL da API
-const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 
-  (window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://codepulse-monorepo.onrender.com');
+const API_URL = ((import.meta as unknown) as { env: ImportMetaEnv }).env.VITE_API_URL || 'https://codepulse-monorepo-backend.vercel.app';
 
 interface QATestResult {
   testId: number;
@@ -90,7 +88,7 @@ export function App() {
             disabled={isLoading}
             className="execute-btn"
           >
-            {isLoading ? "Processing..." : "Launch Execution"}
+            {isLoading ? "⏳ Processing..." : "▶️ Launch Execution"}
           </button>
         </div>
 
@@ -98,17 +96,17 @@ export function App() {
           <label>Terminal Output / QA Results:</label>
           <div className="output-box">
             {isLoading && <p className="loading">Accessing sandboxed environment...</p>}
-            {error && <p className="error">System Error: {error}</p>}
+            {error && <p className="error">❌ System Error: {error}</p>}
 
             {qaResults && ( 
               <div className="qa-container">
                 <h3 className={qaResults.success ? 'status-pass' : 'status-fail'}>
-                  {qaResults.success ? 'All QA Tests Passed' : 'QA Pipeline Failed'}
+                  {qaResults.success ? '✅ All QA Tests Passed' : '❌ QA Pipeline Failed'}
                 </h3>
                 <ul className="test-list">
                   {qaResults.results.map((test) => (
                     <li key={test.testId} className={`test-item ${test.status}`}>
-                      <span className="test-icon">{test.status === 'passed' ? '✔' : '✘'}</span>
+                      <span className="test-icon">{test.status === 'passed' ? '✔️' : '✘️'}</span>
                       <span className="test-name">Test Case #{test.testId}</span>
                       {test.status === 'failed' && ( 
                         <pre className="test-diff">Expected output mismatch. Actual: {test.actual}</pre>
