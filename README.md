@@ -27,7 +27,7 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 | **High QA Standards** | 85%+ Coverage & E2E Testing | Reduces software defects and maintenance costs |
 | **Automation First** | Full CI/CD (GitHub Actions) | Accelerates time-to-market for digital solutions |
 | **Scalable Monorepo** | Yarn Workspaces + TypeScript | Demonstrates management of complex enterprise systems |
-| **Cloud Native** | Vercel + Serverless Backend | Showcases cost-efficient and resilient deployment |
+| **Cloud Native** | Render + Dedicated Node.js Service | Showcases cost-efficient and resilient deployment |
 
 ## Deployment & Integration
 
@@ -35,22 +35,20 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 
 #### Backend (Render)
 - Automatic deployment via GitHub Actions
-- Serverless Functions with Node.js
+- Dedicated Node.js Service with Fastify
 - Environment variables managed in Render dashboard
-- API URL: `https://codepulse-monorepo.onrender.com`
+- API URL: `https://codepulse-monorepo-backend.onrender.com`
 
 #### Frontend (GitHub Pages)
-- Automatic build via GitHub Actions
+- Direct deployment via GitHub Actions
 - Hosted at `https://pklavc.github.io/codepulse-monorepo`
-- Vite configuration optimized for production
+- No build process required (standalone HTML)
 
 ## Tech Stack
 
 | Layer | Technology | Version |
 |-------|-----------|----------|
-| **Frontend** | HTML5 | Standard |
-| | CSS3 | Standard |
-| | JavaScript ES6+ | Modern |
+| **Frontend** | HTML5 / CSS3 / Vanilla JS (Standalone) | Modern |
 | | Particle.js | Latest |
 | **Backend** | Node.js | 20.x |
 | | Fastify | 4.x |
@@ -78,10 +76,12 @@ graph LR
 codepulse-monorepo/
 ├── frontend/              # Standalone HTML application
 │   ├── index.html         # Main IDE application
-│   ├── src/               # Legacy React structure (archived)
-│   │   ├── App.tsx
-│   │   ├── App.test.tsx
-│   │   └── ...
+│   ├── src/               # Visual assets (GIFs, Logos, Icons)
+│   │   ├── code.gif
+│   │   ├── doc.gif
+│   │   ├── logo.png
+│   │   ├── play.gif
+│   │   └── return.gif
 │   ├── package.json
 │   └── vite.config.ts
 ├── backend/               # Node.js + Fastify API
@@ -144,7 +144,7 @@ cd e2e && npm test
 # Build backend only
 cd backend && npm run build
 
-# Frontend: No build required (standalone HTML)
+# Frontend: No build required. The frontend runs as a high-performance standalone HTML application.
 ```
 
 ### Linting
