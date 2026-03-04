@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "CodePulse Monorepo - Online IDE with Code Execution",
   "type": "module",
-  "workspaces": ["frontend", "backend", "e2e"],
+  "workspaces": [
+    "frontend",
+    "backend",
+    "e2e"
+  ],
   "scripts": {
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm test --workspaces --if-present",
@@ -22,5 +26,8 @@
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.37.5"
   }
 }
