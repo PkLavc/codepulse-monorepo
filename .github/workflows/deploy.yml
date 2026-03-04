@@ -31,10 +31,7 @@ jobs:
         run: npm test
 
       - name: Build frontend
-        run: |
-          cd frontend
-          npm install
-          npm run build
+        run: npm run build --workspace=codepulse-frontend
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
