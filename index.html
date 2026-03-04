@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodePulse - Online IDE</title>
@@ -256,18 +254,30 @@
             #navigation-content { transform: translateY(-120%); opacity: 0; pointer-events: none; transition: transform .28s ease, opacity .28s ease; }
             #navigation-content.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
         }
+
+        /* Footer */
+        .footer-minimal {
+            background: #1a1a1a;
+            color: #ccc;
+            padding: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .footer-minimal a { color: #667eea; }
+        .footer-minimal .credits-hidden { display: none; }
+        .footer-minimal .credits-grid { display: flex; justify-content: center; gap: 20px; }
     </style>
 </head>
-<body>
+<body style="">
     <div id="all">
-        <div class="cursor"></div>
+        <div class="cursor" style="left: 890px; top: 371px;"></div>
         <div id="navigation-content">
             <div class="logo"></div>
             <div class="navigation-links">
                 <a href="https://pklavc.github.io/" data-text="HOME" id="home-link">HOME</a>
                 <a href="https://pklavc.github.io/about.html" data-text="ABOUT" id="about-link">ABOUT</a>
                 <a href="https://pklavc.github.io/projects.html" data-text="PROJECTS" id="projects-link">PROJECTS</a>
-                <a href="https://pklavc.github.io/codepulse-monorepo/" data-text="IDE & QA" id="ide-link">IDE & QA</a>
+                <a href="https://pklavc.github.io/codepulse-monorepo/" data-text="IDE &amp; QA" id="ide-link">IDE &amp; QA</a>
             </div>
         </div>
         <div id="navigation-bar">
@@ -281,7 +291,7 @@
             </div>
         </div>
         <div id="header">
-            <div id="particles"></div>
+            <div id="particles"><canvas class="particles-js-canvas-el" width="1081" height="826" style="width: 100%; height: 100%;"></canvas></div>
         </div>
     <div class="container">
         <div class="content">
@@ -387,35 +397,58 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         });
 
     </script>
-    <script src="https://pklavc.github.io/js/jquery.min.js"></script>
-    <script src="https://pklavc.github.io/js/particles.min.js"></script>
-    <script src="https://pklavc.github.io/js/index.js"></script>
-    <script>
-        particlesJS("particles", {"particles":{"number":{"value":50,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
-    </script>
-    <script>
-        // Menu toggle fix: ensure clicks on .menubar open the navigation on small screens
-        $(function(){
-            $('.menubar').on('click', function(e){
-                e.stopPropagation();
-                $('#navigation-content').toggleClass('active');
+        <script src="https://pklavc.github.io/js/jquery.min.js"></script>
+        <script src="https://pklavc.github.io/js/particles.min.js"></script>
+        <script src="https://pklavc.github.io/js/index.js"></script>
+
+        
+        <footer class="footer-minimal">
+            <div class="footer-container">
+                <p>© 2026 Patrick Araujo • <span class="credits-trigger" onclick="toggleCredits()">Resources & Attributions</span></p>
+                <div id="credits-list" class="credits-hidden">
+                    <div class="credits-grid">
+                        <a href="https://lordicon.com/" target="_blank">Icons</a>
+                        <a href="https://vincentgarreau.com/" target="_blank">VFX</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script>
+            particlesJS("particles", {"particles":{"number":{"value":50,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
+        </script>
+        <script>
+            // Menu toggle fix: ensure clicks on .menubar open the navigation on small screens
+            $(function(){
+                $('.menubar').on('click', function(e){
+                    e.stopPropagation();
+                    $('#navigation-content').toggleClass('active');
+                });
+                // Close when clicking outside
+                $(document).on('click', function(e){
+                    if (!$(e.target).closest('#navigation-content, .menubar').length) {
+                        $('#navigation-content').removeClass('active');
+                    }
+                });
             });
-            // Close when clicking outside
-            $(document).on('click', function(e){
-                if (!$(e.target).closest('#navigation-content, .menubar').length) {
-                    $('#navigation-content').removeClass('active');
+
+            // Fix cursor bug
+            document.addEventListener('mousemove', (e) => {
+                const cursor = document.querySelector('.cursor');
+                if(cursor) {
+                    cursor.style.left = (e.clientX - 20) + 'px';
+                    cursor.style.top = (e.clientY - 20) + 'px';
                 }
             });
-        });
 
-        // Fix cursor bug
-        document.addEventListener('mousemove', (e) => {
-            const cursor = document.querySelector('.cursor');
-            if(cursor) {
-                cursor.style.left = (e.clientX - 20) + 'px';
-                cursor.style.top = (e.clientY - 20) + 'px';
+            // footer credits toggle
+            function toggleCredits() {
+                var x = document.getElementById("credits-list");
+                if (x.style.display === "block") {
+                    x.style.display = "none";
+                } else {
+                    x.style.display = "block";
+                }
             }
-        });
-    </script>
-</body>
-</html>
+        </script>
+
+</div></body></html>
