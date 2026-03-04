@@ -1,18 +1,13 @@
 {
-  "name": "@codepulse/frontend",
+  "name": "codepulse-monorepo",
   "version": "1.0.0",
-  "description": "CodePulse Frontend - React IDE with Monaco Editor",
+  "description": "CodePulse Monorepo - Online IDE with Code Execution",
   "type": "module",
+  "workspaces": ["frontend", "backend", "e2e"],
   "scripts": {
-    "install-all": "yarn install",
-    "dev": "yarn workspaces run dev",
-    "build": "yarn build:backend",
-    "build:frontend": "yarn workspace @codepulse/frontend build",
-    "build:backend": "yarn workspace @codepulse/backend build",
-    "test": "yarn workspaces run test",
-    "test:coverage": "yarn workspaces run test:coverage --exclude e2e",
-    "lint": "yarn workspaces run lint",
-    "format": "yarn workspaces run format"
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
   },
   "keywords": [
     "code-execution",
@@ -26,11 +21,6 @@
   "author": "Patrick Araujo",
   "license": "MIT",
   "engines": {
-    "node": ">=24.0.0"
-  },
-  "dependencies": {
-    "@fastify/static": "^9.0.0",
-    "axios": "^1.13.5",
-    "dotenv": "^17.3.1"
+    "node": ">=20.0.0"
   }
 }
