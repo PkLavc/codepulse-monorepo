@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodePulse - Online IDE</title>
-    <link rel="icon" type="image/png" href="./src/assets/logo.png">
+    <link rel="icon" type="image/png" href="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://pklavc.github.io/css/global.css">
     <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css">
@@ -256,6 +256,18 @@
             #navigation-content { transform: translateY(-120%); opacity: 0; pointer-events: none; transition: transform .28s ease, opacity .28s ease; }
             #navigation-content.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
         }
+
+        /* Footer */
+        .footer-minimal {
+            background: #1a1a1a;
+            color: #ccc;
+            padding: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .footer-minimal a { color: #667eea; }
+        .footer-minimal .credits-hidden { display: none; }
+        .footer-minimal .credits-grid { display: flex; justify-content: center; gap: 20px; }
     </style>
 </head>
 <body>
@@ -272,7 +284,7 @@
         </div>
         <div id="navigation-bar">
             <div class="nav-brand">
-                <img src="./src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
+                <img src="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
             </div>
             <div class="menubar">
                 <span class="first-span"></span>
@@ -287,7 +299,7 @@
         <div class="content">
             <div class="editor-section">
                 <div class="section-title">
-                    <img src="./src/assets/code.gif" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
+                    <img src="https://pklavc.github.io/codepulse-monorepo/src/assets/code.gif" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
                     Code Editor
                     <div class="editor-controls">
                         <select id="language">
@@ -296,7 +308,7 @@
                             <option value="java">Java</option>
                         </select>
                         <button class="execute-btn" onclick="executeCode()">
-                            <img src="./src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
+                            <img src="https://pklavc.github.io/codepulse-monorepo/src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
                             <span style="color:white; font-weight:bold;">Run</span>
                         </button>
                     </div>
@@ -305,10 +317,10 @@
             </div>
             <div class="output-section">
                 <div class="section-title">
-                    <img src="./src/assets/return.gif" alt="Output" style="height:24px; width:auto; margin-right:8px;">
+                    <img src="https://pklavc.github.io/codepulse-monorepo/src/assets/return.gif" alt="Output" style="height:24px; width:auto; margin-right:8px;">
                     Output
                 </div>
-                <div id="output"><div class="alert alert-info"><img src="./src/assets/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
+                <div id="output"><div class="alert alert-info"><img src="https://pklavc.github.io/codepulse-monorepo/src/assets/doc.gif" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
 
 Type your code and click "Run" or use Ctrl+Enter</div></div>
                 <div class="loading" id="loading">
@@ -390,6 +402,19 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         <script src="https://pklavc.github.io/js/jquery.min.js"></script>
         <script src="https://pklavc.github.io/js/particles.min.js"></script>
         <script src="https://pklavc.github.io/js/index.js"></script>
+
+        <!-- minimal footer copied from about.html -->
+        <footer class="footer-minimal">
+            <div class="footer-container">
+                <p>© 2026 Patrick Araujo • <span class="credits-trigger" onclick="toggleCredits()">Resources & Attributions</span></p>
+                <div id="credits-list" class="credits-hidden">
+                    <div class="credits-grid">
+                        <a href="https://lordicon.com/" target="_blank">Icons</a>
+                        <a href="https://vincentgarreau.com/" target="_blank">VFX</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
         <script>
             particlesJS("particles", {"particles":{"number":{"value":50,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
         </script>
@@ -416,6 +441,16 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     cursor.style.top = (e.clientY - 20) + 'px';
                 }
             });
+
+            // footer credits toggle
+            function toggleCredits() {
+                var x = document.getElementById("credits-list");
+                if (x.style.display === "block") {
+                    x.style.display = "none";
+                } else {
+                    x.style.display = "block";
+                }
+            }
         </script>
 </body>
 </html>
