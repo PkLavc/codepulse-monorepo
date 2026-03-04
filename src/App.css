@@ -157,6 +157,11 @@ label {
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-dim);
+  transition: color 0.2s ease;
+}
+
+.footer:hover {
+  color: var(--accent);
 }
 
 .footer a {

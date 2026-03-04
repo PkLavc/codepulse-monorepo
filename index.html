@@ -376,11 +376,8 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             const pre = document.createElement('pre');
             pre.className = 'output-pre';
             pre.textContent = message;
-            const alert = document.createElement('div');
-            alert.className = 'alert alert-' + type;
-            alert.appendChild(pre);
             output.innerHTML = '';
-            output.appendChild(alert);
+            output.appendChild(pre);
         }
 
         // Allow run with Ctrl+Enter
@@ -398,7 +395,7 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         <!-- minimal footer copied from about.html -->
         <footer class="footer-minimal">
             <div class="footer-container">
-                <p>© 2026 <a href="https://pklavc.github.io/" target="_blank" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'">Patrick Araujo</a> • <span class="credits-trigger" onclick="toggleCredits()">Resources & Attributions</span></p>
+                <p>© 2026 <a href="https://pklavc.github.io/" target="_blank" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'">Patrick Araujo</a> • <span class="credits-trigger" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'" onclick="toggleCredits()">Resources & Attributions</span></p>
                 <div id="credits-list" class="credits-hidden">
                     <div class="credits-grid">
                         <a href="https://lordicon.com/" target="_blank" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'">Icons</a>
