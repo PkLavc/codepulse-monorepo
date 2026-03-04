@@ -13,7 +13,7 @@
         /* Consolidated CSS: overrides, layout and base styles */
         /* Particles and stacking */
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
-        #navigation-content, #navigation-bar { position: fixed; top: 0; left: 0; width: 100%; z-index: 999999 !important; }
+        #navigation-content, #navigation-bar { position: absolute; top: 0; left: 0; width: 100%; z-index: 999999 !important; }
         #navigation-bar {
             background: none !important;
             background-color: transparent !important;
@@ -30,7 +30,7 @@
         #header { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
 
         /* Container positioning and background for legibility */
-        .container { position: relative !important; z-index: 5 !important; margin-top: 80px !important; background: rgba(30,30,30,0.85) !important; height: calc(100vh - 120px) !important; box-shadow: none !important; border-radius: 8px !important; padding-top: 8px !important; overflow: hidden; }
+        .container { position: relative !important; z-index: 5 !important; margin-top: 140px !important; background: rgba(30,30,30,0.85) !important; height: calc(100vh - 160px) !important; box-shadow: none !important; border-radius: 8px !important; padding-top: 8px !important; overflow: hidden; }
         .container .header { display: flex !important; position: relative; z-index: 6 !important; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important; border-bottom: 2px solid #667eea !important; padding: 12px 20px !important; border-radius: 8px; }
 
         /* Editor layout fills container */
@@ -51,27 +51,16 @@
         }
         .container {
             max-width: 1400px;
-            margin: 0 auto;
-            background: transparent;
-            border-radius: 12px;
+            margin: 140px auto 0;
+            background: rgba(30, 30, 30, 0.9) !important;
+            border-radius: 8px !important;
             box-shadow: none;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 160px) !important;
-            margin-top: 130px !important;
+            height: calc(100vh - 160px);
             z-index: 10 !important;
-            background: rgba(30, 30, 30, 0.9) !important;
             position: relative;
-        }
-        .header {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #667eea;
         }
         .header h1 {
             display: flex;
@@ -265,7 +254,10 @@
             font-size: 14px;
             text-align: center;
         }
-        .footer-minimal a { color: #667eea; }
+        .footer-minimal a { color: #667eea; transition: color 0.3s ease; }
+        .footer-minimal a:hover { color: #667eea; text-decoration: none; }
+        .footer-minimal .credits-trigger { cursor: pointer; color: #999; transition: color 0.3s ease; }
+        .footer-minimal .credits-trigger:hover { color: #667eea; }
         .footer-minimal .credits-hidden { display: none; }
         .footer-minimal .credits-grid { display: flex; justify-content: center; gap: 20px; }
     </style>
@@ -286,11 +278,11 @@
             <div class="nav-brand">
                 <img src="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
             </div>
-            <div class="menubar">
+            <!-- <div class="menubar">
                 <span class="first-span"></span>
                 <span class="second-span"></span>
                 <span class="third-span"></span>
-            </div>
+            </div> -->
         </div>
         <div id="header">
             <div id="particles"></div>
@@ -406,11 +398,11 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         <!-- minimal footer copied from about.html -->
         <footer class="footer-minimal">
             <div class="footer-container">
-                <p>© 2026 Patrick Araujo • <span class="credits-trigger" onclick="toggleCredits()">Resources & Attributions</span></p>
+                <p>© 2026 <a href="https://pklavc.github.io/" target="_blank" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'">Patrick Araujo</a> • <span class="credits-trigger" onclick="toggleCredits()">Resources & Attributions</span></p>
                 <div id="credits-list" class="credits-hidden">
                     <div class="credits-grid">
-                        <a href="https://lordicon.com/" target="_blank">Icons</a>
-                        <a href="https://vincentgarreau.com/" target="_blank">VFX</a>
+                        <a href="https://lordicon.com/" target="_blank" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'">Icons</a>
+                        <a href="https://vincentgarreau.com/" target="_blank" style="color: #999; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#999'">VFX</a>
                     </div>
                 </div>
             </div>
@@ -451,6 +443,22 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     x.style.display = "block";
                 }
             }
+
+            // Reset scroll to top on page load
+            history.scrollRestoration = 'manual';
+            window.addEventListener('load', function() {
+                window.scrollTo(0, 0);
+            });
+
+            // Header fade-out effect on scroll
+            const navBar = document.getElementById('navigation-bar');
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const fadeDistance = 200;
+                let opacity = Math.max(0, 1 - (scrollTop / fadeDistance));
+                navBar.style.opacity = opacity;
+                navBar.style.transition = 'opacity 0.1s ease';
+            });
         </script>
 </body>
 </html>
