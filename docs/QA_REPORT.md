@@ -42,7 +42,10 @@ CodePulse utilizes a multi-layered testing strategy to ensure high reliability a
 - **Frontend Performance**: Optimized asset delivery with zero-framework overhead.
 - **Reliability**: Backend health-checks monitored via Render logs.
 
-## 5. Status Summary
+## 5. Supported Languages
+**Multi-language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
+
+## 6. Status Summary
 - **Unit Tests**: ✅ Passing
 - **E2E Tests**: ✅ Passing
 - **Linting**: ✅ Passing

@@ -16,7 +16,7 @@
 
 **Current Implementation**: GlotService with Glot.io API integration
 - **Primary API**: Glot.io API (https://run.glot.io)
-- **Language Support**: JavaScript, Python, Java, C, C++, C#, Go, Rust, PHP, Ruby, Bash, Swift, Kotlin, TypeScript
+- **Language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
 
 **Language Mapping**:
 - JavaScript/Node/TypeScript → `javascript` (v18.15.0)

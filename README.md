@@ -183,6 +183,18 @@ npm run format
 - **Static Analysis**: ESLint + TypeScript (Strict mode)
 - **Continuous Tracking**: Codecov integration for coverage regression
 
+## Code Execution
+
+**Multi-language Support**: Python, JavaScript, Java, C++, C#, PHP, Go, Ruby
+
+**Execution Flow**:
+1. User writes code in textarea
+2. Selects programming language from dropdown
+3. Clicks "Run" button or uses Ctrl+Enter
+4. Code sent to backend via fetch API
+5. Backend executes code using Glot.io API
+6. Results displayed in output area
+
 ## CI/CD Pipeline
 
 ### Automated Workflow (`.github/workflows/ci.yml`)
