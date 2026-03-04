@@ -298,6 +298,11 @@
                             <option value="python">Python</option>
                             <option value="javascript">JavaScript</option>
                             <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="php">PHP</option>
+                            <option value="go">Go</option>
+                            <option value="ruby">Ruby</option>
                         </select>
                         <button class="execute-btn" onclick="executeCode()">
                             <img src="https://pklavc.github.io/codepulse-monorepo/src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
@@ -379,6 +384,30 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             output.innerHTML = '';
             output.appendChild(pre);
         }
+
+        // Language boilerplates with Hello CodePulse string
+        const boilerplates = {
+            python: "print('Hello CodePulse!')",
+            javascript: "console.log('Hello CodePulse!');",
+            java: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello CodePulse!\");\n    }\n}",
+            cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello CodePulse!\" << endl;\n    return 0;\n}",
+            csharp: "using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine(\"Hello CodePulse!\");\n    }\n}",
+            php: "<?php\necho 'Hello CodePulse!';\n?>",
+            go: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello CodePulse!\")\n}",
+            ruby: "puts 'Hello CodePulse!'"
+        };
+
+        // Dynamic language switching logic
+        document.getElementById('language').addEventListener('change', function() {
+            const currentCode = document.getElementById('code').value;
+            const defaultPythonCode = "print('Hello CodePulse!')";
+            
+            // Only change code if it matches the default Python code
+            if (currentCode.trim() === defaultPythonCode.trim()) {
+                const selectedLanguage = this.value;
+                document.getElementById('code').value = boilerplates[selectedLanguage];
+            }
+        });
 
         // Allow run with Ctrl+Enter
         document.getElementById('code').addEventListener('keydown', (e) => {
