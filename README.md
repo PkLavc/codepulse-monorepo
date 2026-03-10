@@ -275,10 +275,29 @@ Contributions are welcome! Please ensure:
 
 MIT License - See [LICENSE](LICENSE) file for details
 
+## Security & Research
+
+### Security Milestone 1: Completed ✅
+**CP-SEC-001: Hardcoded API Token Exposure**
+- **Status**: [COMPLETED ✅]
+- **Finding**: Hardcoded Glot.io API token in source code
+- **Impact**: Potential API abuse and service disruption
+- **Mitigation**: Moved credentials to Environment Variables only
+- **Date**: March 2026
+
+### Security Research
+This project serves as a security research platform for:
+- **Static Analysis (SAST)**: ESLint, TypeScript strict mode, SonarQube
+- **Dynamic Testing (DAST)**: Playwright, OWASP ZAP, custom scripts
+- **Vulnerability Research**: RCE, command injection, container security
+- **Secure Development**: Best practices implementation and validation
+
 ## Author
 
-**Patrick Lavc - Computer Engineer** To view other projects and portfolio details, visit:
-[https://pklavc.github.io/projects.html](https://pklavc.github.io/projects.html)
+**Patrick Araujo - Security Researcher & Computer Engineer**  
+**HackerOne Profile**: https://hackerone.com/pklavc  
+**GitHub**: https://github.com/PkLavc  
+**Portfolio**: [https://pklavc.github.io/projects.html](https://pklavc.github.io/projects.html)
 
 ---
 
