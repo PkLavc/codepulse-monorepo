@@ -301,4 +301,4 @@ This project serves as a security research platform for:
 
 ---
 
-*CodePulse - A high-performance monorepo architecture for modern full-stack application development.*
+*CodePulse - A high-performance monorepo architecture for modern full-stack application development.* 
