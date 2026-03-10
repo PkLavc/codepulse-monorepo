@@ -271,6 +271,13 @@ Contributions are welcome! Please ensure:
 5. Frontend changes are tested manually via `frontend/index.html`
 6. Backend changes maintain Glot.io integration compatibility
 
+## 🚀 Roadmap
+
+- [x] **Phase 1**: Core Engine & Monorepo Architecture
+- [x] **Phase 2**: Security Audit & Environment Variable Enforcement
+- [ ] **Phase 3**: n8n Automation & PostgreSQL Integration
+- [ ] **Phase 4**: Advanced WebContainer support for local execution
+
 ## License
 
 MIT License - See [LICENSE](LICENSE) file for details
