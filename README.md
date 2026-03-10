@@ -295,7 +295,6 @@ This project serves as a security research platform for:
 ## Author
 
 **Patrick Araujo - Security Researcher & Computer Engineer**  
-**HackerOne Profile**: https://hackerone.com/pklavc  
 **GitHub**: https://github.com/PkLavc  
 **Portfolio**: [https://pklavc.github.io/projects.html](https://pklavc.github.io/projects.html)
 
