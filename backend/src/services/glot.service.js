@@ -83,8 +83,11 @@ export class GlotService {
     try {
       const { language: runtime, version } = this.getLanguageRuntime(language);
 
-      // Use hardcoded token for testing
-      const token = process.env.GLOT_API_TOKEN || 'db2dd0bd-64e5-487b-801a-c9845ea7bbd0';
+      const token = process.env.GLOT_API_TOKEN;
+
+      if (!token) {
+        throw new Error('GLOT_API_TOKEN is not defined in environment variables. Service cannot execute code safely.');
+      }  
 
       const response = await axios.post(`${this.baseURL}/${runtime}/${version}`, {
         files: [
