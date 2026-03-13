@@ -308,3 +308,5 @@ This project serves as a security research platform for:
 ---
 
 *CodePulse - A high-performance monorepo architecture for modern full-stack application development.* 
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20me-%23ea4aaa?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://github.com/sponsors/PkLavc)
