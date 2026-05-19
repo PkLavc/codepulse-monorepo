@@ -1,0 +1,21 @@
+{
+  "name": "lord-icon-element",
+  "version": "4.1.2",
+  "private": false,
+  "keywords": [
+    "lordicon",
+    "lottie",
+    "icon",
+    "animation"
+  ],
+  "scripts": {},
+  "devDependencies": {},
+  "sideEffects": false,
+  "author": "Marcin Baszczewski <marcin@baszczewski.pl> (https://www.baszczewski.pl/)",
+  "homepage": "https://lordicon.com/",
+  "repository": "git@github.com:tomwilusz/lord-icon-element.git",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
