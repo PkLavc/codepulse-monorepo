@@ -20,12 +20,29 @@ interface QAExecuteResponse {
   results: QATestResult[];
 }
 
+interface FixCodeResponse {
+  code: string;
+}
+
+const LANGUAGE_OPTIONS = [
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'python', label: 'Python*' },
+  { value: 'java', label: 'Java*' },
+  { value: 'cpp', label: 'C++*' },
+  { value: 'csharp', label: 'C#*' },
+  { value: 'php', label: 'PHP*' },
+  { value: 'go', label: 'Go*' },
+  { value: 'ruby', label: 'Ruby*' },
+];
+
 export function App() {
   const [code, setCode] = useState('// Welcome to CodePulse\nconsole.log("System Ready");');
+  const [language, setLanguage] = useState('javascript');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [qaResults, setQaResults] = useState<QAExecuteResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFixing, setIsFixing] = useState(false);
 
   const handleExecute = async () => {
     setIsLoading(true);
@@ -37,7 +54,7 @@ export function App() {
       const response = await fetch(`${API_URL}/api/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, language }),
       });
 
       const data = await response.json();
@@ -57,6 +74,34 @@ export function App() {
     }
   };
 
+  const handleFixCode = async () => {
+    setIsFixing(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_URL}/api/fix`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language }),
+      });
+      const data = (await response.json()) as FixCodeResponse & { error?: string };
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Unable to adjust code');
+      }
+
+      if (typeof data.code !== 'string') {
+        throw new Error('Invalid fix response format');
+      }
+
+      setCode(data.code);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Code adjustment failed');
+    } finally {
+      setIsFixing(false);
+    }
+  };
+
   return (
     <div className="app">
       <header>
@@ -70,9 +115,37 @@ export function App() {
       <div className="container">
         <div className="editor-section">
           <label>Source Code:</label>
+          <div className="editor-controls">
+            <select
+              value={language}
+              onChange={(event) => setLanguage(event.target.value)}
+              className="language-select"
+              aria-label="Selecionar linguagem"
+            >
+              {LANGUAGE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={handleFixCode}
+              disabled={isLoading || isFixing}
+              className="fix-btn"
+            >
+              {isFixing ? '✨ Ajustando...' : '✨ Ajustar Código'}
+            </button>
+            <button
+              onClick={handleExecute}
+              disabled={isLoading || isFixing}
+              className="execute-btn"
+            >
+              {isLoading ? '⏳ Processing...' : '▶️ Launch Execution'}
+            </button>
+          </div>
           <MonacoEditor
             height="450px"
-            defaultLanguage="javascript"
+            language={language}
             value={code}
             onChange={(value) => setCode(value || '')}
             theme="vs-dark"
@@ -83,13 +156,6 @@ export function App() {
               scrollBeyondLastLine: false,
             }}
           />
-          <button
-            onClick={handleExecute}
-            disabled={isLoading}
-            className="execute-btn"
-          >
-            {isLoading ? "⏳ Processing..." : "▶️ Launch Execution"}
-          </button>
         </div>
 
         <div className="output-section">

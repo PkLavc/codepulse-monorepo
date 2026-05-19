@@ -78,8 +78,24 @@ label {
   flex-direction: column;
 }
 
+.editor-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.language-select {
+  min-width: 170px;
+  border: 1px solid var(--border);
+  background-color: #0d1117;
+  color: var(--text-main);
+  border-radius: 6px;
+  padding: 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.fix-btn,
 .execute-btn {
-  margin-top: 1rem;
   padding: 12px;
   background-color: var(--accent);
   color: white;
@@ -91,10 +107,16 @@ label {
   font-size: 1rem;
 }
 
+.fix-btn {
+  background-color: #1f6feb;
+}
+
+.fix-btn:hover:not(:disabled),
 .execute-btn:hover:not(:disabled) {
   filter: brightness(1.2);
 }
 
+.fix-btn:disabled,
 .execute-btn:disabled {
   background-color: var(--border);
   cursor: not-allowed;

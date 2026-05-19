@@ -5,11 +5,11 @@ compatibility_date = "2024-09-23"
 [vars]
 NODE_ENV = "production"
 
+[ai]
+binding = "AI"
+
 # Custom domain route — requires an A/AAAA or CNAME record for api-ide.pklavc.com
 # pointing to "100::" (Cloudflare Proxy) in your Cloudflare DNS dashboard.
 [[routes]]
 pattern = "api-ide.pklavc.com/*"
 zone_name = "pklavc.com"
-
-# Secrets (set via Cloudflare dashboard or `wrangler secret put GLOT_API_TOKEN`):
-#   GLOT_API_TOKEN — your glot.io API token
