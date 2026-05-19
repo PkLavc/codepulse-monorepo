@@ -459,6 +459,11 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     throw new Error('Invalid response received from the AI fix service.');
                 }
 
+                if (data.code === code) {
+                    showOutput('No AI adjustments were needed. Your current code was kept as-is.', 'info');
+                    return;
+                }
+
                 codeEditor.value = data.code;
                 showOutput('Code updated successfully. Review the AI-adjusted code and run it again when ready.', 'success');
             } catch (error) {
