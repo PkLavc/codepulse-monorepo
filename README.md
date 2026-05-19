@@ -2,7 +2,7 @@
 
 **A Professional Monorepo with Standalone HTML Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
-<!-- ci-trigger: validate GlotService fixes -->
+<!-- ci-trigger: validate Cloudflare Workers AI execution -->
 [![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
 [![CodeCov Coverage](https://codecov.io/gh/PkLavc/codepulse-monorepo/branch/main/graph/badge.svg)](https://codecov.io/gh/PkLavc/codepulse-monorepo)
 [![Frontend: HTML + CSS + JavaScript](https://img.shields.io/badge/Frontend-HTML%20%2B%20CSS%20%2B%20JS-blue)](./frontend)
@@ -16,7 +16,7 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 
 - **Frontend**: Standalone HTML application with CSS/JavaScript (IDE-like interface)
 - **Backend**: Node.js with Fastify & TypeScript (API service)
-- **Code Execution**: Glot.io integration for secure multi-language code execution
+- **Code Execution**: Hybrid execution on Cloudflare (native JS at the edge + deterministic AI simulation for other languages)
 - **Testing**: Vitest (unit), Playwright (e2e), comprehensive test infrastructure
 - **CI/CD**: GitHub Actions with automated testing, linting, and deployments
 - **Deployment**: GitHub Pages (Frontend) + Cloudflare Workers (Backend)
@@ -38,9 +38,6 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 - Entry point: `backend/src/worker.js`
 - Deploy: `cd backend && npm run deploy`
 - Local dev: `cd backend && npm run dev:worker`
-
-**Required secrets (Cloudflare dashboard or `wrangler secret put`):**
-- `GLOT_API_TOKEN` — your glot.io API token
 
 **Required GitHub Secrets (for CI/CD auto-deploy):**
 - `CLOUDFLARE_API_TOKEN` — Cloudflare API token with Worker edit permissions
@@ -70,7 +67,7 @@ Add a DNS record: `api-ide.pklavc.com` → type `AAAA`, value `100::`, Proxy ena
 | **Backend** | Node.js | 20.x |
 | | Fastify | 4.x |
 | | TypeScript | 5.x |
-| **Code Execution** | Glot.io API | Latest |
+| **Code Execution** | Cloudflare Workers + Workers AI | Latest |
 | **Testing** | Vitest | Latest |
 | | Playwright | Latest |
 | **CI/CD** | GitHub Actions | - |
@@ -84,7 +81,7 @@ Add a DNS record: `api-ide.pklavc.com` → type `AAAA`, value `100::`, Proxy ena
 ```mermaid
 graph LR
     A[Frontend: HTML/CSS/JS] -->|API Calls| B[Backend: Fastify/Node]
-    B -->|Glot.io API| C[Code Execution]
+    B -->|Workers AI + Native Edge Sandbox| C[Code Execution]
     D[Playwright E2E] -->|Tests| A
     D -->|Tests| B
     E[CI/CD Pipeline] -->|Validates| D
@@ -186,7 +183,7 @@ npm run format
 - **Unit Tests**: Vitest with mocked services
 - **Coverage**: In development (basic test structure implemented)
 - **Configuration**: `backend/vitest.config.ts`
-- **API Testing**: Fastify server endpoints and Glot.io integration
+- **API Testing**: Fastify/Worker endpoints with Cloudflare-native execution
 
 ### E2E Testing
 - **Framework**: Playwright
@@ -210,7 +207,9 @@ npm run format
 2. Selects programming language from dropdown
 3. Clicks "Run" button or uses Ctrl+Enter
 4. Code sent to backend via fetch API
-5. Backend executes code using Glot.io API
+5. Backend executes JavaScript nativamente na borda da Cloudflare
+6. Backend executa Python/Java/C++/C#/PHP/Go/Ruby via simulação determinística no Cloudflare Workers AI (`@cf/meta/llama-3-8b-instruct`)
+7. Linguagens simuladas são exibidas no frontend com `*` (ex.: Python*, Java*)
 6. Results displayed in output area
 
 ## CI/CD Pipeline
@@ -256,7 +255,8 @@ POST /api/execute - Execute code (POST variant)
 
 ### Backend (Cloudflare Workers — `backend/wrangler.toml`)
 ```
-GLOT_API_TOKEN=your_glot_api_token   # set via: wrangler secret put GLOT_API_TOKEN
+[ai]
+binding = "AI"
 ```
 
 ### Frontend (.env — local dev only)
@@ -280,7 +280,7 @@ Contributions are welcome! Please ensure:
 3. Coverage is maintained: `npm run test:coverage`
 4. Commit messages follow conventional commits
 5. Frontend changes are tested manually via `frontend/index.html`
-6. Backend changes maintain Glot.io integration compatibility
+6. Backend changes maintain Cloudflare Workers + Workers AI execution compatibility
 
 ## 🚀 Roadmap
 

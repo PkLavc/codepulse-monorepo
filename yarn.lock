@@ -177,7 +177,6 @@
   dependencies:
     "@fastify/cors" "^8.4.0"
     "@fastify/rate-limit" "^8.0.0"
-    axios "^1.6.0"
     dotenv "^16.3.1"
     fastify "^4.24.0"
     zod "^3.22.0"
