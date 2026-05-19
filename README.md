@@ -47,13 +47,13 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 - `CLOUDFLARE_ACCOUNT_ID` — your Cloudflare account ID
 
 **DNS setup (one-time, in Cloudflare dashboard):**
-Add a DNS record: `api.pklavc.com` → type `AAAA`, value `100::`, Proxy enabled (orange cloud).
+Add a DNS record: `api-ide.pklavc.com` → type `AAAA`, value `100::`, Proxy enabled (orange cloud).
 
 #### Backend (Cloudflare Workers)
 - Automatic deployment via GitHub Actions (`cloudflare/wrangler-action`)
 - Serverless Worker with native `fetch` API (no Node.js dependencies)
 - Environment secrets managed via Cloudflare dashboard or `wrangler secret put`
-- API URL: `https://api.pklavc.com`
+- API URL: `https://api-ide.pklavc.com`
 - Worker config: `backend/wrangler.toml`
 
 #### Frontend (GitHub Pages)
@@ -261,7 +261,7 @@ GLOT_API_TOKEN=your_glot_api_token   # set via: wrangler secret put GLOT_API_TOK
 
 ### Frontend (.env — local dev only)
 ```
-VITE_API_URL=https://api.pklavc.com
+VITE_API_URL=https://api-ide.pklavc.com
 VITE_APP_NAME=CodePulse
 ```
 
