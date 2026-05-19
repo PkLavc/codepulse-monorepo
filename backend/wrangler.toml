@@ -5,7 +5,7 @@ compatibility_date = "2024-09-23"
 [vars]
 NODE_ENV = "production"
 
-# Custom domain route — requires an A/AAAA or CNAME record for api.pklavc.com
+# Custom domain route — requires an A/AAAA or CNAME record for api-ide.pklavc.com
 # pointing to "100::" (Cloudflare Proxy) in your Cloudflare DNS dashboard.
 [[routes]]
 pattern = "api-ide.pklavc.com/*"
