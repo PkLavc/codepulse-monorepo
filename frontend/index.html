@@ -384,6 +384,9 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             languageSelect.disabled = isBusy;
             fixCodeButton.disabled = isBusy;
             runButton.disabled = isBusy;
+            fixCodeButton.setAttribute('aria-busy', String(isBusy));
+            fixCodeButton.setAttribute('aria-disabled', String(isBusy));
+            runButton.setAttribute('aria-disabled', String(isBusy));
         }
 
         async function executeCode() {
@@ -456,13 +459,13 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 }
 
                 if (typeof data.code !== 'string') {
-                    throw new Error('Invalid response received from the AI fix service.');
+                    throw new Error('AI fix service returned an invalid code payload.');
                 }
 
                 const fixedCode = data.code;
 
                 if (!fixedCode.trim()) {
-                    throw new Error('Invalid response received from the AI fix service.');
+                    throw new Error('AI fix service returned an empty code result.');
                 }
 
                 if (fixedCode === code) {
