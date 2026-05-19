@@ -108,6 +108,11 @@ export class GlotService {
         })
       });
 
+      if (!response.ok) {
+        const errBody = await response.text();
+        throw new Error(`Glot.io API error ${response.status}: ${errBody}`);
+      }
+
       const data = await response.json();
 
       return {
@@ -117,7 +122,7 @@ export class GlotService {
     } catch (error) {
       return {
         output: '',
-        error: (error.message) || 'Glot.io service unavailable'
+        error: error.message || 'Glot.io service unavailable'
       };
     }
   }
