@@ -19,7 +19,7 @@
     <meta name="twitter:description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
     <meta name="twitter:image" content="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script type="module" src="src/assets/lord-icon/index.js"></script>
     <link rel="stylesheet" href="https://pklavc.github.io/css/global.css?v=1.0.1">
     <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css?v=1.0.1">
     <link rel="stylesheet" href="https://pklavc.github.io/css/index.css?v=1.0.1">
@@ -143,7 +143,7 @@
         .fix-btn:hover {
             filter: brightness(1.1);
         }
-        .button-icon {
+        .fix-btn .button-icon {
             height: 16px;
             width: 16px;
             margin-right: 4px;
@@ -348,12 +348,13 @@
                         </select>
                         <button class="fix-btn" id="fix-code-btn">
                             <lord-icon
-                                src="src/assets/ruins.json"
+                                src="./src/assets/ruins.json"
                                 trigger="loop"
                                 colors="primary:#ffffff,secondary:#ffffff"
                                 class="button-icon"
+                                aria-hidden="true"
                             ></lord-icon>
-                            <span style="color:white; font-weight:bold;">Fix Code</span>
+                            <span>Fix Code</span>
                         </button>
                         <button class="execute-btn" id="run-code-btn">
                             <img src="src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
