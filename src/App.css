@@ -119,6 +119,7 @@ label {
 .fix-btn:disabled,
 .execute-btn:disabled {
   background-color: var(--border);
+  color: white;
   cursor: not-allowed;
 }
 

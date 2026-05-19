@@ -133,7 +133,7 @@ export function App() {
               disabled={isLoading || isFixing}
               className="fix-btn"
             >
-              {isFixing ? '✨ Ajustando...' : '✨ Ajustar Código'}
+              {isFixing ? '🔧 Ajustando...' : '🔧 Ajustar Código'}
             </button>
             <button
               onClick={handleExecute}
