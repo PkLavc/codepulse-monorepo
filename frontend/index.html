@@ -339,7 +339,7 @@
                             <option value="go">Go</option>
                             <option value="ruby">Ruby</option>
                         </select>
-                        <button class="fix-btn" id="fix-code-btn" onclick="fixCode()">
+                        <button class="fix-btn" id="fix-code-btn" onclick="fixCode()" aria-label="Fix code with AI assistance">
                             <span aria-hidden="true">✨</span>
                             <span>Fix Code</span>
                         </button>
@@ -460,7 +460,7 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 }
 
                 codeEditor.value = data.code;
-                showOutput('AI applied formatting, syntax, or variable-name fixes to the editor content. Review the updated code and run it again when ready.', 'success');
+                showOutput('Code updated successfully. Review the AI-adjusted code and run it again when ready.', 'success');
             } catch (error) {
                 showOutput(`AI fix error: ${error.message}`, 'danger');
             } finally {
