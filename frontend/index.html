@@ -18,7 +18,7 @@
     <meta name="twitter:title" content="CodePulse | High-Performance Online IDE & Code Execution Engine">
     <meta name="twitter:description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
     <meta name="twitter:image" content="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.0.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://pklavc.github.io/css/global.css?v=1.0.1">
     <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css?v=1.0.1">
     <link rel="stylesheet" href="https://pklavc.github.io/css/index.css?v=1.0.1">
@@ -455,12 +455,12 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     throw new Error(data.error || 'Unable to fix code right now.');
                 }
 
-                if (typeof data.code !== 'string') {
+                if (typeof data.code !== 'string' || !data.code.trim()) {
                     throw new Error('Invalid response received from the AI fix service.');
                 }
 
                 codeEditor.value = data.code;
-                showOutput('Code updated successfully. Review the AI changes and run it again when ready.', 'success');
+                showOutput('AI applied formatting, syntax, or variable-name fixes to the editor content. Review the updated code and run it again when ready.', 'success');
             } catch (error) {
                 showOutput(`AI fix error: ${error.message}`, 'danger');
             } finally {
