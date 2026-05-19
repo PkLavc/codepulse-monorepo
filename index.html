@@ -19,9 +19,9 @@
     <meta name="twitter:description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
     <meta name="twitter:image" content="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://pklavc.github.io/css/global.css">
-    <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css">
-    <link rel="stylesheet" href="https://pklavc.github.io/css/index.css">
+    <link rel="stylesheet" href="https://pklavc.github.io/css/global.css?v=1.0.1">
+    <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css?v=1.0.1">
+    <link rel="stylesheet" href="https://pklavc.github.io/css/index.css?v=1.0.1">
     <style>
         /* Consolidated CSS: overrides, layout and base styles */
         /* Particles and stacking */
@@ -123,8 +123,30 @@
             font-weight: bold;
             color: white;
         }
+        .fix-btn {
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            border: none;
+            font-weight: bold;
+            color: white;
+        }
+        .fix-btn,
+        .execute-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
         .execute-btn:hover {
             filter: brightness(1.1);
+        }
+        .fix-btn:hover {
+            filter: brightness(1.1);
+        }
+        button:disabled,
+        select:disabled,
+        textarea:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
         }
         .content {
             display: flex;
@@ -317,7 +339,11 @@
                             <option value="go">Go</option>
                             <option value="ruby">Ruby</option>
                         </select>
-                        <button class="execute-btn" onclick="executeCode()">
+                        <button class="fix-btn" id="fix-code-btn">
+                            <span aria-hidden="true">✨</span>
+                            <span>Fix Code</span>
+                        </button>
+                        <button class="execute-btn" id="run-code-btn">
                             <img src="src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
                             <span style="color:white; font-weight:bold;">Run</span>
                         </button>
@@ -335,7 +361,7 @@
 Type your code and click "Run" or use Ctrl+Enter</div></div>
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Executing code...</p>
+                    <p id="loading-message">Executing code...</p>
                 </div>
             </div>
         </div>
@@ -343,19 +369,34 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
 
     <script>
         const BACKEND_URL = 'https://api-ide.pklavc.com';
+        const codeEditor = document.getElementById('code');
+        const languageSelect = document.getElementById('language');
+        const output = document.getElementById('output');
+        const loading = document.getElementById('loading');
+        const loadingMessage = document.getElementById('loading-message');
+        const fixCodeButton = document.getElementById('fix-code-btn');
+        const runButton = document.getElementById('run-code-btn');
+
+        function setEditorBusyState(isBusy, message = 'Executing code...') {
+            loadingMessage.textContent = message;
+            loading.style.display = isBusy ? 'block' : 'none';
+            codeEditor.disabled = isBusy;
+            languageSelect.disabled = isBusy;
+            fixCodeButton.disabled = isBusy;
+            runButton.disabled = isBusy;
+            fixCodeButton.setAttribute('aria-busy', String(isBusy));
+        }
 
         async function executeCode() {
-            const code = document.getElementById('code').value;
-            const language = document.getElementById('language').value;
-            const output = document.getElementById('output');
-            const loading = document.getElementById('loading');
+            const code = codeEditor.value;
+            const language = languageSelect.value;
 
             if (!code.trim()) {
                 showOutput('Please enter some code!', 'info');
                 return;
             }
 
-            loading.style.display = 'block';
+            setEditorBusyState(true, 'Executing code...');
             output.innerHTML = '';
 
             try {
@@ -368,7 +409,6 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 });
 
                 const data = await response.json();
-                loading.style.display = 'none';
 
                 if (response.ok) {
                     if (data.output && data.output.trim()) {
@@ -384,13 +424,63 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     showOutput(data.error || 'Execution error', 'danger');
                 }
             } catch (error) {
-                loading.style.display = 'none';
                 showOutput(`Connection error: ${error.message}\nEnsure the backend is accessible at ${BACKEND_URL}/api/execute`, 'danger');
+            } finally {
+                setEditorBusyState(false);
+            }
+        }
+
+        async function fixCode() {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+
+            if (!code.trim()) {
+                showOutput('Please enter some code before requesting an AI fix.', 'info');
+                return;
+            }
+
+            setEditorBusyState(true, 'Fixing code with AI...');
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/fix`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code, language })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Unable to fix code right now.');
+                }
+
+                if (typeof data.code !== 'string') {
+                    throw new Error('AI fix service returned an invalid code payload.');
+                }
+
+                const fixedCode = data.code;
+
+                if (!fixedCode.trim()) {
+                    throw new Error('AI fix service returned an empty code result.');
+                }
+
+                if (fixedCode === code) {
+                    showOutput('No AI adjustments were needed. Your current code was kept as-is.', 'info');
+                    return;
+                }
+
+                codeEditor.value = fixedCode;
+                showOutput('Code updated successfully. Review the AI-adjusted code and run it again when ready.', 'success');
+            } catch (error) {
+                showOutput(`AI fix error: ${error.message}`, 'danger');
+            } finally {
+                setEditorBusyState(false);
             }
         }
 
         function showOutput(message, type) {
-            const output = document.getElementById('output');
             const pre = document.createElement('pre');
             pre.className = 'output-pre';
             pre.textContent = message;
@@ -411,8 +501,8 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         };
 
         // Dynamic language switching logic with comprehensive validation
-        document.getElementById('language').addEventListener('change', function() {
-            const currentCode = document.getElementById('code').value;
+        languageSelect.addEventListener('change', function() {
+            const currentCode = codeEditor.value;
             const currentCodeTrimmed = currentCode.trim();
             
             // Check if current code matches any of the boilerplate defaults
@@ -423,21 +513,23 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             // Only change code if it matches any default boilerplate (preserves user modifications)
             if (isDefaultCode) {
                 const selectedLanguage = this.value;
-                document.getElementById('code').value = boilerplates[selectedLanguage];
+                codeEditor.value = boilerplates[selectedLanguage];
             }
         });
 
         // Allow run with Ctrl+Enter
-        document.getElementById('code').addEventListener('keydown', (e) => {
+        codeEditor.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
                 executeCode();
             }
         });
+        fixCodeButton.addEventListener('click', fixCode);
+        runButton.addEventListener('click', executeCode);
 
     </script>
-        <script src="https://pklavc.github.io/js/jquery.min.js"></script>
-        <script src="https://pklavc.github.io/js/particles.min.js"></script>
-        <script src="https://pklavc.github.io/js/index.js"></script>
+        <script src="https://pklavc.github.io/js/jquery.min.js?v=1.0.1"></script>
+        <script src="https://pklavc.github.io/js/particles.min.js?v=1.0.1"></script>
+        <script src="https://pklavc.github.io/js/index.js?v=1.0.1"></script>
 
         <!-- minimal footer copied from about.html -->
         <footer class="footer-minimal">
