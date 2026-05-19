@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
+import Lottie from 'lottie-react';
 import logo from './assets/logo.png';
+import ruinsAnimation from './assets/ruins.json';
 import './App.css';
 
 interface ImportMetaEnv {
@@ -34,6 +36,13 @@ const LANGUAGE_OPTIONS = [
   { value: 'go', label: 'Go*' },
   { value: 'ruby', label: 'Ruby*' },
 ];
+
+const LOTTIE_ICON_STYLE = { 
+  width: 24, 
+  height: 24, 
+  display: 'inline-block' as const, 
+  marginRight: 8 
+};
 
 export function App() {
   const [code, setCode] = useState('// Welcome to CodePulse\nconsole.log("System Ready");');
@@ -133,7 +142,12 @@ export function App() {
               disabled={isLoading || isFixing}
               className="fix-btn"
             >
-              {isFixing ? '✨ Ajustando...' : '✨ Ajustar Código'}
+              <Lottie 
+                animationData={ruinsAnimation} 
+                loop={true}
+                style={LOTTIE_ICON_STYLE}
+              />
+              {isFixing ? 'Ajustando...' : 'Ajustar Código'}
             </button>
             <button
               onClick={handleExecute}

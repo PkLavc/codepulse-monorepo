@@ -105,6 +105,9 @@ label {
   cursor: pointer;
   transition: transform 0.1s, filter 0.2s;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fix-btn {
@@ -119,6 +122,7 @@ label {
 .fix-btn:disabled,
 .execute-btn:disabled {
   background-color: var(--border);
+  color: white;
   cursor: not-allowed;
 }
 
