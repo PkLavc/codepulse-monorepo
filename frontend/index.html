@@ -339,11 +339,11 @@
                             <option value="go">Go</option>
                             <option value="ruby">Ruby</option>
                         </select>
-                        <button class="fix-btn" id="fix-code-btn" onclick="fixCode()" aria-label="Fix code with AI assistance">
+                        <button class="fix-btn" id="fix-code-btn" aria-label="Fix code with AI assistance">
                             <span aria-hidden="true">✨</span>
                             <span>Fix Code</span>
                         </button>
-                        <button class="execute-btn" onclick="executeCode()">
+                        <button class="execute-btn" id="run-code-btn">
                             <img src="src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
                             <span style="color:white; font-weight:bold;">Run</span>
                         </button>
@@ -375,7 +375,7 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         const loading = document.getElementById('loading');
         const loadingMessage = document.getElementById('loading-message');
         const fixCodeButton = document.getElementById('fix-code-btn');
-        const runButton = document.querySelector('.execute-btn');
+        const runButton = document.getElementById('run-code-btn');
 
         function setEditorBusyState(isBusy, message = 'Executing code...') {
             loadingMessage.textContent = message;
@@ -455,16 +455,22 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     throw new Error(data.error || 'Unable to fix code right now.');
                 }
 
-                if (typeof data.code !== 'string' || !data.code.trim()) {
+                if (typeof data.code !== 'string') {
                     throw new Error('Invalid response received from the AI fix service.');
                 }
 
-                if (data.code === code) {
+                const fixedCode = data.code;
+
+                if (!fixedCode.trim()) {
+                    throw new Error('Invalid response received from the AI fix service.');
+                }
+
+                if (fixedCode === code) {
                     showOutput('No AI adjustments were needed. Your current code was kept as-is.', 'info');
                     return;
                 }
 
-                codeEditor.value = data.code;
+                codeEditor.value = fixedCode;
                 showOutput('Code updated successfully. Review the AI-adjusted code and run it again when ready.', 'success');
             } catch (error) {
                 showOutput(`AI fix error: ${error.message}`, 'danger');
@@ -516,6 +522,8 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 executeCode();
             }
         });
+        fixCodeButton.addEventListener('click', fixCode);
+        runButton.addEventListener('click', executeCode);
 
     </script>
         <script src="https://pklavc.github.io/js/jquery.min.js?v=1.0.1"></script>
