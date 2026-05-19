@@ -339,7 +339,7 @@
                             <option value="go">Go</option>
                             <option value="ruby">Ruby</option>
                         </select>
-                        <button class="fix-btn" id="fix-code-btn" aria-label="Fix code with AI assistance">
+                        <button class="fix-btn" id="fix-code-btn">
                             <span aria-hidden="true">✨</span>
                             <span>Fix Code</span>
                         </button>
@@ -385,8 +385,6 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             fixCodeButton.disabled = isBusy;
             runButton.disabled = isBusy;
             fixCodeButton.setAttribute('aria-busy', String(isBusy));
-            fixCodeButton.setAttribute('aria-disabled', String(isBusy));
-            runButton.setAttribute('aria-disabled', String(isBusy));
         }
 
         async function executeCode() {
