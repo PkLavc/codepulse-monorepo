@@ -19,7 +19,7 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 - **Code Execution**: Glot.io integration for secure multi-language code execution
 - **Testing**: Vitest (unit), Playwright (e2e), comprehensive test infrastructure
 - **CI/CD**: GitHub Actions with automated testing, linting, and deployments
-- **Deployment**: GitHub Pages (Frontend) + Render (Backend)
+- **Deployment**: GitHub Pages (Frontend) + Cloudflare Workers (Backend)
 
 ### Engineering Excellence & Professional Showcase
 | Feature | Implementation | Industry Impact |
@@ -27,17 +27,34 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 | **High QA Standards** | 85%+ Coverage & E2E Testing | Reduces software defects and maintenance costs |
 | **Automation First** | Full CI/CD (GitHub Actions) | Accelerates time-to-market for digital solutions |
 | **Scalable Monorepo** | Yarn Workspaces + TypeScript | Demonstrates management of complex enterprise systems |
-| **Cloud Native** | Render + Dedicated Node.js Service | Showcases cost-efficient and resilient deployment |
+| **Cloud Native** | Cloudflare Workers + Dedicated Node.js Service | Showcases cost-efficient and resilient deployment |
 
 ## Deployment & Integration
 
 ### Deployment Configuration
 
-#### Backend (Render)
-- Automatic deployment via GitHub Actions
-- Dedicated Node.js Service with Fastify
-- Environment variables managed in Render dashboard
-- API URL: `https://codepulse-monorepo-backend.onrender.com`
+#### Backend (Cloudflare Workers)
+- Config: `backend/wrangler.toml`
+- Entry point: `backend/src/worker.js`
+- Deploy: `cd backend && npm run deploy`
+- Local dev: `cd backend && npm run dev:worker`
+
+**Required secrets (Cloudflare dashboard or `wrangler secret put`):**
+- `GLOT_API_TOKEN` — your glot.io API token
+
+**Required GitHub Secrets (for CI/CD auto-deploy):**
+- `CLOUDFLARE_API_TOKEN` — Cloudflare API token with Worker edit permissions
+- `CLOUDFLARE_ACCOUNT_ID` — your Cloudflare account ID
+
+**DNS setup (one-time, in Cloudflare dashboard):**
+Add a DNS record: `api.pklavc.com` → type `AAAA`, value `100::`, Proxy enabled (orange cloud).
+
+#### Backend (Cloudflare Workers)
+- Automatic deployment via GitHub Actions (`cloudflare/wrangler-action`)
+- Serverless Worker with native `fetch` API (no Node.js dependencies)
+- Environment secrets managed via Cloudflare dashboard or `wrangler secret put`
+- API URL: `https://api.pklavc.com`
+- Worker config: `backend/wrangler.toml`
 
 #### Frontend (GitHub Pages)
 - Direct deployment via GitHub Actions
@@ -57,6 +74,7 @@ CodePulse is a professional-grade monorepo showcasing software engineering excel
 | **Testing** | Vitest | Latest |
 | | Playwright | Latest |
 | **CI/CD** | GitHub Actions | - |
+| **Deployment** | Cloudflare Workers | Latest |
 | **Code Quality** | ESLint | Latest |
 | | Codecov | - |
 
@@ -210,11 +228,9 @@ npm run format
      - Run unit tests with coverage
      - Upload coverage to Codecov
 
-2. **Frontend Deploy Job**
-   - Runs after lint-and-test succeeds
-   - Copies `frontend/` directory directly to GitHub Pages
-   - No build process required (standalone HTML)
-   - Status: ✅ Green checkmark
+3. **Backend Deploy Job**
+   - Deploys `backend/src/worker.js` to Cloudflare Workers via `wrangler-action`
+   - Requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in GitHub Secrets
 
 3. **Status Badges**
    - CI/CD Pipeline: Automatic from GitHub Actions
@@ -238,19 +254,14 @@ POST /api/execute - Execute code (POST variant)
 
 ## Environment Variables
 
-### Backend (.env)
+### Backend (Cloudflare Workers — `backend/wrangler.toml`)
 ```
-NODE_ENV=production
-PORT=3001
-CORE_ALLOWED_ORIGINS=*
-EXECUTION_TIMEOUT=5000
-GLOT_API_URL=https://run.glot.io
-GLOT_API_TOKEN=your_glot_api_token
+GLOT_API_TOKEN=your_glot_api_token   # set via: wrangler secret put GLOT_API_TOKEN
 ```
 
-### Frontend (.env.production)
+### Frontend (.env — local dev only)
 ```
-VITE_API_URL=https://codepulse-monorepo-backend.onrender.com
+VITE_API_URL=https://api.pklavc.com
 VITE_APP_NAME=CodePulse
 ```
 

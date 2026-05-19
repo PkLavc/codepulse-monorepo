@@ -43,7 +43,7 @@ async function setupApp() {
     try {
       console.log('[API] Execution request received for:', request.body?.language);
       const validated = executeSchema.parse(request.body);
-      const judge0Service = new GlotService();
+      const judge0Service = new GlotService(process.env.GLOT_API_TOKEN);
       
       if (validated.testCases && validated.testCases.length > 0) {
         const qaResult = await judge0Service.executeWithQA(
@@ -90,7 +90,7 @@ async function setupApp() {
   isPrepared = true;
 }
 
-if (!process.env.VERCEL) {
+if (process.env.NODE_ENV !== 'test') {
   setupApp().then(() => {
     const port = Number(process.env.PORT) || 3000;
     console.log(`Starting server on port ${port}...`);

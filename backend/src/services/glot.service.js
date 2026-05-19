@@ -1,11 +1,13 @@
-import axios from 'axios';
-
 /**
  * Glot.io API service for code execution (Primary Provider)
  */
 export class GlotService {
-  constructor() {
+  /**
+   * @param {string} [token] - Glot.io API token. Falls back to process.env.GLOT_API_TOKEN in Node.js.
+   */
+  constructor(token) {
     this.baseURL = 'https://glot.io/api/run';
+    this.token = token ?? (typeof process !== 'undefined' ? process.env.GLOT_API_TOKEN : undefined);
     this.runtimes = new Map();
     this.initialized = false;
   }
@@ -83,37 +85,44 @@ export class GlotService {
     try {
       const { language: runtime, version } = this.getLanguageRuntime(language);
 
-      const token = process.env.GLOT_API_TOKEN;
+      const token = this.token;
 
       if (!token) {
-        throw new Error('GLOT_API_TOKEN is not defined in environment variables. Service cannot execute code safely.');
-      }  
+        throw new Error('GLOT_API_TOKEN is not defined. Service cannot execute code safely.');
+      }
 
-      const response = await axios.post(`${this.baseURL}/${runtime}/${version}`, {
-        files: [
-          {
-            name: this.getFileName(runtime),
-            content: code
-          }
-        ],
-        stdin: stdin || ''
-      }, {
+      const response = await fetch(`${this.baseURL}/${runtime}/${version}`, {
+        method: 'POST',
         headers: {
           'Authorization': 'Token ' + token,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          files: [
+            {
+              name: this.getFileName(runtime),
+              content: code
+            }
+          ],
+          stdin: stdin || ''
+        })
       });
 
-      // Response handling without console.log
+      if (!response.ok) {
+        const errBody = await response.text();
+        throw new Error(`Glot.io API error ${response.status}: ${errBody}`);
+      }
+
+      const data = await response.json();
 
       return {
-        output: response.data.stdout || '',
-        error: response.data.stderr || null
+        output: data.stdout || '',
+        error: data.stderr || null
       };
     } catch (error) {
       return {
         output: '',
-        error: error.response?.data?.message || error.message || 'Glot.io service unavailable'
+        error: error.message || 'Glot.io service unavailable'
       };
     }
   }
