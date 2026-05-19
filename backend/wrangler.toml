@@ -8,7 +8,7 @@ NODE_ENV = "production"
 # Custom domain route — requires an A/AAAA or CNAME record for api.pklavc.com
 # pointing to "100::" (Cloudflare Proxy) in your Cloudflare DNS dashboard.
 [[routes]]
-pattern = "api.pklavc.com/*"
+pattern = "api-ide.pklavc.com/*"
 zone_name = "pklavc.com"
 
 # Secrets (set via Cloudflare dashboard or `wrangler secret put GLOT_API_TOKEN`):
