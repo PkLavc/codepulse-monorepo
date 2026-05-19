@@ -10,15 +10,12 @@
   ],
   "scripts": {
     "dev": "npm run dev --prefix backend",
-    "build": "npm run build --prefix backend",
-    "test": "npm run test --prefix backend",
-    "test:coverage": "npm run test:coverage --prefix backend",
-    "lint": "npm run lint --prefix backend",
-    "format": "prettier --write .",
-    "typecheck": "tsc --noEmit",
-    "lint": "npm run lint --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
     "test": "npm test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "test:coverage": "npm run test:coverage --prefix backend",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "code-execution",
@@ -42,5 +39,8 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "prettier": "^3.2.4",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "lottie-react": "^2.4.1"
   }
 }

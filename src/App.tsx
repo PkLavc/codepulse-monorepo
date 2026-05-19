@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
+import Lottie from 'lottie-react';
 import logo from './assets/logo.png';
+import ruinsAnimation from './assets/ruins.json';
 import './App.css';
 
 interface ImportMetaEnv {
@@ -133,7 +135,12 @@ export function App() {
               disabled={isLoading || isFixing}
               className="fix-btn"
             >
-              {isFixing ? '🔧 Ajustando...' : '🔧 Ajustar Código'}
+              <Lottie 
+                animationData={ruinsAnimation} 
+                loop={true}
+                style={{ width: 24, height: 24, display: 'inline-block', marginRight: 8 }}
+              />
+              {isFixing ? 'Ajustando...' : 'Ajustar Código'}
             </button>
             <button
               onClick={handleExecute}

@@ -105,6 +105,9 @@ label {
   cursor: pointer;
   transition: transform 0.1s, filter 0.2s;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fix-btn {
