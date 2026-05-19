@@ -37,6 +37,13 @@ const LANGUAGE_OPTIONS = [
   { value: 'ruby', label: 'Ruby*' },
 ];
 
+const LOTTIE_ICON_STYLE = { 
+  width: 24, 
+  height: 24, 
+  display: 'inline-block' as const, 
+  marginRight: 8 
+};
+
 export function App() {
   const [code, setCode] = useState('// Welcome to CodePulse\nconsole.log("System Ready");');
   const [language, setLanguage] = useState('javascript');
@@ -138,7 +145,7 @@ export function App() {
               <Lottie 
                 animationData={ruinsAnimation} 
                 loop={true}
-                style={{ width: 24, height: 24, display: 'inline-block', marginRight: 8 }}
+                style={LOTTIE_ICON_STYLE}
               />
               {isFixing ? 'Ajustando...' : 'Ajustar Código'}
             </button>
