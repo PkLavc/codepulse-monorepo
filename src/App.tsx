@@ -41,7 +41,8 @@ const LOTTIE_ICON_STYLE = {
   width: 24, 
   height: 24, 
   display: 'inline-block' as const, 
-  marginRight: 8 
+  marginRight: 8,
+  filter: 'brightness(0) invert(1)' as const
 };
 
 export function App() {

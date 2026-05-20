@@ -79,6 +79,13 @@ function extractAiText(result) {
   return '';
 }
 
+function stripCodeFences(text) {
+  // Extract content from inside a markdown code block if present
+  const match = text.match(/```[a-zA-Z0-9]*\s*\n([\s\S]*?)\n\s*```/);
+  if (match) return match[1].trim();
+  return text;
+}
+
 async function runDeterministicAiExecution(env, language, code, stdin = '') {
   const systemPrompt = `Você é um interpretador/compilador e terminal puro para a linguagem ${language}. Seu único trabalho é ler o código fornecido, executá-lo mentalmente com precisão absoluta e retornar ESTRITAMENTE o que seria impresso no stdout ou stderr de uma IDE real. Não adicione saudações, explicações, comentários ou blocos de código em markdown (\`\`\`). Se houver erro de sintaxe ou execução, retorne exatamente a mensagem de erro padrão que o compilador/interpretador daquela linguagem daria no terminal.`;
   const userPrompt = stdin
@@ -137,7 +144,7 @@ async function fixCodeWithAi(env, language, code) {
       {
         role: 'system',
         content:
-          'Corrija apenas problemas de indentação, erros de sintaxe gritantes e escrita errada de variáveis (typos) no código fornecido. Não reescreva a lógica do usuário, não resolva o problema para ele e não complete trechos faltando. Retorne apenas o código limpo e corrigido, sem explicações.'
+          `Você é um revisor de código para ${language}. REGRA FUNDAMENTAL: se o conteúdo fornecido NÃO for código válido em ${language} (por exemplo, uma frase em linguagem natural ou texto em prosa), retorne-o EXATAMENTE como está, sem nenhuma alteração. Se for código, corrija APENAS indentação incorreta, erros de sintaxe óbvios e typos em nomes de variáveis/funções. Não reescreva a lógica, não resolva o problema, não complete código faltando. Retorne SOMENTE o resultado final, sem explicações, sem prefixos como "Código corrigido:", e NUNCA use blocos markdown com \`\`\`.`
       },
       {
         role: 'user',
@@ -146,7 +153,8 @@ async function fixCodeWithAi(env, language, code) {
     ]
   });
 
-  return extractAiText(result).trim();
+  const raw = extractAiText(result).trim();
+  return stripCodeFences(raw);
 }
 
 export default {

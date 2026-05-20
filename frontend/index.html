@@ -128,8 +128,9 @@
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             border: none;
             font-weight: bold;
-            color: white;
+            color: white !important;
         }
+        .fix-btn span, .fix-btn * { color: white !important; }
         .fix-btn,
         .execute-btn {
             display: inline-flex;
@@ -148,6 +149,7 @@
             width: 16px;
             margin-right: 4px;
             vertical-align: middle;
+            filter: brightness(0) invert(1);
         }
         button:disabled,
         select:disabled,

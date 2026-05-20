@@ -112,6 +112,7 @@ label {
 
 .fix-btn {
   background-color: #1f6feb;
+  color: white;
 }
 
 .fix-btn:hover:not(:disabled),
