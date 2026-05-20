@@ -135,6 +135,7 @@
             color: white !important;
         }
         .fix-btn span, .fix-btn * { color: white !important; }
+        .fix-btn-text-short { display: none; }
         .fix-btn,
         .execute-btn {
             display: inline-flex;
@@ -170,6 +171,7 @@
         }
         .editor-section, .output-section {
             flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
             border-right: 1px solid #333;
@@ -214,6 +216,7 @@
         }
         #output {
             flex: 1;
+            min-width: 0;
             background: #1e1e1e;
             color: #d4d4d4;
             border: none;
@@ -223,13 +226,17 @@
             line-height: 1.5;
             resize: none;
             outline: none;
+            overflow-x: hidden;
             overflow-y: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .output-pre {
             white-space: pre-wrap;
             word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
             margin: 0;
             font-family: 'Courier New', monospace;
         }
@@ -292,6 +299,10 @@
             /* mobile: hide nav until menu toggled */
             #navigation-content { transform: translateY(-120%); opacity: 0; pointer-events: none; transition: transform .28s ease, opacity .28s ease; }
             #navigation-content.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+            /* mobile: hide verbose labels, shorten buttons */
+            .editor-title-text { display: none; }
+            .fix-btn-text-full { display: none; }
+            .fix-btn-text-short { display: inline; }
         }
 
         /* Footer */
@@ -324,7 +335,7 @@
         </div>
         <div id="navigation-bar">
             <div class="nav-brand">
-                <img src="src/assets/logo.png" alt="CodePulse Logo" style="position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
+                <img src="src/assets/logo.png" alt="CodePulse Logo" style="display:block !important; position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
             </div>
             <!-- <div class="menubar">
                 <span class="first-span"></span>
@@ -340,7 +351,7 @@
             <div class="editor-section">
                 <div class="section-title">
                     <img src="src/assets/code.gif" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
-                    Code Editor
+                    <span class="editor-title-text">Code Editor</span>
                     <div class="editor-controls">
                         <select id="language">
                             <option value="python">Python</option>
@@ -360,7 +371,7 @@
                                 class="button-icon"
                                 aria-hidden="true"
                             ></lord-icon>
-                            <span>Fix Code</span>
+                            <span class="fix-btn-text-full">Fix Code</span><span class="fix-btn-text-short">Fix</span>
                         </button>
                         <button class="execute-btn" id="run-code-btn">
                             <img src="src/assets/play.gif" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
