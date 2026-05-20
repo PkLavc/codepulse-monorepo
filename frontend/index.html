@@ -19,7 +19,11 @@
     <meta name="twitter:description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
     <meta name="twitter:image" content="https://pklavc.github.io/codepulse-monorepo/src/assets/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script type="module" src="src/assets/lord-icon/index.js"></script>
+    <script type="module">
+        import lottie from 'https://esm.sh/lottie-web';
+        import { defineElement } from './src/assets/lord-icon/index.js';
+        defineElement(lottie.loadAnimation);
+    </script>
     <link rel="stylesheet" href="https://pklavc.github.io/css/global.css?v=1.0.1">
     <link rel="stylesheet" href="https://pklavc.github.io/css/color-blue.css?v=1.0.1">
     <link rel="stylesheet" href="https://pklavc.github.io/css/index.css?v=1.0.1">
@@ -149,8 +153,8 @@
             width: 16px;
             margin-right: 4px;
             vertical-align: middle;
-            filter: brightness(0) invert(1);
         }
+
         button:disabled,
         select:disabled,
         textarea:disabled {
