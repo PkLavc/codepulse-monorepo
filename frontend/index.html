@@ -458,6 +458,11 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 return;
             }
 
+            if (!looksLikeCode(code)) {
+                showOutput('⚠ O conteúdo no editor não parece ser código ' + language + '.\nEscreva ou cole um código válido antes de usar o Fix Code.', 'info');
+                return;
+            }
+
             setEditorBusyState(true, 'Fixing code with AI...');
 
             try {
@@ -505,6 +510,24 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
             pre.textContent = message;
             output.innerHTML = '';
             output.appendChild(pre);
+        }
+
+        function looksLikeCode(text) {
+            const t = text.trim();
+            if (!t) return false;
+            // Multiple lines → almost certainly code
+            if (t.includes('\n')) return true;
+            // Code symbols
+            if (/[{}();\[\]=<>]/.test(t)) return true;
+            // Common keywords across all supported languages
+            if (/\b(?:def|class|function|func|var|let|const|if|else|for|while|return|import|from|include|using|print|console|echo|puts|printf|cout|scanf|int|str|bool|float|void|public|private|static|new|null|true|false|nil|end|do|then|elsif|elif|pass|lambda|async|await)\b/.test(t)) return true;
+            // Function call: word(
+            if (/\w+\s*\(/.test(t)) return true;
+            // Comments
+            if (/\/\/|\/\*|#\s*\w/.test(t)) return true;
+            // Assignment: x = something
+            if (/\w+\s*=\s*\S/.test(t)) return true;
+            return false;
         }
 
         // Language boilerplates with Hello CodePulse string

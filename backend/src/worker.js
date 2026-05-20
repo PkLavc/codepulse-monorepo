@@ -80,10 +80,51 @@ function extractAiText(result) {
 }
 
 function stripCodeFences(text) {
-  // Extract content from inside a markdown code block if present
-  const match = text.match(/```[a-zA-Z0-9]*\s*\n([\s\S]*?)\n\s*```/);
+  const match = text.match(/```[a-zA-Z0-9]*\s*\n([\s\S]*?)\n?\s*```/);
   if (match) return match[1].trim();
   return text;
+}
+
+function cleanAiResponse(text, originalCode) {
+  if (!text) return originalCode;
+
+  // 1. Extract from markdown code fence
+  text = stripCodeFences(text);
+
+  // 2. Strip common AI prefix lines (loop until stable)
+  const prefixPatterns = [
+    /^Linguagem:\s*\S+[ \t]*\n+/i,
+    /^C[oó]digo(?:\s+[^\n]*)?\s*:\s*\n+/i,
+    /^Aqui(?:\s+est[áa][^\n]*)?\s*:\s*\n+/i,
+    /^Here(?:'s| is)[^\n]*:\s*\n+/i,
+    /^O c[oó]digo[^\n]*:\s*\n+/i,
+    /^Resultado[^\n]*:\s*\n+/i,
+    /^Fixed[^\n]*:\s*\n+/i,
+    /^Corrected[^\n]*:\s*\n+/i,
+    /^Output[^\n]*:\s*\n+/i,
+  ];
+  let prev;
+  do {
+    prev = text;
+    for (const p of prefixPatterns) text = text.replace(p, '').trimStart();
+  } while (text !== prev);
+
+  // 3. Strip trailing explanation lines
+  const explanationStart = /^(?:Note[:\s]|Obs[:\s]|Nota[:\s]|This |Here |The |I |Este |Esta |Corrigi|Changed|Fixed|The code|O c[oó]digo)/i;
+  const lines = text.split('\n');
+  let cutAt = lines.length;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) continue;
+    if (explanationStart.test(trimmed)) cutAt = i;
+    else break;
+  }
+  text = lines.slice(0, cutAt).join('\n').trim();
+
+  // 4. Strip inline backtick wrapping: `code`
+  if (/^`[^`]+`$/.test(text)) text = text.slice(1, -1);
+
+  return text || originalCode;
 }
 
 async function runDeterministicAiExecution(env, language, code, stdin = '') {
@@ -144,17 +185,17 @@ async function fixCodeWithAi(env, language, code) {
       {
         role: 'system',
         content:
-          `Você é um revisor de código para ${language}. REGRA FUNDAMENTAL: se o conteúdo fornecido NÃO for código válido em ${language} (por exemplo, uma frase em linguagem natural ou texto em prosa), retorne-o EXATAMENTE como está, sem nenhuma alteração. Se for código, corrija APENAS indentação incorreta, erros de sintaxe óbvios e typos em nomes de variáveis/funções. Não reescreva a lógica, não resolva o problema, não complete código faltando. Retorne SOMENTE o resultado final, sem explicações, sem prefixos como "Código corrigido:", e NUNCA use blocos markdown com \`\`\`.`
+          `You are a strict ${language} code reviewer. Rules (follow exactly):\n1. If the input is NOT valid ${language} code (e.g. a natural-language sentence, a question, a description) — return it EXACTLY as received, no changes at all.\n2. If the input IS code — fix ONLY: obvious syntax errors, wrong indentation, typos in variable/function names. Do NOT rewrite logic, do NOT add features, do NOT complete missing code.\n3. Return ONLY the final code or unchanged text. Absolutely forbidden: prefixes like "Here is:", "Fixed:", "Código:", "Linguagem:"; trailing explanations; markdown fences (\`\`\`); any commentary.`
       },
       {
         role: 'user',
-        content: `Linguagem: ${language}\n\nCódigo:\n${code}`
+        content: code
       }
     ]
   });
 
   const raw = extractAiText(result).trim();
-  return stripCodeFences(raw);
+  return cleanAiResponse(raw, code);
 }
 
 export default {
