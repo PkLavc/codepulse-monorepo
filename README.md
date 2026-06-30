@@ -2,6 +2,12 @@
 
 **A Professional Monorepo with Standalone HTML Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
+## Portfolio Case Study
+
+Full case study: https://pklavc.com/projects/codepulse-monorepo/
+
+This repository is part of my backend and developer tooling portfolio. It demonstrates monorepo structure, Node.js execution APIs, browser-based IDE workflow design, CI behavior, and Playwright coverage.
+
 <!-- ci-trigger: validate Cloudflare Workers AI execution -->
 [![CI/CD Pipeline](https://github.com/PkLavc/codepulse-monorepo/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/PkLavc/codepulse-monorepo/actions)
 [![CodeCov Coverage](https://codecov.io/gh/PkLavc/codepulse-monorepo/branch/main/graph/badge.svg)](https://codecov.io/gh/PkLavc/codepulse-monorepo)
@@ -97,8 +103,6 @@ codepulse-monorepo/
 │   │   ├── logo.png
 │   │   ├── play.gif
 │   │   └── return.gif
-│   ├── package.json
-│   └── vite.config.ts
 ├── backend/               # Node.js + Fastify API
 │   ├── src/
 │   │   ├── server.ts
