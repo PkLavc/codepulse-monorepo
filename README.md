@@ -1,8 +1,6 @@
 # CodePulse Monorepo
 
-CodePulse is a source-code project for a browser-based code editor with a Node.js backend, code execution integrations, and optional AI-assisted code correction.
-
-**Status: source-only / self-hosted.** The public live demo, GitHub Pages deployment, and automatic Cloudflare Worker deployment have been retired. The old Workers AI integration and AI-simulated execution are no longer used by the current source.
+CodePulse is a browser-based IDE for writing and editing code, built with HTML, CSS, JavaScript and a Node.js backend. Its monorepo architecture brings together multi-language templates, code-execution APIs, AI-assisted code correction and automated tests.
 
 ## Features
 
@@ -57,6 +55,6 @@ npm run lint
 npm test
 ```
 
-The project is provided under the MIT license. Contributions can be proposed via GitHub, but the project no longer offers a publicly hosted editor.
+The project is provided under the MIT license. Contributions are welcome via GitHub.
 
 Author: Patrick Araujo — https://github.com/PkLavc
