@@ -7,10 +7,8 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",
-    "dev:worker": "wrangler dev",
     "build": "echo 'No build needed'",
     "start": "node src/server.js",
-    "deploy": "wrangler deploy",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext .js",
@@ -28,8 +26,6 @@
     "eslint": "^8.57.1",
     "vitest": "^0.34.0",
     "@vitest/coverage-v8": "^0.34.0",
-    "prettier": "^3.0.0",
-    "wrangler": "^3.114.17"
+    "prettier": "^3.0.0"
   }
 }
-
