@@ -9,8 +9,8 @@ import { fixCodeWithUserAI } from './services/ai.service.js';
 import 'dotenv/config';
 
 const executeSchema = z.object({
-  code: z.string(),
-  language: z.string(),
+  code: z.string().min(1).max(100000),
+  language: z.string().min(1).max(40),
   testCases: z.array(z.object({
     input: z.string(),
     expected: z.string()
@@ -25,9 +25,7 @@ const fixSchema = z.object({
   apiKey: z.string().min(10).max(512)
 });
 
-const fastify = Fastify({ logger: true });
-
-console.log('VAR_CHECK: GLOT_API_TOKEN is', process.env.GLOT_API_TOKEN ? 'DEFINED' : 'MISSING');
+const fastify = Fastify({ logger: false, bodyLimit: 120000 });
 
 let isPrepared = false;
 
@@ -35,7 +33,16 @@ async function setupApp() {
   if (isPrepared) return;
   
   await fastify.register(cors, {
-    origin: true,
+    origin: (origin, callback) => {
+      if (!origin || origin === 'null') return callback(null, true);
+      try {
+        const url = new URL(origin);
+        const allowed = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && ['http:', 'https:'].includes(url.protocol);
+        return callback(null, allowed);
+      } catch {
+        return callback(null, false);
+      }
+    },
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: false
   });
@@ -66,7 +73,6 @@ async function setupApp() {
   
   fastify.post('/api/execute', async (request) => {
     try {
-      console.log('[API] Execution request received for:', request.body?.language);
       const validated = executeSchema.parse(request.body);
       const judge0Service = new GlotService(process.env.GLOT_API_TOKEN);
       
