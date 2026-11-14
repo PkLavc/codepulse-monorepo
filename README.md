@@ -1,5 +1,7 @@
 # CodePulse: High-Performance Code Execution Engine
 
+> **Status: Live demo discontinued.** The publicly hosted CodePulse demonstration has been disabled. This repository remains available as a source-code and engineering portfolio reference; the application is not currently offered as a hosted service.
+
 **A Professional Monorepo with Standalone HTML Frontend, Node.js Backend, E2E Tests & High QA Coverage**
 
 ## Portfolio Case Study
@@ -61,7 +63,7 @@ Add a DNS record: `api-ide.pklavc.com` → type `AAAA`, value `100::`, Proxy ena
 
 #### Frontend (GitHub Pages)
 - Direct deployment via GitHub Actions
-- Hosted at `https://pklavc.github.io/codepulse-monorepo`
+- Public demo disabled; source code remains available for local development.
 - No build process required (standalone HTML)
 
 ## Tech Stack
