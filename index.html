@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodePulse | High-Performance Online IDE & Code Execution Engine</title>
+    <link rel="canonical" href="https://pklavc.com/projects/codepulse-monorepo/">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/png" href="src/assets/logo.png?v=20260531-1">
+    <meta name="description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
+    <meta name="keywords" content="Online IDE, Code Execution Engine, React TypeScript, Fastify Backend, Software Engineering Portfolio, Remote Code Execution">
+    <meta name="author" content="Patrick Araujo">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="CodePulse | High-Performance Online IDE & Code Execution Engine">
+    <meta property="og:description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pklavc.com/codepulse-monorepo/">
+    <meta property="og:image" content="https://pklavc.com/codepulse-monorepo/src/assets/logo.png?v=20260531-1">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CodePulse | High-Performance Online IDE & Code Execution Engine">
+    <meta name="twitter:description" content="A professional-grade monorepo IDE. Execute Python, Node.js, Java, and C++ with high-speed cloud infrastructure. Built for engineering excellence.">
+    <meta name="twitter:image" content="https://pklavc.com/codepulse-monorepo/src/assets/logo.png?v=20260531-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module">
+        import lottie from 'https://esm.sh/lottie-web';
+        import { defineElement } from './src/assets/lord-icon/index.js?v=20260531-1';
+        defineElement(lottie.loadAnimation);
+    </script>
+    <link rel="stylesheet" href="https://pklavc.com/css/global.css?v=322d1fbf16">
+    <link rel="stylesheet" href="https://pklavc.com/css/color-blue.css?v=5d0741820d">
+    <link rel="stylesheet" href="https://pklavc.com/css/index.css?v=ff2e3766cd">
+    <style>
+        /* Consolidated CSS: overrides, layout and base styles */
+        /* Particles and stacking */
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
+        #navigation-content, #navigation-bar { position: absolute; top: 0; left: 0; width: 100%; z-index: 999999 !important; }
+        #navigation-bar {
+            background: none !important;
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            box-shadow: none !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            height: 140px;
+        }
+
+        /* Header should be absolute and not affect document flow (particles background) */
+        #header { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
+
+        /* Container positioning and background for legibility */
+        .container { position: relative !important; z-index: 5 !important; margin-top: 140px !important; background: rgba(30,30,30,0.85) !important; height: calc(100vh - 160px) !important; box-shadow: none !important; border-radius: 8px !important; padding-top: 8px !important; overflow: hidden; }
+        .container .header { display: flex !important; position: relative; z-index: 6 !important; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important; border-bottom: 2px solid #667eea !important; padding: 12px 20px !important; border-radius: 8px; }
+
+        /* Editor layout fills container */
+        .content { display: flex !important; height: 100% !important; flex: 1 1 auto !important; }
+        .editor-section, .output-section { flex: 1 !important; height: 100% !important; display: flex; flex-direction: column; }
+        textarea, #output { flex: 1 !important; min-height: 0; }
+
+        /* Ensure editor content sits above particles */
+        .content, .editor-section, .output-section, textarea, #output { background: rgba(0,0,0,0.45) !important; }
+
+        /* Base reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: visible;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 140px auto 0;
+            background: rgba(30, 30, 30, 0.9) !important;
+            border-radius: 8px !important;
+            box-shadow: none;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 160px);
+            z-index: 10 !important;
+            position: relative;
+        }
+        .header h1 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+        }
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        select, button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        select {
+            background-color: #252526 !important;
+            color: white !important;
+        }
+        select option {
+            background-color: #252526 !important;
+            color: white !important;
+        }
+        select#language, select#language option {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+            border: 1px solid #333 !important;
+        }
+        select:hover, button:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .execute-btn {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            font-weight: bold;
+            color: white;
+        }
+        .fix-btn {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            font-weight: bold;
+            color: white !important;
+        }
+        .fix-btn span, .fix-btn * { color: white !important; }
+        .fix-btn-text-short { display: none; }
+        .fix-btn,
+        .execute-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .execute-btn:hover {
+            filter: brightness(1.1);
+        }
+        .fix-btn:hover {
+            filter: brightness(1.1);
+        }
+        .fix-btn .button-icon {
+            height: 16px;
+            width: 16px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        button:disabled,
+        select:disabled,
+        textarea:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            z-index: 100;
+            position: relative;
+        }
+        .editor-section, .output-section {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #333;
+        }
+        .output-section {
+            border-right: none;
+            position: relative;
+        }
+        .section-title {
+            background: #252526;
+            color: #ccc;
+            padding: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 55px;
+        }
+        .editor-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .section-title i {
+            color: #667eea;
+        }
+        textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+        textarea:focus {
+            background: #252526;
+        }
+        #output {
+            flex: 1;
+            min-width: 0;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            overflow-x: hidden;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .output-pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+        }
+        .alert {
+            padding: 12px 15px;
+            margin: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .alert-success {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        }
+        .alert-danger {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        }
+        .alert-info {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: #a5b4fc !important;
+            border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        }
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            color: #00d1ff;
+            background: rgba(0,0,0,0.8);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+        .spinner {
+            border: 3px solid rgba(0, 209, 255, 0.3);
+            border-top: 3px solid #00d1ff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+            .editor-section {
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+            /* mobile: hide nav until menu toggled */
+            #navigation-content { transform: translateY(-120%); opacity: 0; pointer-events: none; transition: transform .28s ease, opacity .28s ease; }
+            #navigation-content.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+            /* mobile: hide verbose labels, shorten buttons */
+            .editor-title-text { display: none; }
+            .fix-btn-text-full { display: none; }
+            .fix-btn-text-short { display: inline; }
+        }
+
+        /* Footer */
+        .footer-minimal {
+            background: #1a1a1a;
+            color: #ccc;
+            padding: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .footer-minimal a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-minimal a:hover { color: #667eea; text-decoration: none; }
+        .footer-minimal .credits-trigger {
+            appearance: none;
+            background: transparent;
+            border: 0;
+            color: #999;
+            cursor: pointer;
+            font: inherit;
+            padding: 0;
+            transition: color 0.3s ease;
+        }
+        .footer-minimal .credits-trigger:hover { color: #667eea; }
+        .footer-minimal .credits-hidden {
+            display: none;
+            margin-top: 8px;
+        }
+        .footer-minimal .credits-grid {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+        }
+        .footer-minimal .credits-detail-trigger,
+        .footer-minimal .credits-detail-text,
+        .footer-minimal .credits-detail-text a {
+            color: #999;
+            font: inherit;
+        }
+        .footer-minimal .credits-detail-trigger {
+            appearance: none;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.3s ease;
+        }
+        .footer-minimal .credits-detail-trigger:hover,
+        .footer-minimal .credits-detail-text a:hover {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div id="all">
+        <div class="cursor"></div>
+        <div id="navigation-content">
+            <div class="logo"></div>
+            <div class="navigation-links">
+                <a href="https://pklavc.com/" data-text="HOME" id="home-link">HOME</a>
+                <a href="https://pklavc.com/about/" data-text="ABOUT" id="about-link">ABOUT</a>
+                <a href="https://pklavc.com/projects/" data-text="PROJECTS" id="projects-link">PROJECTS</a>
+                <a href="https://pklavc.com/codepulse-monorepo/" data-text="IDE & QA" id="ide-link">IDE & QA</a>
+            </div>
+        </div>
+        <div id="navigation-bar">
+            <div class="nav-brand">
+                <img src="src/assets/logo.png?v=20260531-1" alt="CodePulse Logo" style="display:block !important; position:absolute; top:20px; left:20px; z-index:99999 !important; height:120px !important; width:auto;">
+            </div>
+            <!-- <div class="menubar">
+                <span class="first-span"></span>
+                <span class="second-span"></span>
+                <span class="third-span"></span>
+            </div> -->
+        </div>
+        <div id="header">
+            <div id="particles"></div>
+        </div>
+    <div class="container">
+        <div class="content">
+            <div class="editor-section">
+                <div class="section-title">
+                    <img src="src/assets/code.gif?v=20260531-1" alt="Code Editor" style="height:24px; width:auto; margin-right:8px;">
+                    <span class="editor-title-text">Code Editor</span>
+                    <div class="editor-controls">
+                        <select id="language">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="php">PHP</option>
+                            <option value="go">Go</option>
+                            <option value="ruby">Ruby</option>
+                        </select>
+                        <button class="fix-btn" id="fix-code-btn">
+                            <lord-icon
+                                src="./src/assets/ruins.json?v=20260531-1"
+                                trigger="loop"
+                                colors="primary:#ffffff,secondary:#ffffff"
+                                class="button-icon"
+                                aria-hidden="true"
+                            ></lord-icon>
+                            <span class="fix-btn-text-full">Fix Code</span><span class="fix-btn-text-short">Fix</span>
+                        </button>
+                        <button class="execute-btn" id="run-code-btn">
+                            <img src="src/assets/play.gif?v=20260531-1" alt="Run" style="height:16px; width:auto; margin-right:4px; vertical-align:middle;">
+                            <span style="color:white; font-weight:bold;">Run</span>
+                        </button>
+                    </div>
+                </div>
+                <textarea id="code" placeholder="Write your code here...">print('Hello CodePulse!')</textarea>
+            </div>
+            <div class="output-section">
+                <div class="section-title">
+                    <img src="src/assets/return.gif?v=20260531-1" alt="Output" style="height:24px; width:auto; margin-right:8px;">
+                    Output
+                </div>
+                <div id="output"><div class="alert alert-info"><img src="src/assets/doc.gif?v=20260531-1" alt="Welcome" style="height:20px; width:auto; margin-right:8px; vertical-align:middle;"> Welcome to CodePulse IDE!
+
+Type your code and click "Run" or use Ctrl+Enter</div></div>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p id="loading-message">Executing code...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://api-ide.pklavc.com';
+        const codeEditor = document.getElementById('code');
+        const languageSelect = document.getElementById('language');
+        const output = document.getElementById('output');
+        const loading = document.getElementById('loading');
+        const loadingMessage = document.getElementById('loading-message');
+        const fixCodeButton = document.getElementById('fix-code-btn');
+        const runButton = document.getElementById('run-code-btn');
+
+        function setEditorBusyState(isBusy, message = 'Executing code...') {
+            loadingMessage.textContent = message;
+            loading.style.display = isBusy ? 'block' : 'none';
+            codeEditor.disabled = isBusy;
+            languageSelect.disabled = isBusy;
+            fixCodeButton.disabled = isBusy;
+            runButton.disabled = isBusy;
+            fixCodeButton.setAttribute('aria-busy', String(isBusy));
+        }
+
+        async function executeCode() {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+
+            if (!code.trim()) {
+                showOutput('Please enter some code!', 'info');
+                return;
+            }
+
+            setEditorBusyState(true, 'Executing code...');
+            output.innerHTML = '';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/execute`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code, language })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.output && data.output.trim()) {
+                        showOutput(data.output, 'success');
+                    } else if (data.error) {
+                        showOutput('Error: ' + data.error, 'danger');
+                    } else {
+                        showOutput('(no output)', 'info');
+                    }
+                } else if (response.status === 408) {
+                    showOutput('Timeout: The code took too long to execute (> 5s)', 'danger');
+                } else {
+                    showOutput(data.error || 'Execution error', 'danger');
+                }
+            } catch (error) {
+                showOutput(`Connection error: ${error.message}\nEnsure the backend is accessible at ${BACKEND_URL}/api/execute`, 'danger');
+            } finally {
+                setEditorBusyState(false);
+            }
+        }
+
+        async function fixCode() {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+
+            if (!code.trim()) {
+                showOutput('Please enter some code before requesting an AI fix.', 'info');
+                return;
+            }
+
+            if (!looksLikeCode(code)) {
+                showOutput('⚠ O conteúdo no editor não parece ser código ' + language + '.\nEscreva ou cole um código válido antes de usar o Fix Code.', 'info');
+                return;
+            }
+
+            setEditorBusyState(true, 'Fixing code with AI...');
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/fix`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code, language })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Unable to fix code right now.');
+                }
+
+                if (typeof data.code !== 'string') {
+                    throw new Error('AI fix service returned an invalid code payload.');
+                }
+
+                const fixedCode = data.code;
+
+                if (!fixedCode.trim()) {
+                    throw new Error('AI fix service returned an empty code result.');
+                }
+
+                if (fixedCode === code) {
+                    showOutput('No AI adjustments were needed. Your current code was kept as-is.', 'info');
+                    return;
+                }
+
+                codeEditor.value = fixedCode;
+                showOutput('Code updated successfully. Review the AI-adjusted code and run it again when ready.', 'success');
+            } catch (error) {
+                showOutput(`AI fix error: ${error.message}`, 'danger');
+            } finally {
+                setEditorBusyState(false);
+            }
+        }
+
+        function showOutput(message, type) {
+            const pre = document.createElement('pre');
+            pre.className = 'output-pre';
+            pre.textContent = message;
+            output.innerHTML = '';
+            output.appendChild(pre);
+        }
+
+        function looksLikeCode(text) {
+            const t = text.trim();
+            if (!t) return false;
+            // Multiple lines → almost certainly code
+            if (t.includes('\n')) return true;
+            // Code symbols
+            if (/[{}();\[\]=<>]/.test(t)) return true;
+            // Common keywords across all supported languages
+            if (/\b(?:def|class|function|func|var|let|const|if|else|for|while|return|import|from|include|using|print|console|echo|puts|printf|cout|scanf|int|str|bool|float|void|public|private|static|new|null|true|false|nil|end|do|then|elsif|elif|pass|lambda|async|await)\b/.test(t)) return true;
+            // Function call: word(
+            if (/\w+\s*\(/.test(t)) return true;
+            // Comments
+            if (/\/\/|\/\*|#\s*\w/.test(t)) return true;
+            // Assignment: x = something
+            if (/\w+\s*=\s*\S/.test(t)) return true;
+            return false;
+        }
+
+        // Language boilerplates with Hello CodePulse string
+        const boilerplates = {
+            python: "print('Hello CodePulse!')",
+            javascript: "console.log('Hello CodePulse!');",
+            java: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello CodePulse!\");\n    }\n}",
+            cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello CodePulse!\" << endl;\n    return 0;\n}",
+            csharp: "using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine(\"Hello CodePulse!\");\n    }\n}",
+            php: "<?php\necho 'Hello CodePulse!';\n?>",
+            go: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello CodePulse!\")\n}",
+            ruby: "puts 'Hello CodePulse!'"
+        };
+
+        // Dynamic language switching logic with comprehensive validation
+        languageSelect.addEventListener('change', function() {
+            const currentCode = codeEditor.value;
+            const currentCodeTrimmed = currentCode.trim();
+            
+            // Check if current code matches any of the boilerplate defaults
+            const isDefaultCode = Object.values(boilerplates).some(boilerplate => 
+                currentCodeTrimmed === boilerplate.trim()
+            );
+            
+            // Only change code if it matches any default boilerplate (preserves user modifications)
+            if (isDefaultCode) {
+                const selectedLanguage = this.value;
+                codeEditor.value = boilerplates[selectedLanguage];
+            }
+        });
+
+        // Allow run with Ctrl+Enter
+        codeEditor.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                executeCode();
+            }
+        });
+        fixCodeButton.addEventListener('click', fixCode);
+        runButton.addEventListener('click', executeCode);
+
+    </script>
+        <script src="https://pklavc.com/js/jquery.min.js?v=d482871a5e"></script>
+        <script src="https://pklavc.com/js/particles.min.js?v=faee7815a5"></script>
+        <script src="https://pklavc.com/js/index.js?v=427bc765ee"></script>
+
+        <!-- minimal footer aligned with the portfolio -->
+        <footer class="footer-minimal">
+            <div class="footer-container">
+                <p>&copy; 2026 <a href="https://pklavc.com/" target="_blank" rel="noopener noreferrer">Patrick Araujo</a> &bull; <button id="credits-trigger-btn" class="credits-trigger" type="button" onclick="toggleCredits()" aria-controls="credits-list" aria-expanded="false">Resources & Attributions</button></p>
+                <div id="credits-list" class="credits-hidden">
+                    <div class="credits-grid">
+                        <button class="credits-detail-trigger" type="button" data-credit-detail="icons">Icons</button>
+                        <button class="credits-detail-trigger" type="button" data-credit-detail="vfx">VFX</button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script>
+            particlesJS("particles", {"particles":{"number":{"value":50,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
+        </script>
+        <script>
+            // Menu toggle fix: ensure clicks on .menubar open the navigation on small screens
+            $(function(){
+                $('.menubar').on('click', function(e){
+                    e.stopPropagation();
+                    $('#navigation-content').toggleClass('active');
+                });
+                // Close when clicking outside
+                $(document).on('click', function(e){
+                    if (!$(e.target).closest('#navigation-content, .menubar').length) {
+                        $('#navigation-content').removeClass('active');
+                    }
+                });
+            });
+
+            // Fix cursor bug
+            document.addEventListener('mousemove', (e) => {
+                const cursor = document.querySelector('.cursor');
+                if(cursor) {
+                    cursor.style.left = (e.clientX - 20) + 'px';
+                    cursor.style.top = (e.clientY - 20) + 'px';
+                }
+            });
+
+            // footer credits toggle
+            function toggleCredits() {
+                var credits = document.getElementById("credits-list");
+                var trigger = document.getElementById("credits-trigger-btn");
+                if (!credits) {
+                    return;
+                }
+                var isOpen = credits.style.display === "block";
+                credits.style.display = isOpen ? "none" : "block";
+                if (trigger) {
+                    trigger.setAttribute("aria-expanded", isOpen ? "false" : "true");
+                }
+            }
+
+            function handleCreditDetailClick(event) {
+                var button = event.target.closest("[data-credit-detail]");
+                if (!button || !button.isConnected) {
+                    return;
+                }
+                var detail = button.getAttribute("data-credit-detail");
+                if (detail === "vfx") {
+                    button.outerHTML = '<span class="credits-detail-text">Particles by <a href="https://github.com/VincentGarreau/particles.js" target="_blank" rel="noopener noreferrer">Vincent Garreau</a></span>';
+                } else if (detail === "icons") {
+                    button.outerHTML = '<span class="credits-detail-text">Animated icons by <a href="https://lordicon.com/" target="_blank" rel="noopener noreferrer">Lordicon</a></span>';
+                }
+            }
+            document.addEventListener("click", handleCreditDetailClick);
+
+            // Reset scroll to top on page load
+            history.scrollRestoration = 'manual';
+            window.addEventListener('load', function() {
+                window.scrollTo(0, 0);
+            });
+
+            // Header fade-out effect on scroll
+            const navBar = document.getElementById('navigation-bar');
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const fadeDistance = 200;
+                let opacity = Math.max(0, 1 - (scrollTop / fadeDistance));
+                navBar.style.opacity = opacity;
+                navBar.style.transition = 'opacity 0.1s ease';
+            });
+        </script>
+</body>
+</html>
