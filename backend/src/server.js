@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import { z } from 'zod';
 import { GlotService } from './services/glot.service.js';
+import { fixCodeWithUserAI } from './services/ai.service.js';
 
 // Load environment variables
 import 'dotenv/config';
@@ -14,6 +15,14 @@ const executeSchema = z.object({
     input: z.string(),
     expected: z.string()
   })).optional()
+});
+
+const fixSchema = z.object({
+  code: z.string().min(1).max(100000),
+  language: z.string().min(1).max(40),
+  provider: z.enum(['openai', 'anthropic', 'gemini']),
+  model: z.string().max(100).optional(),
+  apiKey: z.string().min(10).max(512)
 });
 
 const fastify = Fastify({ logger: true });
@@ -37,6 +46,22 @@ async function setupApp() {
   });
 
   fastify.get('/health', async () => ({ status: 'ok' }));
+
+  fastify.post('/api/fix', async (request, reply) => {
+    const parsed = fixSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.code(400).send({ error: 'Invalid AI settings or code' });
+    }
+
+    try {
+      const fixedCode = await fixCodeWithUserAI(parsed.data);
+      return { code: fixedCode };
+    } catch (error) {
+      return reply.code(502).send({
+        error: error instanceof Error ? error.message : 'AI provider failed'
+      });
+    }
+  });
   
   
   fastify.post('/api/execute', async (request) => {
@@ -95,7 +120,7 @@ if (process.env.NODE_ENV !== 'test') {
     const port = Number(process.env.PORT) || 3000;
     console.log(`Starting server on port ${port}...`);
     try {
-      fastify.listen({ port, host: '0.0.0.0' }, (err) => {
+      fastify.listen({ port, host: process.env.HOST || '127.0.0.1' }, (err) => {
         if (err) {
           console.error('Error starting server:', err);
           process.exit(1);
