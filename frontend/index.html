@@ -361,6 +361,16 @@
         .footer-minimal .credits-detail-text a:hover {
             color: #667eea;
         }
+
+        .settings-btn { background: #243244; border: 1px solid #50627b; color: #fff; font-weight: 600; }
+        .ai-dialog { width: min(92vw, 460px); margin: auto; border: 1px solid #526886; border-radius: 12px; background: #1f2430; color: #fff; padding: 24px; box-shadow: 0 18px 60px #000b; }
+        .ai-dialog::backdrop { background: rgba(0,0,0,.72); }
+        .ai-dialog h2 { font-size: 1.3rem; margin-bottom: 14px; }
+        .ai-dialog label { display: block; font-size: .95rem; margin: 14px 0 6px; }
+        .ai-dialog input, .ai-dialog select { display: block; width: 100%; padding: 10px; border: 1px solid #657087; border-radius: 6px; background: #151c28; color: #fff; }
+        .ai-dialog p { color: #c4cedb; line-height: 1.45; margin-top: 12px; font-size: .89rem; }
+        .ai-dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+        .ai-dialog-actions button { padding: 9px 12px; border: 1px solid #667eaa; }
     </style>
 </head>
 <body>
@@ -405,6 +415,7 @@
                             <option value="go">Go</option>
                             <option value="ruby">Ruby</option>
                         </select>
+                        <button class="settings-btn" type="button" id="ai-settings-btn" aria-haspopup="dialog" aria-controls="ai-settings-dialog">AI Settings</button>
                         <button class="fix-btn" id="fix-code-btn">
                             <lord-icon
                                 src="./src/assets/ruins.json?v=20260531-1"
@@ -439,8 +450,32 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         </div>
     </div>
 
+    <dialog id="ai-settings-dialog" class="ai-dialog" aria-labelledby="ai-settings-title">
+        <form id="ai-settings-form">
+            <h2 id="ai-settings-title">Your AI settings</h2>
+            <label for="ai-provider">AI provider</label>
+            <select id="ai-provider">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="gemini">Google Gemini</option>
+            </select>
+            <label for="ai-model">Model (optional)</label>
+            <input id="ai-model" placeholder="Use provider default" maxlength="100" autocomplete="off">
+            <label for="ai-api-key">Your API key</label>
+            <input id="ai-api-key" type="password" placeholder="Paste your own API key" maxlength="512" autocomplete="new-password">
+            <p id="ai-key-status" aria-live="polite">No key configured.</p>
+            <label for="ai-backend-url">Trusted local backend URL</label>
+            <input id="ai-backend-url" type="url" value="http://127.0.0.1:3000" required>
+            <p>Keys are kept in this tab's memory only, not saved to the server or browser storage. Your configured backend receives the key for each AI request. Only use a backend you control and trust. Provider charges, if any, apply to your own key.</p>
+            <div class="ai-dialog-actions">
+                <button type="button" id="ai-clear-key">Clear key</button>
+                <button type="button" id="ai-settings-cancel">Cancel</button>
+                <button type="submit" class="execute-btn">Apply settings</button>
+            </div>
+        </form>
+    </dialog>
     <script>
-        const BACKEND_URL = 'https://api-ide.pklavc.com';
+        let BACKEND_URL = 'http://127.0.0.1:3000';
         const codeEditor = document.getElementById('code');
         const languageSelect = document.getElementById('language');
         const output = document.getElementById('output');
@@ -448,6 +483,68 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
         const loadingMessage = document.getElementById('loading-message');
         const fixCodeButton = document.getElementById('fix-code-btn');
         const runButton = document.getElementById('run-code-btn');
+
+
+        const settingsDialog = document.getElementById('ai-settings-dialog');
+        const settingsButton = document.getElementById('ai-settings-btn');
+        const settingsForm = document.getElementById('ai-settings-form');
+        const apiKeyInput = document.getElementById('ai-api-key');
+        const providerInput = document.getElementById('ai-provider');
+        const modelInput = document.getElementById('ai-model');
+        const backendInput = document.getElementById('ai-backend-url');
+        const keyStatus = document.getElementById('ai-key-status');
+        let aiApiKey = '';
+        let aiProvider = 'openai';
+        let aiModel = '';
+
+        function updateKeyStatus() {
+            keyStatus.textContent = aiApiKey ? 'Key configured for this tab only.' : 'No key configured.';
+        }
+
+        settingsButton.addEventListener('click', () => {
+            providerInput.value = aiProvider;
+            modelInput.value = aiModel;
+            backendInput.value = BACKEND_URL;
+            apiKeyInput.value = '';
+            updateKeyStatus();
+            settingsDialog.showModal();
+        });
+        document.getElementById('ai-settings-cancel').addEventListener('click', () => settingsDialog.close());
+        document.getElementById('ai-clear-key').addEventListener('click', () => {
+            aiApiKey = '';
+            apiKeyInput.value = '';
+            updateKeyStatus();
+        });
+        settingsForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            let parsed;
+            try {
+                parsed = new URL(backendInput.value.trim());
+            } catch {
+                alert('Enter a valid backend URL.');
+                return;
+            }
+            const loopback = ['127.0.0.1', 'localhost', '[::1]'].includes(parsed.hostname);
+            if (!['http:', 'https:'].includes(parsed.protocol) || (!loopback && parsed.protocol !== 'https:')) {
+                alert('Backend must use HTTPS unless it is on localhost.');
+                return;
+            }
+            if (parsed.username || parsed.password || parsed.search || parsed.hash) {
+                alert('Backend URL must not contain credentials or parameters.');
+                return;
+            }
+            if (modelInput.value.trim() && !/^[a-zA-Z0-9_.:-]{1,100}$/.test(modelInput.value.trim())) {
+                alert('Invalid model name.');
+                return;
+            }
+            BACKEND_URL = parsed.origin + parsed.pathname.replace(/\/+$/, '');
+            aiProvider = providerInput.value;
+            aiModel = modelInput.value.trim();
+            if (apiKeyInput.value.trim()) aiApiKey = apiKeyInput.value.trim();
+            apiKeyInput.value = '';
+            updateKeyStatus();
+            settingsDialog.close();
+        });
 
         function setEditorBusyState(isBusy, message = 'Executing code...') {
             loadingMessage.textContent = message;
@@ -511,6 +608,12 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                 return;
             }
 
+            if (!aiApiKey) {
+                showOutput('Configure your own AI API key in AI Settings before using Fix Code.', 'info');
+                settingsButton.click();
+                return;
+            }
+
             if (!looksLikeCode(code)) {
                 showOutput('⚠ O conteúdo no editor não parece ser código ' + language + '.\nEscreva ou cole um código válido antes de usar o Fix Code.', 'info');
                 return;
@@ -524,7 +627,7 @@ Type your code and click "Run" or use Ctrl+Enter</div></div>
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ code, language })
+                    body: JSON.stringify({ code, language, provider: aiProvider, model: aiModel, apiKey: aiApiKey })
                 });
 
                 const data = await response.json();
