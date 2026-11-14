@@ -1,6 +1,0 @@
-name = "codepulse-backend"
-main = "src/worker.js"
-compatibility_date = "2024-09-23"
-
-# Retired compatibility stub. No Workers AI binding, no custom domain route.
-# Public deployments are disabled in .github/workflows/deploy.yml.
