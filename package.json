@@ -1,7 +1,7 @@
 {
   "name": "codepulse-monorepo",
   "version": "1.0.0",
-  "description": "CodePulse Monorepo - Online IDE with Code Execution",
+  "description": "Self-hosted code editor with local Node.js API and bring-your-own-key AI assistance",
   "type": "module",
   "workspaces": [
     "frontend",
@@ -18,14 +18,14 @@
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
-    "code-execution",
-    "online-ide",
-    "monorepo",
-    "html",
+    "self-hosted-ide",
     "nodejs",
-    "glot-io",
-    "qa",
-    "testing"
+    "openai",
+    "anthropic",
+    "gemini",
+    "bring-your-own-key",
+    "code-execution",
+    "monorepo"
   ],
   "author": "Patrick Araujo",
   "license": "MIT",
